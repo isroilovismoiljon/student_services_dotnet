@@ -1,0 +1,4492 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Student Services API",
+    "description": "A comprehensive API for student services management with TextSlide validation",
+    "contact": {
+      "name": "Student Services Team",
+      "email": "support@studentservices.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/v1/Admin/users/role": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Updates user role (User ↔ Admin). SuperAdmin only.",
+        "requestBody": {
+          "description": "Role update details",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRoleDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRoleDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/users/balance/add": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Adds balance to user account. Admin and SuperAdmin can use this.",
+        "requestBody": {
+          "description": "Balance modification details",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyBalanceDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyBalanceDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyBalanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/users/balance/subtract": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Subtracts balance from user account. Admin and SuperAdmin can use this.",
+        "requestBody": {
+          "description": "Balance modification details",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyBalanceDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyBalanceDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyBalanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/actions/{id}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets admin action by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Action ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminActionDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/actions": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets paginated list of admin actions with optional filtering",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page size (default: 20, max: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "actionType",
+            "in": "query",
+            "description": "Optional action type filter",
+            "schema": {
+              "$ref": "#/components/schemas/AdminActionType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": { }
+              },
+              "application/json; ver=1.0": {
+                "schema": { }
+              },
+              "text/json; ver=1.0": {
+                "schema": { }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/actions/my-actions": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets admin actions performed by current admin",
+        "parameters": [
+          {
+            "name": "actionType",
+            "in": "query",
+            "description": "Optional action type filter",
+            "schema": {
+              "$ref": "#/components/schemas/AdminActionType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/actions/user/{userId}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets admin actions performed on a specific user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Target user ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "actionType",
+            "in": "query",
+            "description": "Optional action type filter",
+            "schema": {
+              "$ref": "#/components/schemas/AdminActionType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/actions/recent": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets recent admin actions (last 50 by default)",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of recent actions to retrieve (max: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminActionSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Admin/actions/stats": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets admin action statistics",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": { }
+              },
+              "application/json; ver=1.0": {
+                "schema": { }
+              },
+              "text/json; ver=1.0": {
+                "schema": { }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/{id}/process": {
+      "put": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Processes a payment (approve or reject)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Payment ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Processing details",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessPaymentDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessPaymentDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessPaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentProcessResult"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentProcessResult"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentProcessResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/pending": {
+      "get": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Gets all pending payments for the current admin",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/my-assignments": {
+      "get": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Gets all payments assigned to the current admin",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Optional status filter",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/all": {
+      "get": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Gets all payments with pagination (SuperAdmin only)",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page size (default: 20, max: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Optional status filter",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": { }
+              },
+              "application/json; ver=1.0": {
+                "schema": { }
+              },
+              "text/json; ver=1.0": {
+                "schema": { }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/stats": {
+      "get": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Gets comprehensive payment statistics (SuperAdmin only)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentStatsDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentStatsDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentStatsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/{id}": {
+      "get": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Gets payment details by ID (admin access)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Payment ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/my-stats": {
+      "get": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Gets admin's processing statistics",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": { }
+              },
+              "application/json; ver=1.0": {
+                "schema": { }
+              },
+              "text/json; ver=1.0": {
+                "schema": { }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/payments/bulk-process": {
+      "put": {
+        "tags": [
+          "AdminPayment"
+        ],
+        "summary": "Bulk process multiple payments (SuperAdmin only)",
+        "requestBody": {
+          "description": "Bulk processing details",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkProcessPaymentDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkProcessPaymentDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkProcessPaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": { }
+              },
+              "application/json; ver=1.0": {
+                "schema": { }
+              },
+              "text/json; ver=1.0": {
+                "schema": { }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register a new user",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login user with username and password",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify user with verification code",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/resend-verification-code": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Resend verification code to user's Telegram account",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendVerificationCodeDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendVerificationCodeDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendVerificationCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/link-telegram": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Link Telegram account using verification code from bot",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/TelegramVerificationDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/TelegramVerificationDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/TelegramVerificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/exists": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Check if user exists",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phoneNumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "telegramId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/user/{id}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/user/{id}/referrals": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get user referrals",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Request forgot password - sends reset code to user's Telegram",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/reset-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset password using reset code from Telegram",
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotificationRequestDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotificationRequestDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotificationRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/bulk": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateNotificationRequestDto"
+                }
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateNotificationRequestDto"
+                }
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateNotificationRequestDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/{id}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationRequestDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationRequestDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNotificationRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/user/{userId}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/user/{userId}/unread": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/user/{userId}/unread/count": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/user/{userId}/type/{type}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NotificationType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/user/{userId}/active": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/global": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/{id}/mark-read": {
+      "patch": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Notifications/user/{userId}/mark-all-read": {
+      "patch": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Payment": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Creates a new payment request",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "Photo",
+                  "RequestedAmount"
+                ],
+                "type": "object",
+                "properties": {
+                  "RequestedAmount": {
+                    "minimum": 0.01,
+                    "type": "number",
+                    "description": "The amount requested by the user",
+                    "format": "double"
+                  },
+                  "Photo": {
+                    "type": "string",
+                    "description": "Receipt photo/screenshot file uploaded by the user",
+                    "format": "binary"
+                  },
+                  "Description": {
+                    "maxLength": 500,
+                    "type": "string",
+                    "description": "Optional description or note from the user"
+                  }
+                }
+              },
+              "encoding": {
+                "RequestedAmount": {
+                  "style": "form"
+                },
+                "Photo": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Payment/{id}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Gets a specific payment by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Payment ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Payment/my-payments": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Gets all payments for the current user",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Optional status filter",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Payment/available-admins": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Gets available admins that can receive payments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "application/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "text/json; ver=1.0": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Payment/my-stats": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Gets payment statistics for the current user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain; ver=1.0": {
+                "schema": { }
+              },
+              "application/json; ver=1.0": {
+                "schema": { }
+              },
+              "text/json; ver=1.0": {
+                "schema": { }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides": {
+      "post": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Creates a new text slide",
+        "requestBody": {
+          "description": "Text slide creation data",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTextSlideDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTextSlideDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTextSlideDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Text slide created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextSlideDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Text slide with same content and position already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets all text slides with pagination",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page size (default: 10, max: 50)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/{id}": {
+      "put": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Updates an existing text slide",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Text slide ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Text slide update data",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTextSlideDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTextSlideDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTextSlideDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Text slide updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextSlideDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Text slide not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Text slide with same content and position already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets a text slide by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Text slide ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slide found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextSlideDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Text slide not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Deletes a text slide",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Text slide ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Text slide deleted successfully"
+          },
+          "404": {
+            "description": "Text slide not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Checks if a text slide exists",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Text slide ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check completed successfully",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/search": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Searches text slides by text content",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Text to search for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search term",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/font/{font}": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slides by font family",
+        "parameters": [
+          {
+            "name": "font",
+            "in": "path",
+            "description": "Font family name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid font parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/color/{colorHex}": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slides by color",
+        "parameters": [
+          {
+            "name": "colorHex",
+            "in": "path",
+            "description": "Hex color code (e.g., #000000)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid color parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/size-range": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slides within a specific size range",
+        "parameters": [
+          {
+            "name": "minSize",
+            "in": "query",
+            "description": "Minimum font size",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "maxSize",
+            "in": "query",
+            "description": "Maximum font size",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid size range parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/formatting": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slides with specific formatting",
+        "parameters": [
+          {
+            "name": "isBold",
+            "in": "query",
+            "description": "Filter by bold formatting (optional)",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isItalic",
+            "in": "query",
+            "description": "Filter by italic formatting (optional)",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/position-area": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slides within a specific position area",
+        "parameters": [
+          {
+            "name": "minLeft",
+            "in": "query",
+            "description": "Minimum left position",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxLeft",
+            "in": "query",
+            "description": "Maximum left position",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "minTop",
+            "in": "query",
+            "description": "Minimum top position",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxTop",
+            "in": "query",
+            "description": "Maximum top position",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid position parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/dimensions": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slides with specific dimensions",
+        "parameters": [
+          {
+            "name": "minWidth",
+            "in": "query",
+            "description": "Minimum width (optional)",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxWidth",
+            "in": "query",
+            "description": "Maximum width (optional)",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "minHeight",
+            "in": "query",
+            "description": "Minimum height (optional)",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxHeight",
+            "in": "query",
+            "description": "Maximum height (optional)",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/recent": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets recently created text slides",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of text slides to retrieve (default: 10, max: 50)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid count parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/recently-updated": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets recently updated text slides",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of text slides to retrieve (default: 10, max: 50)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slides retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid count parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/{id}/duplicate": {
+      "post": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Duplicates a text slide with optional position offset",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the text slide to duplicate",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "leftOffset",
+            "in": "query",
+            "description": "Offset for left position (default: 10)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 10
+            }
+          },
+          {
+            "name": "topOffset",
+            "in": "query",
+            "description": "Offset for top position (default: 10)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Text slide duplicated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextSlideDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Text slide not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/bulk": {
+      "post": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Bulk creates text slides",
+        "requestBody": {
+          "description": "Bulk creation data",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateTextSlideDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateTextSlideDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateTextSlideDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Text slides created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TextSlideDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "One or more text slides already exist with same content and position",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Bulk deletes text slides",
+        "requestBody": {
+          "description": "Bulk operation data",
+          "content": {
+            "application/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkTextSlideOperationDto"
+              }
+            },
+            "text/json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkTextSlideOperationDto"
+              }
+            },
+            "application/*+json; ver=1.0": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkTextSlideOperationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Text slides deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/stats": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Gets text slide statistics",
+        "responses": {
+          "200": {
+            "description": "Statistics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextSlideStatsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/TextSlides/{id}/exists": {
+      "get": {
+        "tags": [
+          "TextSlides"
+        ],
+        "summary": "Checks if a text slide exists",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Text slide ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check completed successfully",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdminActionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "admin": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          },
+          "targetUser": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          },
+          "actionType": {
+            "$ref": "#/components/schemas/AdminActionType"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the action",
+            "nullable": true
+          },
+          "previousValue": {
+            "type": "string",
+            "description": "Previous value",
+            "nullable": true
+          },
+          "newValue": {
+            "type": "string",
+            "description": "New value",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount changed (for balance modifications)",
+            "format": "double",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason provided by admin",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the action was performed",
+            "format": "date-time"
+          },
+          "notificationSent": {
+            "type": "boolean",
+            "description": "Whether telegram notification was sent"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for admin action response"
+      },
+      "AdminActionSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adminName": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetUserFullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetUserUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "actionType": {
+            "$ref": "#/components/schemas/AdminActionType"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notificationSent": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for admin action summary in lists"
+      },
+      "AdminActionType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          999
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "BulkCreateTextSlideDto": {
+        "required": [
+          "textSlides"
+        ],
+        "type": "object",
+        "properties": {
+          "textSlides": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateTextSlideDto"
+            },
+            "description": "List of text slides to create in bulk. Must contain at least one slide definition."
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for bulk creating text slides"
+      },
+      "BulkProcessPaymentDto": {
+        "type": "object",
+        "properties": {
+          "paymentIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "processDetails": {
+            "$ref": "#/components/schemas/ProcessPaymentDto"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for bulk payment processing"
+      },
+      "BulkTextSlideOperationDto": {
+        "required": [
+          "textSlideIds"
+        ],
+        "type": "object",
+        "properties": {
+          "textSlideIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "List of text slide IDs to operate on. Must contain at least one ID.",
+            "example": [
+              123,
+              456,
+              789
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for bulk operations on text slides"
+      },
+      "CreateNotificationRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/NotificationType"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "actionUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "iconUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isGlobal": {
+            "type": "boolean"
+          },
+          "metadata": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTextSlideDto": {
+        "required": [
+          "colorHex",
+          "font",
+          "left",
+          "size",
+          "text",
+          "top",
+          "width"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "maxLength": 5000,
+            "minLength": 0,
+            "type": "string",
+            "description": "The text content to display on the slide. Maximum 5000 characters.",
+            "example": "Welcome to our presentation!"
+          },
+          "size": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Font size for the text. Must be between 1 and 200 points.",
+            "format": "int32",
+            "example": 24
+          },
+          "font": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "Font family name for the text. Common examples: Arial, Times New Roman, Calibri.",
+            "example": "Arial"
+          },
+          "isBold": {
+            "type": "boolean",
+            "description": "Apply bold formatting to the text.",
+            "example": false
+          },
+          "isItalic": {
+            "type": "boolean",
+            "description": "Apply italic formatting to the text.",
+            "example": false
+          },
+          "colorHex": {
+            "minLength": 1,
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+            "type": "string",
+            "description": "Text color in hexadecimal format. Supports both 3-digit (#FFF) and 6-digit (#FFFFFF) formats.",
+            "example": "#000000"
+          },
+          "left": {
+            "maximum": 33.867,
+            "minimum": 0,
+            "type": "number",
+            "description": "Left position of the text element in centimeters. Must be between 0 and 33.867 cm (slide width limit).",
+            "format": "double",
+            "example": 2.5
+          },
+          "top": {
+            "maximum": 19.05,
+            "minimum": 0,
+            "type": "number",
+            "description": "Top position of the text element in centimeters. Must be between 0 and 19.05 cm (slide height limit).",
+            "format": "double",
+            "example": 1.5
+          },
+          "width": {
+            "maximum": 33.867,
+            "minimum": 0.1,
+            "type": "number",
+            "description": "Width of the text element in centimeters. Must be between 0.1 and 33.867 cm (slide width limit).",
+            "format": "double",
+            "example": 10
+          },
+          "height": {
+            "maximum": 19.05,
+            "minimum": 0.1,
+            "type": "number",
+            "description": "Height of the text element in centimeters. Optional - auto-calculated if not provided. Must be between 0.1 and 19.05 cm (slide height limit).",
+            "format": "double",
+            "nullable": true,
+            "example": 3
+          },
+          "horizontal": {
+            "$ref": "#/components/schemas/HorizontalAlignment"
+          },
+          "vertical": {
+            "$ref": "#/components/schemas/VerticalAlignment"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for creating a new TextSlide"
+      },
+      "ForgotPasswordDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "HorizontalAlignment": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ModifyBalanceDto": {
+        "required": [
+          "amount",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "description": "ID of the user whose balance will be modified",
+            "format": "int32"
+          },
+          "amount": {
+            "maximum": 1000000,
+            "minimum": 0.01,
+            "type": "number",
+            "description": "Amount to add or subtract (positive number)",
+            "format": "double"
+          },
+          "reason": {
+            "maxLength": 500,
+            "type": "string",
+            "description": "Optional reason for the balance modification",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for adding or subtracting balance from user account"
+      },
+      "NotificationStatus": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "NotificationType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "PaymentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sender": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          },
+          "requestedAmount": {
+            "type": "number",
+            "description": "Amount originally requested by the user",
+            "format": "double"
+          },
+          "approvedAmount": {
+            "type": "number",
+            "description": "Amount approved by admin (if approved)",
+            "format": "double",
+            "nullable": true
+          },
+          "finalAmount": {
+            "type": "number",
+            "description": "Final amount (approved amount if available, otherwise requested amount)",
+            "format": "double"
+          },
+          "photo": {
+            "type": "string",
+            "description": "Receipt photo URL/path",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description provided by user",
+            "nullable": true
+          },
+          "paymentStatus": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "rejectReason": {
+            "type": "string",
+            "description": "Rejection reason (if rejected)",
+            "nullable": true
+          },
+          "processedByAdmin": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          },
+          "processedAt": {
+            "type": "string",
+            "description": "When the payment was processed",
+            "format": "date-time",
+            "nullable": true
+          },
+          "adminNotes": {
+            "type": "string",
+            "description": "Additional notes from admin",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the payment was created",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the payment was last updated",
+            "format": "date-time"
+          },
+          "amountWasAdjusted": {
+            "type": "boolean",
+            "description": "Whether the amount was adjusted by admin"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for viewing payment details"
+      },
+      "PaymentProcessResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the operation was successful"
+          },
+          "message": {
+            "type": "string",
+            "description": "Result message (e.g., \"AlreadySuccess\", \"ProcessedSuccessfully\", etc.)",
+            "nullable": true
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentDto"
+          },
+          "resultCode": {
+            "$ref": "#/components/schemas/PaymentProcessResultCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result of payment processing operation"
+      },
+      "PaymentProcessResultCode": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "description": "Specific result codes for payment processing",
+        "format": "int32"
+      },
+      "PaymentStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalPayments": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pendingPayments": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "approvedPayments": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectedPayments": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRequestedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalApprovedAmount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentStatus": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "PaymentSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "senderName": {
+            "type": "string",
+            "nullable": true
+          },
+          "senderUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "processedByAdminName": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "photo": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedAmount": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "finalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentStatus": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "amountWasAdjusted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Simplified DTO for listing payments"
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "ProcessPaymentDto": {
+        "required": [
+          "paymentStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentStatus": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "approvedAmount": {
+            "type": "number",
+            "description": "The approved amount (can be different from requested amount)\r\nOptional - if null when status is Success, defaults to RequestedAmount",
+            "format": "double",
+            "nullable": true
+          },
+          "rejectReason": {
+            "maxLength": 1000,
+            "type": "string",
+            "description": "Reason for rejection (required when status is Rejected)",
+            "nullable": true
+          },
+          "adminNotes": {
+            "maxLength": 1000,
+            "type": "string",
+            "description": "Additional notes from the admin",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for admin to process (approve/reject) a payment"
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "referralId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResendVerificationCodeDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "resetCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TelegramVerificationDto": {
+        "type": "object",
+        "properties": {
+          "telegramId": {
+            "type": "string",
+            "nullable": true
+          },
+          "verificationCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextSlideDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the text slide.",
+            "format": "int32",
+            "example": 123
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content of the slide.",
+            "nullable": true,
+            "example": "Welcome to our presentation!"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Font size for the text in points.",
+            "format": "int32",
+            "example": 24
+          },
+          "font": {
+            "type": "string",
+            "description": "Font family name for the text.",
+            "nullable": true,
+            "example": "Arial"
+          },
+          "isBold": {
+            "type": "boolean",
+            "description": "Whether the text has bold formatting.",
+            "example": false
+          },
+          "isItalic": {
+            "type": "boolean",
+            "description": "Whether the text has italic formatting.",
+            "example": false
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Color of the text in hexadecimal format.",
+            "nullable": true,
+            "example": "#000000"
+          },
+          "left": {
+            "type": "number",
+            "description": "Left position of the text element in centimeters.",
+            "format": "double",
+            "example": 2.5
+          },
+          "top": {
+            "type": "number",
+            "description": "Top position of the text element in centimeters.",
+            "format": "double",
+            "example": 1.5
+          },
+          "width": {
+            "type": "number",
+            "description": "Width of the text element in centimeters.",
+            "format": "double",
+            "example": 10
+          },
+          "height": {
+            "type": "number",
+            "description": "Height of the text element in centimeters.",
+            "format": "double",
+            "nullable": true,
+            "example": 3
+          },
+          "horizontal": {
+            "$ref": "#/components/schemas/HorizontalAlignment"
+          },
+          "vertical": {
+            "$ref": "#/components/schemas/VerticalAlignment"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the text slide was created.",
+            "format": "date-time",
+            "example": "2024-10-04T06:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the text slide was last updated.",
+            "format": "date-time",
+            "example": "2024-10-04T08:30:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for viewing TextSlide details"
+      },
+      "TextSlideStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalTextSlides": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uniqueFonts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uniqueColors": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boldTextSlides": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "italicTextSlides": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "averageTextLength": {
+            "type": "number",
+            "format": "double"
+          },
+          "minSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "averageSize": {
+            "type": "number",
+            "format": "double"
+          },
+          "oldestCreated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "newestCreated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "mostUsedFont": {
+            "type": "string",
+            "nullable": true
+          },
+          "mostUsedColor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextSlideSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the text slide.",
+            "format": "int32",
+            "example": 456
+          },
+          "textPreview": {
+            "type": "string",
+            "description": "Preview of the text content (first 100 characters).",
+            "nullable": true,
+            "example": "Welcome to our presentation! This is a sample..."
+          },
+          "size": {
+            "type": "integer",
+            "description": "Font size for the text in points.",
+            "format": "int32",
+            "example": 18
+          },
+          "font": {
+            "type": "string",
+            "description": "Font family name for the text.",
+            "nullable": true,
+            "example": "Calibri"
+          },
+          "isBold": {
+            "type": "boolean",
+            "description": "Whether the text has bold formatting.",
+            "example": true
+          },
+          "isItalic": {
+            "type": "boolean",
+            "description": "Whether the text has italic formatting.",
+            "example": false
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Color of the text in hexadecimal format.",
+            "nullable": true,
+            "example": "#2E86AB"
+          },
+          "positionSummary": {
+            "type": "string",
+            "description": "Summary of the text element's position and dimensions.",
+            "nullable": true,
+            "example": "Left: 2.5cm, Top: 1.5cm, Size: 10.0x3.0cm"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the text slide was created.",
+            "format": "date-time",
+            "example": "2024-10-04T06:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the text slide was last updated.",
+            "format": "date-time",
+            "example": "2024-10-04T08:30:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Simplified DTO for listing text slides"
+      },
+      "UpdateNotificationRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/NotificationType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/NotificationStatus"
+          },
+          "actionUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "iconUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTextSlideDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "maxLength": 5000,
+            "minLength": 0,
+            "type": "string",
+            "description": "The text content to display on the slide. Maximum 5000 characters.",
+            "nullable": true,
+            "example": "Updated presentation text!"
+          },
+          "size": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "integer",
+            "description": "Font size for the text. Must be between 1 and 200 points.",
+            "format": "int32",
+            "nullable": true,
+            "example": 28
+          },
+          "font": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "Font family name for the text. Common examples: Arial, Times New Roman, Calibri.",
+            "nullable": true,
+            "example": "Times New Roman"
+          },
+          "isBold": {
+            "type": "boolean",
+            "description": "Apply bold formatting to the text.",
+            "nullable": true,
+            "example": true
+          },
+          "isItalic": {
+            "type": "boolean",
+            "description": "Apply italic formatting to the text.",
+            "nullable": true,
+            "example": false
+          },
+          "colorHex": {
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+            "type": "string",
+            "description": "Text color in hexadecimal format. Supports both 3-digit (#FFF) and 6-digit (#FFFFFF) formats.",
+            "nullable": true,
+            "example": "#FF5733"
+          },
+          "left": {
+            "maximum": 33.867,
+            "minimum": 0,
+            "type": "number",
+            "description": "Left position of the text element in centimeters. Must be between 0 and 33.867 cm (slide width limit).",
+            "format": "double",
+            "nullable": true,
+            "example": 5
+          },
+          "top": {
+            "maximum": 19.05,
+            "minimum": 0,
+            "type": "number",
+            "description": "Top position of the text element in centimeters. Must be between 0 and 19.05 cm (slide height limit).",
+            "format": "double",
+            "nullable": true,
+            "example": 3
+          },
+          "width": {
+            "maximum": 33.867,
+            "minimum": 0.1,
+            "type": "number",
+            "description": "Width of the text element in centimeters. Must be between 0.1 and 33.867 cm (slide width limit).",
+            "format": "double",
+            "nullable": true,
+            "example": 15
+          },
+          "height": {
+            "maximum": 19.05,
+            "minimum": 0.1,
+            "type": "number",
+            "description": "Height of the text element in centimeters. Must be between 0.1 and 19.05 cm (slide height limit).",
+            "format": "double",
+            "nullable": true,
+            "example": 2.5
+          },
+          "horizontal": {
+            "$ref": "#/components/schemas/HorizontalAlignment"
+          },
+          "vertical": {
+            "$ref": "#/components/schemas/VerticalAlignment"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for updating an existing TextSlide"
+      },
+      "UpdateUserRoleDto": {
+        "required": [
+          "newRole",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "description": "ID of the user whose role will be updated",
+            "format": "int32"
+          },
+          "newRole": {
+            "$ref": "#/components/schemas/UserRole"
+          },
+          "reason": {
+            "maxLength": 500,
+            "type": "string",
+            "description": "Optional reason for the role change",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO for updating user role"
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "telegramId": {
+            "type": "string",
+            "nullable": true
+          },
+          "photo": {
+            "type": "string",
+            "nullable": true
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userRole": {
+            "$ref": "#/components/schemas/UserRole"
+          },
+          "referralId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserRole": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "VerificationDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "verificationCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VerticalAlignment": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}
