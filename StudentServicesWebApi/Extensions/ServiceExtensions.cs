@@ -18,9 +18,9 @@ namespace StudentServicesWebApi.Extensions;
 
 public static class ServiceExtensions
 {
-    /// <summary>
+
     /// Adds database context with PostgreSQL configuration
-    /// </summary>
+
     public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
@@ -32,18 +32,18 @@ public static class ServiceExtensions
         return services;
     }
 
-    /// <summary>
+
     /// Adds AutoMapper configuration
-    /// </summary>
+
     public static IServiceCollection AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(NotificationProfile).Assembly);
         return services;
     }
 
-    /// <summary>
+
     /// Adds FluentValidation configuration
-    /// </summary>
+
     public static IServiceCollection AddFluentValidationConfiguration(this IServiceCollection services)
     {
         services.AddFluentValidationAutoValidation();
@@ -59,9 +59,9 @@ public static class ServiceExtensions
     }
 
 
-    /// <summary>
+
     /// Adds application configuration options
-    /// </summary>
+
     public static IServiceCollection AddApplicationConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<TelegramBotConfiguration>(configuration.GetSection(TelegramBotConfiguration.SectionName));
@@ -70,9 +70,9 @@ public static class ServiceExtensions
         return services;
     }
 
-    /// <summary>
+
     /// Adds all application services and repositories
-    /// </summary>
+
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         // Repositories
@@ -107,9 +107,9 @@ public static class ServiceExtensions
         return services;
     }
 
-    /// <summary>
+
     /// Adds JWT authentication configuration
-    /// </summary>
+
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtConfig = configuration.GetSection(JwtConfiguration.SectionName).Get<JwtConfiguration>();
@@ -142,18 +142,18 @@ public static class ServiceExtensions
         return services;
     }
 
-    /// <summary>
+
     /// Adds hosted services
-    /// </summary>
+
     public static IServiceCollection AddHostedServices(this IServiceCollection services)
     {
         services.AddHostedService<TelegramBotHostedService>();
         return services;
     }
 
-    /// <summary>
+
     /// Adds CORS configuration
-    /// </summary>
+
     public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
     {
         services.AddCors(options =>
@@ -169,9 +169,9 @@ public static class ServiceExtensions
         return services;
     }
 
-    /// <summary>
+
     /// Adds Swagger/OpenAPI configuration with API versioning support
-    /// </summary>
+
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -179,23 +179,41 @@ public static class ServiceExtensions
         // Configure Swagger
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
+            //c.SwaggerDoc("v1", new OpenApiInfo
+            //{
+            //    Version = "3.1.0",
+            //    Title = "Student Services API",
+            //    Description = "API for student services management",
+            //    Contact = new OpenApiContact
+            //    {
+            //        Name = "Student Services Team",
+            //        Email = "support@studentservices.com"
+            //    },
+            //    License = new OpenApiLicense
+            //    {
+            //        Name = "MIT",
+            //        Url = new Uri("https://opensource.org/licenses/MIT")
+            //    }
+            //});
+
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {
-                Version = "3.1.0",
                 Title = "Student Services API",
+                Version = "v1",
                 Description = "API for student services management",
-                Contact = new OpenApiContact
+                Contact = new Microsoft.OpenApi.Models.OpenApiContact
                 {
                     Name = "Student Services Team",
                     Email = "support@studentservices.com"
                 },
-                License = new OpenApiLicense
+                License = new Microsoft.OpenApi.Models.OpenApiLicense
                 {
                     Name = "MIT",
                     Url = new Uri("https://opensource.org/licenses/MIT")
                 }
             });
-            
+
+
             // Include XML comments
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -203,7 +221,7 @@ public static class ServiceExtensions
             {
                 c.IncludeXmlComments(xmlPath);
             }
-            
+
             // Enable annotations for better schema documentation
             c.EnableAnnotations();
 
@@ -216,7 +234,7 @@ public static class ServiceExtensions
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {

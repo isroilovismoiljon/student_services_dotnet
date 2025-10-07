@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.Notification;
 using StudentServicesWebApi.Infrastructure.Interfaces;
@@ -50,6 +51,20 @@ public class NotificationsController : ControllerBase
         try
         {
             var notifications = await _notificationService.GetNotificationsByUserIdAsync(userId);
+            return Ok(new { success = true, data = notifications, timestamp = DateTime.UtcNow });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
+        }
+    }
+
+    [HttpGet("user/unread")]
+    public async Task<IActionResult> GetUserUnreadNotifications(int userId)
+    {
+        try
+        {
+            var notifications = await _notificationService.GetUnreadNotificationsByUserIdAsync(userId);
             return Ok(new { success = true, data = notifications, timestamp = DateTime.UtcNow });
         }
         catch (Exception ex)

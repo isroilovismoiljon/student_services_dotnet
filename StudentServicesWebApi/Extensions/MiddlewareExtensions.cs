@@ -36,9 +36,7 @@ public static class MiddlewareExtensions
         return app;
     }
 
-    /// <summary>
     /// Configures the complete middleware pipeline
-    /// </summary>
     public static WebApplication UseApplicationMiddleware(this WebApplication app)
     {
         // Configure Swagger (enabled for all environments for testing purposes)
