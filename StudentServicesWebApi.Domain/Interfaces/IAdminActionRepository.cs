@@ -1,7 +1,7 @@
 using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Domain.Models;
 
-namespace StudentServicesWebApi.Infrastructure.Interfaces;
+namespace StudentServicesWebApi.Domain.Interfaces;
 
 public interface IAdminActionRepository : IGenericRepository<AdminAction>
 {

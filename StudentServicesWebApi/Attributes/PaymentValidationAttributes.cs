@@ -1,8 +1,9 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using StudentServicesWebApi.Domain.Enums;
+using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Infrastructure.Interfaces;
-using System.Security.Claims;
 
 namespace StudentServicesWebApi.Attributes;
 
@@ -14,7 +15,7 @@ public class ValidateUserCanCreatePaymentAttribute : ActionFilterAttribute
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-        
+
         var userIdClaim = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
         {
@@ -41,7 +42,7 @@ public class ValidateAdminCanProcessPaymentAttribute : ActionFilterAttribute
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-        
+
         var userIdClaim = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
         {
@@ -68,9 +69,9 @@ public class ValidatePaymentAccessAttribute : ActionFilterAttribute
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var paymentService = context.HttpContext.RequestServices.GetRequiredService<IPaymentService>();
-        
+
         // Get payment ID from route
-        if (!context.RouteData.Values.TryGetValue("id", out var paymentIdObj) || 
+        if (!context.RouteData.Values.TryGetValue("id", out var paymentIdObj) ||
             !int.TryParse(paymentIdObj?.ToString(), out int paymentId))
         {
             context.Result = new BadRequestObjectResult("Invalid payment ID.");
@@ -95,7 +96,7 @@ public class ValidatePaymentAccessAttribute : ActionFilterAttribute
 
         // Get current user role
         var userRole = context.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-        
+
         // SuperAdmin can access all payments
         if (userRole == "SuperAdmin")
         {
@@ -115,9 +116,6 @@ public class ValidatePaymentAccessAttribute : ActionFilterAttribute
     }
 }
 
-/// <summary>
-/// Validates file upload requirements for payment receipts
-/// </summary>
 public class ValidatePaymentReceiptFileAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -134,7 +132,7 @@ public class ValidatePaymentReceiptFileAttribute : ActionFilterAttribute
             // Look for file in form data
             var createPaymentDto = context.ActionArguments.Values
                 .FirstOrDefault(arg => arg?.GetType().Name == "CreatePaymentDto");
-            
+
             if (createPaymentDto != null)
             {
                 var photoProperty = createPaymentDto.GetType().GetProperty("Photo");
@@ -153,7 +151,7 @@ public class ValidatePaymentReceiptFileAttribute : ActionFilterAttribute
         {
             var allowedExtensions = string.Join(", ", fileUploadService.GetAllowedExtensions());
             var maxSizeMB = fileUploadService.GetMaxFileSize() / (1024 * 1024);
-            
+
             context.Result = new BadRequestObjectResult(
                 $"Invalid file. Allowed formats: {allowedExtensions}. Maximum size: {maxSizeMB}MB.");
             return;
@@ -163,9 +161,6 @@ public class ValidatePaymentReceiptFileAttribute : ActionFilterAttribute
     }
 }
 
-/// <summary>
-/// Rate limiting attribute for payment operations to prevent spam
-/// </summary>
 public class PaymentRateLimitAttribute : ActionFilterAttribute
 {
     private readonly int _maxRequestsPerMinute;
@@ -200,7 +195,7 @@ public class PaymentRateLimitAttribute : ActionFilterAttribute
             }
 
             var userRequests = _requestLog[key];
-            
+
             // Remove requests older than 1 minute
             userRequests.RemoveAll(time => time < windowStart);
 

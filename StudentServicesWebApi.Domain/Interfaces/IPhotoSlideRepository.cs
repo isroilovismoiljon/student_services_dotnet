@@ -1,6 +1,6 @@
 using StudentServicesWebApi.Domain.Models;
 
-namespace StudentServicesWebApi.Infrastructure.Interfaces;
+namespace StudentServicesWebApi.Domain.Interfaces;
 
 /// <summary>
 /// Repository interface for PhotoSlide entity operations

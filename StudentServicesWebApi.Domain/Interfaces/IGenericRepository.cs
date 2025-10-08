@@ -1,4 +1,4 @@
-﻿namespace StudentServicesWebApi.Infrastructure.Interfaces;
+﻿namespace StudentServicesWebApi.Domain.Interfaces;
 
 public interface IGenericRepository<T> where T : class
 {

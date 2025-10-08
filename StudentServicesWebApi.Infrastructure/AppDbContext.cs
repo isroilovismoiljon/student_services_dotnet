@@ -12,6 +12,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<AdminAction> AdminActions => Set<AdminAction>();
     public DbSet<TextSlide> TextSlides => Set<TextSlide>();
     public DbSet<PhotoSlide> PhotoSlides => Set<PhotoSlide>();
+    public DbSet<PresentationIsroilov> PresentationIsroilovs => Set<PresentationIsroilov>();
+    public DbSet<PresentationPage> PresentationPages => Set<PresentationPage>();
+    public DbSet<PresentationPost> PresentationPosts => Set<PresentationPost>();
+    public DbSet<Design> Designs => Set<Design>();
+    public DbSet<Plan> Plans => Set<Plan>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -237,6 +242,85 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             // Composite index for duplicate position detection
             entity.HasIndex(ps => new { ps.Left, ps.Top })
 ;
+        });
+
+        // PresentationIsroilov
+        modelBuilder.Entity<PresentationIsroilov>(entity =>
+        {
+            entity.Property(p => p.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+            
+            entity.Property(p => p.Author)
+                .IsRequired()
+                .HasMaxLength(100);
+            
+            entity.Property(p => p.FilePath)
+                .HasMaxLength(2000);
+            
+            entity.HasIndex(p => p.Title);
+            entity.HasIndex(p => p.Author);
+            entity.HasIndex(p => p.IsActive);
+            entity.HasIndex(p => p.CreatedAt);
+            
+            entity.HasOne(p => p.Design)
+                .WithMany()
+                .HasForeignKey(p => p.DesignId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(p => p.Plan)
+                .WithMany()
+                .HasForeignKey(p => p.PlanId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // PresentationPage
+        modelBuilder.Entity<PresentationPage>(entity =>
+        {
+            entity.HasIndex(pp => pp.PresentationIsroilovId);
+            entity.HasIndex(pp => pp.CreatedAt);
+            
+            entity.HasOne(pp => pp.PresentationIsroilov)
+                .WithMany(p => p.PresentationPages)
+                .HasForeignKey(pp => pp.PresentationIsroilovId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(pp => pp.Photo)
+                .WithMany()
+                .HasForeignKey("PhotoId")
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+            
+            entity.HasOne(pp => pp.BackgroundPhoto)
+                .WithMany()
+                .HasForeignKey("BackgroundPhotoId")
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+        });
+
+        // PresentationPost
+        modelBuilder.Entity<PresentationPost>(entity =>
+        {
+            entity.HasIndex(pp => pp.PresentationPageId);
+            entity.HasIndex(pp => pp.TitleId);
+            entity.HasIndex(pp => pp.TextId);
+            entity.HasIndex(pp => pp.CreatedAt);
+            
+            entity.HasOne(pp => pp.PresentationPage)
+                .WithMany(p => p.PresentationPosts)
+                .HasForeignKey(pp => pp.PresentationPageId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(pp => pp.Title)
+                .WithMany()
+                .HasForeignKey(pp => pp.TitleId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+            
+            entity.HasOne(pp => pp.Text)
+                .WithMany()
+                .HasForeignKey(pp => pp.TextId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

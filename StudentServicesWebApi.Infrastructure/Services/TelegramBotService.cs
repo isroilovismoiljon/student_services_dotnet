@@ -8,6 +8,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using StudentServicesWebApi.Infrastructure.Configuration;
 using StudentServicesWebApi.Infrastructure.Interfaces;
+using StudentServicesWebApi.Domain.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 

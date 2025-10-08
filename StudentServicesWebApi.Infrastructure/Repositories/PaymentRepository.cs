@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Enums;
+using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 

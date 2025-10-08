@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using StudentServicesWebApi.Infrastructure.Interfaces;
+using StudentServicesWebApi.Domain.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 

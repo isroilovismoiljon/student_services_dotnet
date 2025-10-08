@@ -1,7 +1,7 @@
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
 
-namespace StudentServicesWebApi.Infrastructure.Interfaces;
+namespace StudentServicesWebApi.Domain.Interfaces;
 
 public interface INotificationRepository : IGenericRepository<Notification>
 {

@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Configuration;
 using StudentServicesWebApi.Infrastructure.Interfaces;

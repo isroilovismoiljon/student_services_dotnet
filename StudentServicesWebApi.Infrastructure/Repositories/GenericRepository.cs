@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Repositories;

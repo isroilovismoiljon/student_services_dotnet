@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Infrastructure.Interfaces;
+using StudentServicesWebApi.Domain.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Repositories;
 

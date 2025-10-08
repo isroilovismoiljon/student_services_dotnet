@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Enums;
+using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 

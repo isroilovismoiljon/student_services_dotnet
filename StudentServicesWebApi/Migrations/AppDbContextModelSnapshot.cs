@@ -87,7 +87,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("TargetUserId", "ActionType");
 
-                    b.ToTable("AdminActions");
+                    b.ToTable("AdminActions", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Notification", b =>
@@ -143,7 +143,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("UserId", "Status");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Payment", b =>
@@ -207,7 +207,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("SenderId", "PaymentStatus");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PhotoSlide", b =>
@@ -274,7 +274,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("Left", "Top");
 
-                    b.ToTable("PhotoSlides");
+                    b.ToTable("PhotoSlides", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.TextSlide", b =>
@@ -355,7 +355,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("Text", "Left", "Top");
 
-                    b.ToTable("TextSlides");
+                    b.ToTable("TextSlides", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.User", b =>
@@ -417,7 +417,7 @@ namespace StudentServicesWebApi.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.VerificationCode", b =>
@@ -459,7 +459,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("UserId", "IsUsed");
 
-                    b.ToTable("VerificationCodes");
+                    b.ToTable("VerificationCodes", (string)null);
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.AdminAction", b =>

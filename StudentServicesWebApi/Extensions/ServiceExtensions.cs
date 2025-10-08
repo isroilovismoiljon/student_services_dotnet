@@ -3,7 +3,6 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -13,6 +12,8 @@ using StudentServicesWebApi.Infrastructure.Configuration;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using StudentServicesWebApi.Infrastructure.Repositories;
 using StudentServicesWebApi.Infrastructure.Services;
+using StudentServicesWebApi.Domain.Interfaces;
+using StudentServicesWebApi.Application.Interfaces;
 
 namespace StudentServicesWebApi.Extensions;
 
@@ -83,6 +84,9 @@ public static class ServiceExtensions
         services.AddScoped<IAdminActionRepository, AdminActionRepository>();
         services.AddScoped<ITextSlideRepository, TextSlideRepository>();
         services.AddScoped<IPhotoSlideRepository, PhotoSlideRepository>();
+        services.AddScoped<IPresentationRepository, PresentationRepository>();
+        services.AddScoped<IPresentationPageRepository, PresentationPageRepository>();
+        services.AddScoped<IPresentationPostRepository, PresentationPostRepository>();
 
         // Services
         services.AddScoped<INotificationService, NotificationService>();
@@ -92,6 +96,9 @@ public static class ServiceExtensions
         services.AddScoped<IAdminActionService, AdminActionService>();
         services.AddScoped<ITextSlideService, TextSlideService>();
         services.AddScoped<IPhotoSlideService, PhotoSlideService>();
+        services.AddScoped<IPresentationService, PresentationService>();
+        services.AddScoped<IPresentationPageService, PresentationPageService>();
+        services.AddScoped<IPresentationPostService, PresentationPostService>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IDataSeeder, DataSeeder>();
         services.AddScoped<IFileUploadService, FileUploadService>();
@@ -179,22 +186,6 @@ public static class ServiceExtensions
         // Configure Swagger
         services.AddSwaggerGen(c =>
         {
-            //c.SwaggerDoc("v1", new OpenApiInfo
-            //{
-            //    Version = "3.1.0",
-            //    Title = "Student Services API",
-            //    Description = "API for student services management",
-            //    Contact = new OpenApiContact
-            //    {
-            //        Name = "Student Services Team",
-            //        Email = "support@studentservices.com"
-            //    },
-            //    License = new OpenApiLicense
-            //    {
-            //        Name = "MIT",
-            //        Url = new Uri("https://opensource.org/licenses/MIT")
-            //    }
-            //});
 
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {

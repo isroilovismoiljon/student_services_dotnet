@@ -394,29 +394,16 @@ public class TextSlideSummaryDto
     public DateTime UpdatedAt { get; set; }
 }
 
-/// <summary>
-/// DTO for bulk operations on text slides
-/// </summary>
 public class BulkTextSlideOperationDto
 {
-    /// <summary>
-    /// List of text slide IDs to operate on
-    /// </summary>
-    /// <example>[123, 456, 789]</example>
     [Required(ErrorMessage = "TextSlideIds is required")]
     [MinLength(1, ErrorMessage = "At least one text slide ID is required")]
     [SwaggerSchema(Description = "List of text slide IDs to operate on. Must contain at least one ID.")]
     public List<int> TextSlideIds { get; set; } = new();
 }
 
-/// <summary>
-/// DTO for bulk creating text slides
-/// </summary>
 public class BulkCreateTextSlideDto
 {
-    /// <summary>
-    /// List of text slides to create
-    /// </summary>
     [Required(ErrorMessage = "TextSlides is required")]
     [MinLength(1, ErrorMessage = "At least one text slide is required")]
     [SwaggerSchema(Description = "List of text slides to create in bulk. Must contain at least one slide definition.")]

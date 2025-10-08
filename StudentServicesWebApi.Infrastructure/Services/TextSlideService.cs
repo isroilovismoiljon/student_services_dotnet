@@ -1,12 +1,10 @@
 using StudentServicesWebApi.Application.DTOs.TextSlide;
+using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 
-/// <summary>
-/// Service implementation for TextSlide business logic operations
-/// </summary>
 public class TextSlideService : ITextSlideService
 {
     private readonly ITextSlideRepository _textSlideRepository;
@@ -20,7 +18,7 @@ public class TextSlideService : ITextSlideService
         _dtoMappingService = dtoMappingService;
     }
 
-    /// <inheritdoc />
+ 
     public async Task<TextSlideDto> CreateTextSlideAsync(CreateTextSlideDto createTextSlideDto, CancellationToken ct = default)
     {
         // Validate for duplicates if needed
@@ -50,7 +48,7 @@ public class TextSlideService : ITextSlideService
         return _dtoMappingService.MapToTextSlideDto(createdTextSlide);
     }
 
-    /// <inheritdoc />
+ 
     public async Task<TextSlideDto?> UpdateTextSlideAsync(int id, UpdateTextSlideDto updateTextSlideDto, CancellationToken ct = default)
     {
         var existingTextSlide = await _textSlideRepository.GetByIdAsync(id, ct);
@@ -112,14 +110,14 @@ public class TextSlideService : ITextSlideService
         return _dtoMappingService.MapToTextSlideDto(updatedTextSlide);
     }
 
-    /// <inheritdoc />
+ 
     public async Task<TextSlideDto?> GetTextSlideByIdAsync(int id, CancellationToken ct = default)
     {
         var textSlide = await _textSlideRepository.GetByIdAsync(id, ct);
         return textSlide != null ? _dtoMappingService.MapToTextSlideDto(textSlide) : null;
     }
 
-    /// <inheritdoc />
+ 
     public async Task<(List<TextSlideSummaryDto> TextSlides, int TotalCount)> GetPagedTextSlidesAsync(int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var (textSlides, totalCount) = await _textSlideRepository.GetPagedByCreationDateAsync(false, pageNumber, pageSize, ct);
@@ -127,63 +125,12 @@ public class TextSlideService : ITextSlideService
         return (textSlideSummaries, totalCount);
     }
 
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByFontAsync(string font, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetByFontAsync(font, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesBySizeRangeAsync(int minSize, int maxSize, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetBySizeRangeAsync(minSize, maxSize, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByColorAsync(string colorHex, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetByColorAsync(colorHex, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByFormattingAsync(bool? isBold = null, bool? isItalic = null, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetByFormattingAsync(isBold, isItalic, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
     public async Task<List<TextSlideSummaryDto>> SearchTextSlidesAsync(string searchTerm, CancellationToken ct = default)
     {
         var textSlides = await _textSlideRepository.SearchByTextAsync(searchTerm, ct);
         return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
     }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByPositionAreaAsync(double minLeft, double maxLeft, double minTop, double maxTop, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetByPositionAreaAsync(minLeft, maxLeft, minTop, maxTop, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByDimensionsAsync(double? minWidth = null, double? maxWidth = null, double? minHeight = null, double? maxHeight = null, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetByDimensionsAsync(minWidth, maxWidth, minHeight, maxHeight, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken ct = default)
-    {
-        var textSlides = await _textSlideRepository.GetByDateRangeAsync(startDate, endDate, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
+ 
     public async Task<bool> DeleteTextSlideAsync(int id, CancellationToken ct = default)
     {
         var textSlide = await _textSlideRepository.GetByIdAsync(id, ct);
@@ -196,7 +143,7 @@ public class TextSlideService : ITextSlideService
         return true;
     }
 
-    /// <inheritdoc />
+ 
     public async Task<List<TextSlideDto>> BulkCreateTextSlidesAsync(BulkCreateTextSlideDto bulkCreateDto, CancellationToken ct = default)
     {
         var createdTextSlides = new List<TextSlide>();
@@ -233,13 +180,13 @@ public class TextSlideService : ITextSlideService
         return createdTextSlides.Select(ts => _dtoMappingService.MapToTextSlideDto(ts)).ToList();
     }
 
-    /// <inheritdoc />
+ 
     public async Task<int> BulkDeleteTextSlidesAsync(BulkTextSlideOperationDto bulkOperationDto, CancellationToken ct = default)
     {
         return await _textSlideRepository.BulkDeleteAsync(bulkOperationDto.TextSlideIds, ct);
     }
 
-    /// <inheritdoc />
+ 
     public async Task<bool> ValidateTextSlideCreationAsync(CreateTextSlideDto createTextSlideDto, CancellationToken ct = default)
     {
         // Check for duplicate text slides with same content and position
@@ -253,7 +200,7 @@ public class TextSlideService : ITextSlideService
         return !duplicateExists;
     }
 
-    /// <inheritdoc />
+ 
     public async Task<bool> ValidateTextSlideUpdateAsync(int id, UpdateTextSlideDto updateTextSlideDto, CancellationToken ct = default)
     {
         var existingTextSlide = await _textSlideRepository.GetByIdAsync(id, ct);
@@ -271,7 +218,7 @@ public class TextSlideService : ITextSlideService
         return !duplicateExists;
     }
 
-    /// <inheritdoc />
+ 
     public async Task<TextSlideStatsDto> GetTextSlideStatsAsync(CancellationToken ct = default)
     {
         var stats = await _textSlideRepository.GetStatsAsync(ct);
@@ -304,53 +251,16 @@ public class TextSlideService : ITextSlideService
         };
     }
 
-    /// <inheritdoc />
+ 
     public async Task<bool> TextSlideExistsAsync(int id, CancellationToken ct = default)
     {
         var textSlide = await _textSlideRepository.GetByIdAsync(id, ct);
         return textSlide != null;
     }
 
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetRecentTextSlidesAsync(int count = 10, CancellationToken ct = default)
+    public async Task<List<TextSlideSummaryDto>> GetTextSlidesByPresentationPostIdAsync(int presentationPostId, CancellationToken ct = default)
     {
-        var (textSlides, _) = await _textSlideRepository.GetPagedByCreationDateAsync(false, 1, count, ct);
+        var textSlides = await _textSlideRepository.GetByPresentationPostIdAsync(presentationPostId, ct);
         return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<List<TextSlideSummaryDto>> GetRecentlyUpdatedTextSlidesAsync(int count = 10, CancellationToken ct = default)
-    {
-        var (textSlides, _) = await _textSlideRepository.GetPagedByUpdateDateAsync(false, 1, count, ct);
-        return textSlides.Select(ts => _dtoMappingService.MapToTextSlideSummaryDto(ts)).ToList();
-    }
-
-    /// <inheritdoc />
-    public async Task<TextSlideDto?> DuplicateTextSlideAsync(int id, double leftOffset = 10, double topOffset = 10, CancellationToken ct = default)
-    {
-        var originalTextSlide = await _textSlideRepository.GetByIdAsync(id, ct);
-        if (originalTextSlide == null)
-        {
-            return null;
-        }
-
-        var duplicateTextSlide = new TextSlide
-        {
-            Text = originalTextSlide.Text,
-            Size = originalTextSlide.Size,
-            Font = originalTextSlide.Font,
-            IsBold = originalTextSlide.IsBold,
-            IsItalic = originalTextSlide.IsItalic,
-            ColorHex = originalTextSlide.ColorHex,
-            Left = originalTextSlide.Left + leftOffset,
-            Top = originalTextSlide.Top + topOffset,
-            Width = originalTextSlide.Width,
-            Height = originalTextSlide.Height,
-            Horizontal = originalTextSlide.Horizontal,
-            Vertical = originalTextSlide.Vertical
-        };
-
-        var createdTextSlide = await _textSlideRepository.AddAsync(duplicateTextSlide, ct);
-        return _dtoMappingService.MapToTextSlideDto(createdTextSlide);
     }
 }

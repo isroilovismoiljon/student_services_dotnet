@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
-using StudentServicesWebApi.Infrastructure.Interfaces;
+using StudentServicesWebApi.Domain.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 

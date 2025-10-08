@@ -5,6 +5,7 @@ using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Infrastructure.Interfaces;
+using StudentServicesWebApi.Domain.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 
@@ -164,8 +165,6 @@ public class UserService : IUserService
             Message = isValid ? "Verification successful" : "Invalid or expired verification code"
         };
     }
-
-
 
     public async Task<bool> LinkTelegramAccountAsync(TelegramVerificationDto telegramVerificationDto)
     {
