@@ -14,7 +14,7 @@ public class ValidateUserCanCreatePaymentAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+        var userService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
 
         var userIdClaim = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
@@ -41,7 +41,7 @@ public class ValidateAdminCanProcessPaymentAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+        var userService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
 
         var userIdClaim = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))

@@ -33,16 +33,17 @@ public class UpdatePhotoSlideDto
     [Range(1, double.MaxValue, ErrorMessage = "Width must be positive")]
     public double? Width { get; set; }
 
-    [Range(1, double.MaxValue, ErrorMessage = "Height must be positive")]
     public double? Height { get; set; }
 }
 
 public class PhotoSlideDto
 {
     public int Id { get; set; }
+    public string PhotoPath { get; set; } = string.Empty;
     public string PhotoUrl { get; set; } = string.Empty;
     public string OriginalFileName { get; set; } = string.Empty;
     public long FileSize { get; set; }
+    public string FileSizeFormatted { get; set; } = string.Empty;
     public string ContentType { get; set; } = string.Empty;
     public double Left { get; set; }
     public double Top { get; set; }
@@ -55,7 +56,7 @@ public class PhotoSlideDto
 public class PhotoSlideSummaryDto
 {
     public int Id { get; set; }
-    public string ThumbnailUrl { get; set; } = string.Empty;
+    public string PhotoPath { get; set; } = string.Empty;
     public string PhotoUrl { get; set; } = string.Empty;
     public string OriginalFileName { get; set; } = string.Empty;
     public long FileSize { get; set; }
@@ -79,38 +80,20 @@ public class BulkCreatePhotoSlideDto
     [MinLength(1, ErrorMessage = "At least one photo is required")]
     public List<IFormFile> Photos { get; set; } = new();
 
-
-    /// Default left position for all photos (can be overridden per photo)
-
     [Range(0, double.MaxValue, ErrorMessage = "Left position must be non-negative")]
     public double DefaultLeft { get; set; } = 0;
-
-
-    /// Default top position for all photos (can be overridden per photo)
 
     [Range(0, double.MaxValue, ErrorMessage = "Top position must be non-negative")]
     public double DefaultTop { get; set; } = 0;
 
-
-    /// Default width for all photos (can be overridden per photo)
-
     [Range(1, double.MaxValue, ErrorMessage = "Width must be positive")]
     public double DefaultWidth { get; set; } = 100;
-
-
-    /// Default height for all photos (optional, can be overridden per photo)
 
     [Range(1, double.MaxValue, ErrorMessage = "Height must be positive")]
     public double? DefaultHeight { get; set; }
 
-
-    /// Spacing between photos when positioning them automatically
-
     [Range(0, double.MaxValue, ErrorMessage = "Spacing must be non-negative")]
     public double Spacing { get; set; } = 10;
-
-
-    /// Layout direction for automatic positioning (Horizontal or Vertical)
 
     public BulkLayoutDirection LayoutDirection { get; set; } = BulkLayoutDirection.Horizontal;
 }

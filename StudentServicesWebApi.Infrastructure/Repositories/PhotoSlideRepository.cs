@@ -94,7 +94,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .ToListAsync(ct);
     }
 
-    /// <inheritdoc />
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByCreationDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
@@ -113,7 +112,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
         return (photoSlides, totalCount);
     }
 
-    /// <inheritdoc />
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByUpdateDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
@@ -132,7 +130,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
         return (photoSlides, totalCount);
     }
 
-    /// <inheritdoc />
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByFileSizeAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
@@ -151,21 +148,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
         return (photoSlides, totalCount);
     }
 
-    /// <inheritdoc />
-    public async Task<bool> ExistsDuplicatePositionAsync(double left, double top, int? excludeId = null, CancellationToken ct = default)
-    {
-        var query = _context.Set<PhotoSlide>()
-            .Where(ps => ps.Left == left && ps.Top == top);
-
-        if (excludeId.HasValue)
-        {
-            query = query.Where(ps => ps.Id != excludeId.Value);
-        }
-
-        return await query.AnyAsync(ct);
-    }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken ct = default)
     {
         return await _context.Set<PhotoSlide>()
@@ -325,7 +307,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
         return duplicateSlides.OrderBy(ps => ps.PhotoPath).ToList();
     }
 
-    /// <inheritdoc />
     public async Task<bool> UpdatePhotoPathAsync(int id, string newPhotoPath, CancellationToken ct = default)
     {
         var photoSlide = await _context.Set<PhotoSlide>()

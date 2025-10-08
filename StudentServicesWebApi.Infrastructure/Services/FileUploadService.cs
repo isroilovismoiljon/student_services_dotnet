@@ -11,8 +11,10 @@ public class FileUploadService : IFileUploadService
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<FileUploadService> _logger;
-    private readonly string _uploadPath;
-    private readonly string _baseUrl;
+    private readonly string _paymentUploadPath;
+    private readonly string _paymentBaseUrl;
+    private readonly string _presentationUploadPath;
+    private readonly string _presentationBaseUrl;
     private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
     private readonly string[] _allowedMimeTypes = { "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp" };
     private readonly long _maxFileSize = 10 * 1024 * 1024; // 10MB
@@ -22,12 +24,15 @@ public class FileUploadService : IFileUploadService
         _configuration = configuration;
         _logger = logger;
         
-        // Get upload path from configuration or use default
-        _uploadPath = _configuration["FileUpload:PaymentReceipts:Path"] ?? "wwwroot/uploads/payment-receipts";
-        _baseUrl = _configuration["FileUpload:BaseUrl"] ?? "/uploads/payment-receipts";
+        // Get upload paths from configuration or use defaults
+        _paymentUploadPath = _configuration["FileUpload:PaymentReceipts:Path"] ?? "wwwroot/uploads/payment-receipts";
+        _paymentBaseUrl = _configuration["FileUpload:PaymentReceipts:BaseUrl"] ?? "/uploads/payment-receipts";
+        _presentationUploadPath = _configuration["FileUpload:PresentationFiles:Path"] ?? "wwwroot/uploads/presentation-files";
+        _presentationBaseUrl = _configuration["FileUpload:PresentationFiles:BaseUrl"] ?? "/uploads/presentation-files";
         
-        // Ensure upload directory exists
-        EnsureUploadDirectoryExists();
+        // Ensure upload directories exist
+        EnsureUploadDirectoryExists(_paymentUploadPath);
+        EnsureUploadDirectoryExists(_presentationUploadPath);
     }
 
     public async Task<string> UploadPaymentReceiptAsync(IFormFile file, int? paymentId = null, CancellationToken cancellationToken = default)
@@ -45,7 +50,7 @@ public class FileUploadService : IFileUploadService
             
             // Create year/month directory structure
             var yearMonth = DateTime.UtcNow.ToString("yyyy/MM");
-            var directoryPath = Path.Combine(_uploadPath, yearMonth);
+            var directoryPath = Path.Combine(_paymentUploadPath, yearMonth);
             Directory.CreateDirectory(directoryPath);
             
             var filePath = Path.Combine(directoryPath, fileName);
@@ -75,7 +80,7 @@ public class FileUploadService : IFileUploadService
     {
         try
         {
-            var fullPath = Path.Combine(_uploadPath, filePath.Replace('/', '\\'));
+            var fullPath = Path.Combine(_paymentUploadPath, filePath.Replace('/', '\\'));
             
             if (File.Exists(fullPath))
             {
@@ -95,6 +100,115 @@ public class FileUploadService : IFileUploadService
     }
 
     public bool IsValidPaymentReceiptFile(IFormFile file)
+    {
+        return IsValidImageFile(file);
+    }
+
+    public async Task<string> UploadPresentationFileAsync(IFormFile file, int? slideId = null, CancellationToken cancellationToken = default)
+    {
+        if (!IsValidPresentationFile(file))
+        {
+            throw new ArgumentException("Invalid file format or size for presentation file.");
+        }
+
+        try
+        {
+            // Generate unique filename
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var fileName = $"slide_{slideId?.ToString() ?? "temp"}_{DateTime.UtcNow:yyyyMMdd_HHmmss}_{Guid.NewGuid():N}{fileExtension}";
+            
+            // Create year/month directory structure
+            var yearMonth = DateTime.UtcNow.ToString("yyyy/MM");
+            var directoryPath = Path.Combine(_presentationUploadPath, yearMonth);
+            Directory.CreateDirectory(directoryPath);
+            
+            var filePath = Path.Combine(directoryPath, fileName);
+            var relativePath = Path.Combine(yearMonth, fileName).Replace('\\', '/');
+
+            // Save file
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream, cancellationToken);
+            }
+
+            // Optionally resize image if too large
+            await OptimizeImageAsync(filePath, cancellationToken);
+
+            _logger.LogInformation("Presentation file uploaded: {FileName} for slide {SlideId}", fileName, slideId);
+            
+            return relativePath;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to upload presentation file for slide {SlideId}", slideId);
+            throw new InvalidOperationException("Failed to upload presentation file.", ex);
+        }
+    }
+
+    public async Task<bool> DeletePresentationFileAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var fullPath = Path.Combine(_presentationUploadPath, filePath.Replace('/', '\\'));
+            
+            if (File.Exists(fullPath))
+            {
+                await Task.Run(() => File.Delete(fullPath), cancellationToken);
+                _logger.LogInformation("Presentation file deleted: {FilePath}", filePath);
+                return true;
+            }
+            
+            _logger.LogWarning("Attempted to delete non-existent presentation file: {FilePath}", filePath);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete presentation file: {FilePath}", filePath);
+            return false;
+        }
+    }
+
+    public bool IsValidPresentationFile(IFormFile file)
+    {
+        return IsValidImageFile(file);
+    }
+
+    public string GetFileUrl(string filePath)
+    {
+        if (string.IsNullOrEmpty(filePath))
+            return string.Empty;
+
+        // Determine which base URL to use based on file path
+        if (filePath.Contains("payment") || filePath.StartsWith(_paymentBaseUrl.TrimStart('/')))
+        {
+            return $"{_paymentBaseUrl.TrimEnd('/')}/{filePath.TrimStart('/')}";
+        }
+        else
+        {
+            return $"{_presentationBaseUrl.TrimEnd('/')}/{filePath.TrimStart('/')}";
+        }
+    }
+
+    public string[] GetAllowedExtensions()
+    {
+        return _allowedExtensions;
+    }
+
+    public long GetMaxFileSize()
+    {
+        return _maxFileSize;
+    }
+
+    private void EnsureUploadDirectoryExists(string uploadPath)
+    {
+        if (!Directory.Exists(uploadPath))
+        {
+            Directory.CreateDirectory(uploadPath);
+            _logger.LogInformation("Created upload directory: {UploadPath}", uploadPath);
+        }
+    }
+
+    private bool IsValidImageFile(IFormFile file)
     {
         if (file == null || file.Length == 0)
             return false;
@@ -122,33 +236,6 @@ public class FileUploadService : IFileUploadService
         }
 
         return true;
-    }
-
-    public string GetFileUrl(string filePath)
-    {
-        if (string.IsNullOrEmpty(filePath))
-            return string.Empty;
-            
-        return $"{_baseUrl.TrimEnd('/')}/{filePath.TrimStart('/')}";
-    }
-
-    public string[] GetAllowedExtensions()
-    {
-        return _allowedExtensions;
-    }
-
-    public long GetMaxFileSize()
-    {
-        return _maxFileSize;
-    }
-
-    private void EnsureUploadDirectoryExists()
-    {
-        if (!Directory.Exists(_uploadPath))
-        {
-            Directory.CreateDirectory(_uploadPath);
-            _logger.LogInformation("Created upload directory: {UploadPath}", _uploadPath);
-        }
     }
 
     private async Task OptimizeImageAsync(string filePath, CancellationToken cancellationToken)

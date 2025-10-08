@@ -2,7 +2,9 @@ namespace StudentServicesWebApi.Domain.Interfaces;
 
 public interface IUrlService
 {
-    string? GetImageUrl(string? relativePath);
+    string? GetPaymentImageUrl(string? relativePath);
+    string? GetPresentationPhotoUrl(string? relativePath);
     string GetBaseUrl();
-    string? GetFileUrl(string? relativePath);
+    string? GetPaymentFileUrl(string? relativePath);
+    string? GetPresentationFileUrl(string? relativePath);
 }

@@ -22,22 +22,9 @@ public class PhotoSlideService : IPhotoSlideService
         _fileUploadService = fileUploadService;
     }
 
-    /// <inheritdoc />
     public async Task<PhotoSlideDto> CreatePhotoSlideAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default)
     {
-        // Validate for position conflicts if needed
-        var isValid = await ValidatePhotoSlideCreationAsync(createPhotoSlideDto, ct);
-        if (!isValid)
-        {
-            throw new InvalidOperationException("A photo slide already exists at the specified position.");
-        }
-
-        // Upload the photo file using the payment receipt upload service
-        // TODO: Create dedicated photo upload method in FileUploadService
-        var filePath = await _fileUploadService.UploadPaymentReceiptAsync(
-            createPhotoSlideDto.Photo, 
-            null, // No payment ID for photo slides
-            ct);
+        var filePath = await _fileUploadService.UploadPresentationFileAsync(createPhotoSlideDto.Photo, null, ct);
 
         var photoSlide = new PhotoSlide
         {
@@ -63,27 +50,10 @@ public class PhotoSlideService : IPhotoSlideService
             return null;
         }
 
-        // Validate for position conflicts if position is being changed
-        if (updatePhotoSlideDto.Left != null || updatePhotoSlideDto.Top != null)
-        {
-            var isValid = await ValidatePhotoSlideUpdateAsync(id, updatePhotoSlideDto, ct);
-            if (!isValid)
-            {
-                throw new InvalidOperationException("A photo slide already exists at the specified position.");
-            }
-        }
-
-        // Handle photo replacement if a new photo is provided
         if (updatePhotoSlideDto.Photo != null)
         {
-            // Upload new photo using the payment receipt upload service
-            // TODO: Create dedicated photo upload method in FileUploadService
-            var newFilePath = await _fileUploadService.UploadPaymentReceiptAsync(
-                updatePhotoSlideDto.Photo, 
-                null, // No payment ID for photo slides
-                ct);
+            var newFilePath = await _fileUploadService.UploadPresentationFileAsync(updatePhotoSlideDto.Photo, id, ct);
 
-            // Delete old photo file
             try
             {
                 if (File.Exists(existingPhotoSlide.PhotoPath))
@@ -91,19 +61,14 @@ public class PhotoSlideService : IPhotoSlideService
                     File.Delete(existingPhotoSlide.PhotoPath);
                 }
             }
-            catch
-            {
-                // Continue even if old file deletion fails
-            }
+            catch { }
 
-            // Update photo properties
             existingPhotoSlide.PhotoPath = newFilePath;
             existingPhotoSlide.OriginalFileName = updatePhotoSlideDto.Photo.FileName;
             existingPhotoSlide.FileSize = updatePhotoSlideDto.Photo.Length;
             existingPhotoSlide.ContentType = updatePhotoSlideDto.Photo.ContentType;
         }
 
-        // Apply position and dimension updates
         if (updatePhotoSlideDto.Left.HasValue)
             existingPhotoSlide.Left = updatePhotoSlideDto.Left.Value;
         
@@ -114,7 +79,17 @@ public class PhotoSlideService : IPhotoSlideService
             existingPhotoSlide.Width = updatePhotoSlideDto.Width.Value;
         
         if (updatePhotoSlideDto.Height.HasValue)
+        {
+            if(updatePhotoSlideDto.Height.Value == 0)
+            {
+                existingPhotoSlide.Height = null;
+            }
+            else
+            {
             existingPhotoSlide.Height = updatePhotoSlideDto.Height.Value;
+            }
+
+        }
 
         existingPhotoSlide.UpdatedAt = DateTime.UtcNow;
 
@@ -122,14 +97,12 @@ public class PhotoSlideService : IPhotoSlideService
         return _dtoMappingService.MapToPhotoSlideDto(updatedPhotoSlide);
     }
 
-    /// <inheritdoc />
     public async Task<PhotoSlideDto?> GetPhotoSlideByIdAsync(int id, CancellationToken ct = default)
     {
         var photoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
         return photoSlide != null ? _dtoMappingService.MapToPhotoSlideDto(photoSlide) : null;
     }
 
-    /// <inheritdoc />
     public async Task<(List<PhotoSlideSummaryDto> PhotoSlides, int TotalCount)> GetPagedPhotoSlidesAsync(int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var (photoSlides, totalCount) = await _photoSlideRepository.GetPagedByCreationDateAsync(false, pageNumber, pageSize, ct);
@@ -225,34 +198,6 @@ public class PhotoSlideService : IPhotoSlideService
         return await _photoSlideRepository.BulkDeleteAsync(bulkOperationDto.PhotoSlideIds, deleteFiles, ct);
     }
 
-    public async Task<bool> ValidatePhotoSlideCreationAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default)
-    {
-        // Check for duplicate positions
-        var duplicateExists = await _photoSlideRepository.ExistsDuplicatePositionAsync(
-            createPhotoSlideDto.Left, 
-            createPhotoSlideDto.Top, 
-            null, 
-            ct);
-
-        return !duplicateExists;
-    }
-
-    public async Task<bool> ValidatePhotoSlideUpdateAsync(int id, UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default)
-    {
-        var existingPhotoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
-        if (existingPhotoSlide == null)
-        {
-            return false;
-        }
-
-        // Use existing values if update values are null
-        var left = updatePhotoSlideDto.Left ?? existingPhotoSlide.Left;
-        var top = updatePhotoSlideDto.Top ?? existingPhotoSlide.Top;
-
-        var duplicateExists = await _photoSlideRepository.ExistsDuplicatePositionAsync(left, top, id, ct);
-        return !duplicateExists;
-    }
-
     public async Task<PhotoSlideStatsDto> GetPhotoSlideStatsAsync(CancellationToken ct = default)
     {
         var stats = await _photoSlideRepository.GetStatsAsync(ct);
@@ -290,12 +235,6 @@ public class PhotoSlideService : IPhotoSlideService
     public async Task<List<PhotoSlideSummaryDto>> GetRecentPhotoSlidesAsync(int count = 10, CancellationToken ct = default)
     {
         var (photoSlides, _) = await _photoSlideRepository.GetPagedByCreationDateAsync(false, 1, count, ct);
-        return photoSlides.Select(ps => _dtoMappingService.MapToPhotoSlideSummaryDto(ps)).ToList();
-    }
-
-    public async Task<List<PhotoSlideSummaryDto>> GetRecentlyUpdatedPhotoSlidesAsync(int count = 10, CancellationToken ct = default)
-    {
-        var (photoSlides, _) = await _photoSlideRepository.GetPagedByUpdateDateAsync(false, 1, count, ct);
         return photoSlides.Select(ps => _dtoMappingService.MapToPhotoSlideSummaryDto(ps)).ToList();
     }
 

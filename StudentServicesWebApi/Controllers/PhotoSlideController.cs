@@ -86,6 +86,121 @@ public class PhotoSlideController : ControllerBase
         }
     }
 
+    [HttpPost]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> CreatePhotoSlide([FromForm] CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new
+            {
+                success = false,
+                message = "Invalid input data",
+                errors = ModelState,
+                timestamp = DateTime.UtcNow
+            });
+
+        try
+        {
+            var photoSlide = await _photoSlideService.CreatePhotoSlideAsync(createPhotoSlideDto, ct);
+            return CreatedAtAction(nameof(GetPhotoSlideById), new { id = photoSlide.Id }, new
+            {
+                success = true,
+                message = "Photo slide created successfully",
+                data = photoSlide,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("position"))
+        {
+            return Conflict(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while creating the photo slide",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
+    [HttpPut("{id:int}")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UpdatePhotoSlide(int id, [FromForm] UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new
+            {
+                success = false,
+                message = "Invalid input data",
+                errors = ModelState,
+                timestamp = DateTime.UtcNow
+            });
+
+        try
+        {
+            var photoSlide = await _photoSlideService.UpdatePhotoSlideAsync(id, updatePhotoSlideDto, ct);
+            if (photoSlide == null)
+                return NotFound(new
+                {
+                    success = false,
+                    message = $"Photo slide with ID {id} not found",
+                    timestamp = DateTime.UtcNow
+                });
+
+            return Ok(new
+            {
+                success = true,
+                message = "Photo slide updated successfully",
+                data = photoSlide,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("position"))
+        {
+            return Conflict(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while updating the photo slide",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePhotoSlide(int id, [FromQuery] bool deleteFile = true, CancellationToken ct = default)
@@ -253,33 +368,6 @@ public class PhotoSlideController : ControllerBase
             {
                 success = false,
                 message = "An error occurred while retrieving recent photo slides",
-                details = ex.Message,
-                timestamp = DateTime.UtcNow
-            });
-        }
-    }
-
-    [HttpGet("recently-updated")]
-    public async Task<IActionResult> GetRecentlyUpdatedPhotoSlides([FromQuery] [Range(1, 50)] int count = 10, CancellationToken ct = default)
-    {
-        try
-        {
-            var photoSlides = await _photoSlideService.GetRecentlyUpdatedPhotoSlidesAsync(count, ct);
-            return Ok(new
-            {
-                success = true,
-                data = photoSlides,
-                count = photoSlides.Count,
-                requestedCount = count,
-                timestamp = DateTime.UtcNow
-            });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new
-            {
-                success = false,
-                message = "An error occurred while retrieving recently updated photo slides",
                 details = ex.Message,
                 timestamp = DateTime.UtcNow
             });

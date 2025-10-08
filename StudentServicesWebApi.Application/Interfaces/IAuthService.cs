@@ -3,7 +3,7 @@ using StudentServicesWebApi.Application.DTOs.User;
 
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
 
-public interface IUserService
+public interface IAuthService
 {
     Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto);
     Task<AuthResponseDto> LoginAsync(LoginDto loginDto);

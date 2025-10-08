@@ -23,9 +23,7 @@ public class DtoMappingService : IDtoMappingService
     public UserResponseDto MapToUserResponseDto(User user)
     {
         var dto = _mapper.Map<UserResponseDto>(user);
-        
-        // Transform the photo path to full URL
-        dto.Photo = _urlService.GetImageUrl(user.Photo);
+        dto.Photo = _urlService.GetPaymentImageUrl(user.Photo);
         
         return dto;
     }
@@ -40,7 +38,7 @@ public class DtoMappingService : IDtoMappingService
             RequestedAmount = payment.RequestedAmount,
             ApprovedAmount = payment.ApprovedAmount,
             FinalAmount = payment.FinalAmount,
-            Photo = _urlService.GetImageUrl(payment.Photo) ?? string.Empty, // Transform photo path to full URL
+            Photo = _urlService.GetPaymentImageUrl(payment.Photo) ?? string.Empty, // Transform photo path to full URL
             Description = payment.Description,
             PaymentStatus = payment.PaymentStatus,
             RejectReason = payment.RejectReason,
@@ -67,7 +65,7 @@ public class DtoMappingService : IDtoMappingService
             RequestedAmount = payment.RequestedAmount,
             ApprovedAmount = payment.ApprovedAmount,
             FinalAmount = payment.FinalAmount,
-            Photo = _urlService.GetImageUrl(payment.Photo) ?? string.Empty, // Transform photo path to full URL
+            Photo = _urlService.GetPaymentImageUrl(payment.Photo) ?? string.Empty, // Transform photo path to full URL
             PaymentStatus = payment.PaymentStatus,
             CreatedAt = payment.CreatedAt,
             ProcessedAt = payment.ProcessedAt,
@@ -99,12 +97,10 @@ public class DtoMappingService : IDtoMappingService
 
     public TextSlideSummaryDto MapToTextSlideSummaryDto(TextSlide textSlide)
     {
-        // Create text preview (first 100 characters)
         var textPreview = textSlide.Text.Length <= 100 
             ? textSlide.Text 
             : textSlide.Text.Substring(0, 100) + "...";
 
-        // Create position summary
         var positionSummary = $"Left: {textSlide.Left:F1}, Top: {textSlide.Top:F1}, "
                             + $"Width: {textSlide.Width:F1}"
                             + (textSlide.Height.HasValue ? $", Height: {textSlide.Height.Value:F1}" : "");
@@ -126,12 +122,15 @@ public class DtoMappingService : IDtoMappingService
 
     public PhotoSlideDto MapToPhotoSlideDto(PhotoSlide photoSlide)
     {
+        var fileSizeFormatted = FormatFileSize(photoSlide.FileSize);
         return new PhotoSlideDto
         {
             Id = photoSlide.Id,
-            PhotoUrl = _urlService.GetImageUrl(photoSlide.PhotoPath) ?? string.Empty,
+            PhotoPath = photoSlide.PhotoPath,
+            PhotoUrl = _urlService.GetPresentationPhotoUrl(photoSlide.PhotoPath) ?? string.Empty,
             OriginalFileName = photoSlide.OriginalFileName,
             FileSize = photoSlide.FileSize,
+            FileSizeFormatted = fileSizeFormatted,
             ContentType = photoSlide.ContentType,
             Left = photoSlide.Left,
             Top = photoSlide.Top,
@@ -144,20 +143,18 @@ public class DtoMappingService : IDtoMappingService
 
     public PhotoSlideSummaryDto MapToPhotoSlideSummaryDto(PhotoSlide photoSlide)
     {
-        // Create position summary
         var positionSummary = $"Left: {photoSlide.Left:F1}, Top: {photoSlide.Top:F1}, "
                             + $"Width: {photoSlide.Width:F1}"
                             + (photoSlide.Height.HasValue ? $", Height: {photoSlide.Height.Value:F1}" : "");
 
-        // Format file size to human readable
         var fileSizeFormatted = FormatFileSize(photoSlide.FileSize);
 
-        var photoUrl = _urlService.GetImageUrl(photoSlide.PhotoPath) ?? string.Empty;
+        var photoUrl = _urlService.GetPresentationPhotoUrl(photoSlide.PhotoPath) ?? string.Empty;
         
         return new PhotoSlideSummaryDto
         {
             Id = photoSlide.Id,
-            ThumbnailUrl = photoUrl, // For now, same as photo URL - could be enhanced with thumbnail generation
+            PhotoPath = photoSlide.PhotoPath,
             PhotoUrl = photoUrl,
             OriginalFileName = photoSlide.OriginalFileName,
             FileSize = photoSlide.FileSize,

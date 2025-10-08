@@ -9,7 +9,7 @@ using StudentServicesWebApi.Domain.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 
-public class UserService : IUserService
+public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly IVerificationCodeService _verificationCodeService;
@@ -17,7 +17,7 @@ public class UserService : IUserService
     private readonly IServiceProvider _serviceProvider;
     private readonly IDtoMappingService _dtoMappingService;
 
-    public UserService(
+    public AuthService(
         IUserRepository userRepository, 
         IVerificationCodeService verificationCodeService,
         IJwtService jwtService,
@@ -63,11 +63,10 @@ public class UserService : IUserService
 
         var createdUser = await _userRepository.AddAsync(user);
         
-        // Generate verification code
         var verificationCode = await _verificationCodeService.GenerateVerificationCodeAsync(createdUser.Id);
         var telegramDeepLink = _verificationCodeService.GenerateTelegramDeepLink(verificationCode);
 
-        var userResponseDto = new Application.DTOs.User.UserResponseDto
+        var userResponseDto = new UserResponseDto
         {
             Id = createdUser.Id,
             FirstName = createdUser.FirstName,
@@ -109,7 +108,7 @@ public class UserService : IUserService
             Success = true,
             User = userResponseDto,
             Token = token,
-            TokenExpiry = DateTime.UtcNow.AddMinutes(60), // Match JWT config expiry
+            TokenExpiry = DateTime.UtcNow.AddMinutes(60),
             Message = "Login successful"
         };
     }

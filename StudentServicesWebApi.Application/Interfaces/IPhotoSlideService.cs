@@ -15,10 +15,7 @@ public interface IPhotoSlideService
     Task<int> BulkDeletePhotoSlidesAsync(BulkPhotoSlideOperationDto bulkOperationDto, bool deleteFiles = true, CancellationToken ct = default);
     Task<PhotoSlideStatsDto> GetPhotoSlideStatsAsync(CancellationToken ct = default);
     Task<bool> PhotoSlideExistsAsync(int id, CancellationToken ct = default);
-    Task<bool> ValidatePhotoSlideCreationAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default);
-    Task<bool> ValidatePhotoSlideUpdateAsync(int id, UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default);
     Task<List<PhotoSlideSummaryDto>> GetRecentPhotoSlidesAsync(int count = 10, CancellationToken ct = default);
-    Task<List<PhotoSlideSummaryDto>> GetRecentlyUpdatedPhotoSlidesAsync(int count = 10, CancellationToken ct = default);
     Task<PhotoSlideDto?> DuplicatePhotoSlideAsync(int id, double leftOffset = 10, double topOffset = 10, bool copyFile = true, CancellationToken ct = default);
     Task<PhotoSlideDto?> ReplacePhotoAsync(int id, IFormFile newPhoto, bool deleteOldFile = true, CancellationToken ct = default);
 }

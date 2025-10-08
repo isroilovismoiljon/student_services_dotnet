@@ -9,9 +9,9 @@ namespace StudentServicesWebApi.Controllers;
 [Produces("application/json")]
 public class AuthController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IAuthService _userService;
 
-    public AuthController(IUserService userService)
+    public AuthController(IAuthService userService)
     {
         _userService = userService;
     }

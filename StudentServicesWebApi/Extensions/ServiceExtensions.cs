@@ -90,7 +90,7 @@ public static class ServiceExtensions
 
         // Services
         services.AddScoped<INotificationService, NotificationService>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IAdminActionService, AdminActionService>();

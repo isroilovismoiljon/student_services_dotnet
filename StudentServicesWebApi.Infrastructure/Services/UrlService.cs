@@ -12,18 +12,15 @@ public class UrlService : IUrlService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string? GetImageUrl(string? relativePath)
+    public string? GetPaymentImageUrl(string? relativePath)
     {
         if (string.IsNullOrEmpty(relativePath))
             return null;
 
         var baseUrl = GetBaseUrl();
         
-        // Ensure the relative path starts with a forward slash for proper URL construction
         var cleanPath = relativePath.Replace('\\', '/');
         
-        // If the path doesn't start with uploads/, assume it's a payment receipt
-        // Payment receipts are stored as just "2025/10/filename.png" but need to be served as "/uploads/payment-receipts/2025/10/filename.png"
         if (!cleanPath.StartsWith("/uploads/") && !cleanPath.StartsWith("uploads/"))
         {
             cleanPath = "/uploads/payment-receipts/" + cleanPath.TrimStart('/');
@@ -49,9 +46,34 @@ public class UrlService : IUrlService
         return $"{request.Scheme}://{request.Host}";
     }
 
-    public string? GetFileUrl(string? relativePath)
+    public string? GetPaymentFileUrl(string? relativePath)
     {
-        // For now, files and images use the same transformation logic
-        return GetImageUrl(relativePath);
+        return GetPaymentImageUrl(relativePath);
+    }
+
+    public string? GetPresentationPhotoUrl(string? relativePath)
+    {
+        if (string.IsNullOrEmpty(relativePath))
+            return null;
+
+        var baseUrl = GetBaseUrl();
+
+        var cleanPath = relativePath.Replace('\\', '/');
+
+        if (!cleanPath.StartsWith("/uploads/") && !cleanPath.StartsWith("uploads/"))
+        {
+            cleanPath = "/uploads/presentation-files/" + cleanPath.TrimStart('/');
+        }
+        else if (!cleanPath.StartsWith('/'))
+        {
+            cleanPath = '/' + cleanPath;
+        }
+
+        return $"{baseUrl}{cleanPath}";
+    }
+
+    public string? GetPresentationFileUrl(string? relativePath)
+    {
+        return GetPresentationFileUrl(relativePath);
     }
 }

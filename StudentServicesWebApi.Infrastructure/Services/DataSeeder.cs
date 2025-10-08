@@ -68,7 +68,7 @@ public class DataSeeder : IDataSeeder
 
     private string HashPassword(string password)
     {
-        // Using the same hashing method as in UserService for consistency
+        // Using the same hashing method as in AuthService for consistency
         // TODO: In production, use BCrypt, Argon2, or similar secure hashing
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password + "salt"));
     }

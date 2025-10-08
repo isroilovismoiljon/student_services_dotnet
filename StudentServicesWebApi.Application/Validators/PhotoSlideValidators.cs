@@ -15,18 +15,20 @@ public class CreatePhotoSlideDtoValidator : AbstractValidator<CreatePhotoSlideDt
             .Must(BeWithinSizeLimit).WithMessage("Photo file size cannot exceed 10MB");
 
         RuleFor(x => x.Left)
-            .GreaterThanOrEqualTo(0).WithMessage("Left position must be non-negative");
+            .GreaterThanOrEqualTo(0).WithMessage("Left position must be non-negative")
+            .LessThanOrEqualTo(33.867).WithMessage("Left cannot exceed 33.867");
 
         RuleFor(x => x.Top)
-            .GreaterThanOrEqualTo(0).WithMessage("Top position must be non-negative");
+            .GreaterThanOrEqualTo(0).WithMessage("Top position must be non-negative")
+            .LessThanOrEqualTo(19.05).WithMessage("Top cannot exceed 19.05");
 
         RuleFor(x => x.Width)
             .GreaterThan(0).WithMessage("Width must be greater than 0")
-            .LessThanOrEqualTo(10000).WithMessage("Width cannot exceed 10000");
+            .LessThanOrEqualTo(33.867).WithMessage("Width cannot exceed 33.867");
 
         RuleFor(x => x.Height)
             .GreaterThan(0).WithMessage("Height must be greater than 0 when specified")
-            .LessThanOrEqualTo(10000).WithMessage("Height cannot exceed 10000")
+            .LessThanOrEqualTo(19.05).WithMessage("Height cannot exceed 19.05")
             .When(x => x.Height.HasValue);
 
         // Custom rule to validate position doesn't create negative coordinates
@@ -84,20 +86,22 @@ public class UpdatePhotoSlideDtoValidator : AbstractValidator<UpdatePhotoSlideDt
 
         RuleFor(x => x.Left)
             .GreaterThanOrEqualTo(0).WithMessage("Left position must be non-negative")
+            .LessThanOrEqualTo(33.867).WithMessage("Left cannot exceed 33.867")
             .When(x => x.Left.HasValue);
 
         RuleFor(x => x.Top)
             .GreaterThanOrEqualTo(0).WithMessage("Top position must be non-negative")
+            .LessThanOrEqualTo(19.05).WithMessage("Top cannot exceed 19.05")
             .When(x => x.Top.HasValue);
 
         RuleFor(x => x.Width)
-            .GreaterThan(0).WithMessage("Width must be greater than 0")
-            .LessThanOrEqualTo(10000).WithMessage("Width cannot exceed 10000")
+            .GreaterThan(-1).WithMessage("Width must be non-negative")
+            .LessThanOrEqualTo(33.867).WithMessage("Width cannot exceed 33.867")
             .When(x => x.Width.HasValue);
 
         RuleFor(x => x.Height)
-            .GreaterThan(0).WithMessage("Height must be greater than 0 when specified")
-            .LessThanOrEqualTo(10000).WithMessage("Height cannot exceed 10000")
+            .GreaterThan(-1).WithMessage("Height must be greater than -1 when specified")
+            .LessThanOrEqualTo(19.05).WithMessage("Height cannot exceed 19.05")
             .When(x => x.Height.HasValue);
     }
 
@@ -142,18 +146,20 @@ public class BulkCreatePhotoSlideDtoValidator : AbstractValidator<BulkCreatePhot
             .Must(BeWithinSizeLimit).WithMessage("Photo file size cannot exceed 10MB");
 
         RuleFor(x => x.DefaultLeft)
-            .GreaterThanOrEqualTo(0).WithMessage("Default left position must be non-negative");
+            .GreaterThanOrEqualTo(0).WithMessage("Default left position must be non-negative")
+            .LessThanOrEqualTo(33.867).WithMessage("Left cannot exceed 33.867");
 
         RuleFor(x => x.DefaultTop)
-            .GreaterThanOrEqualTo(0).WithMessage("Default top position must be non-negative");
+            .GreaterThanOrEqualTo(0).WithMessage("Default top position must be non-negative")
+            .LessThanOrEqualTo(19.05).WithMessage("Top cannot exceed 19.05");
 
         RuleFor(x => x.DefaultWidth)
             .GreaterThan(0).WithMessage("Default width must be greater than 0")
-            .LessThanOrEqualTo(10000).WithMessage("Default width cannot exceed 10000");
+            .LessThanOrEqualTo(33.867).WithMessage("Default width cannot exceed 33.867");
 
         RuleFor(x => x.DefaultHeight)
             .GreaterThan(0).WithMessage("Default height must be greater than 0 when specified")
-            .LessThanOrEqualTo(10000).WithMessage("Default height cannot exceed 10000")
+            .LessThanOrEqualTo(19.05).WithMessage("Default height cannot exceed 19.05")
             .When(x => x.DefaultHeight.HasValue);
 
         RuleFor(x => x.Spacing)
