@@ -42,6 +42,7 @@ public class DataSeeder : IDataSeeder
                     TelegramId = "1364757999",
                     UserRole = UserRole.SuperAdmin,
                     Balance = 0,
+                    IsVerified = true,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };

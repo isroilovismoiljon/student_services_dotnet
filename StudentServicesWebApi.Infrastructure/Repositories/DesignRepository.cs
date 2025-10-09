@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
-using StudentServicesWebApi.Infrastructure.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Repositories;
 
@@ -19,7 +18,7 @@ public class DesignRepository : GenericRepository<Design>, IDesignRepository
     {
         return await _context.Set<Design>()
             .Include(d => d.CreatedBy)
-            .Include(d => d.Photos)
+            .Include(d => d.Photos.OrderBy(p => p.CreatedAt))
             .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
     }
 

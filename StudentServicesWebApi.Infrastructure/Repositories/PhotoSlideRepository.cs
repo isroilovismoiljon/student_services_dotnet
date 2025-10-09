@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
-using StudentServicesWebApi.Infrastructure.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Repositories;
 
@@ -148,7 +147,7 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
 
         foreach (var slide in photoSlides)
         {
-            if (!string.IsNullOrEmpty(slide.PhotoPath) && !File.Exists(slide.PhotoPath))
+            if (!string.IsNullOrEmpty(slide.PhotoPath) && !System.IO.File.Exists(slide.PhotoPath))
             {
                 orphanedSlides.Add(slide);
             }
@@ -178,15 +177,12 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(slide.PhotoPath) && File.Exists(slide.PhotoPath))
+                        if (!string.IsNullOrEmpty(slide.PhotoPath) && System.IO.File.Exists($"wwwroot/uploads/presentation-files/{slide.PhotoPath}"))
                         {
-                            File.Delete(slide.PhotoPath);
+                            System.IO.File.Delete($"wwwroot/uploads/presentation-files/{slide.PhotoPath}");
                         }
                     }
-                    catch
-                    {
-                        // Continue with other files if one fails
-                    }
+                    catch { }
                 }
             }
 

@@ -127,9 +127,9 @@ public class PhotoSlideService : IPhotoSlideService
         {
             try
             {
-                if (File.Exists(photoSlide.PhotoPath))
+                if (File.Exists($"wwwroot/uploads/presentation-files/{photoSlide.PhotoPath}"))
                 {
-                    File.Delete(photoSlide.PhotoPath);
+                    File.Delete($"wwwroot/uploads/presentation-files/{photoSlide.PhotoPath}");
                 }
             }
             catch

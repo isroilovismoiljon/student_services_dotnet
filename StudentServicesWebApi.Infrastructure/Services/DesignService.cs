@@ -8,19 +8,21 @@ namespace StudentServicesWebApi.Infrastructure.Services;
 public class DesignService : IDesignService
 {
     private readonly IDesignRepository _designRepository;
+    private readonly IPhotoSlideService _photoSlideService;
     private readonly IDtoMappingService _dtoMappingService;
 
     public DesignService(
         IDesignRepository designRepository,
-        IDtoMappingService dtoMappingService)
+        IDtoMappingService dtoMappingService,
+        IPhotoSlideService photoSlideService)
     {
         _designRepository = designRepository;
         _dtoMappingService = dtoMappingService;
+        _photoSlideService = photoSlideService;
     }
 
     public async Task<DesignDto> CreateDesignAsync(DesignCreateWithPhotosDto createDesignWithPhotosDto, int createdByUserId, CancellationToken cancellationToken = default)
     {
-        // Validate minimum photo requirement
         if (createDesignWithPhotosDto.Photos == null || createDesignWithPhotosDto.Photos.Length < 4)
         {
             throw new ArgumentException("At least 4 photos are required to create a design.");
@@ -73,6 +75,19 @@ public class DesignService : IDesignService
         var design = await _designRepository.GetByIdAsync(id, cancellationToken);
         if (design == null)
             return false;
+
+        var designDto = _dtoMappingService.MapToDesignDto(design);
+
+        List<int> photoSlideIds = designDto.Photos.Select(p => p.Id).ToList();
+        try
+        {
+            await _photoSlideService.BulkDeletePhotoSlidesAsync(
+                new Application.DTOs.PhotoSlide.BulkPhotoSlideOperationDto{
+                    PhotoSlideIds = photoSlideIds
+                }
+            );
+        }
+        catch { }
 
         await _designRepository.DeleteAsync(design, cancellationToken);
         return true;
