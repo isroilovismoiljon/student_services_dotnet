@@ -30,4 +30,8 @@
     <ProjectReference Include="..\StudentServicesWebApi.Infrastructure\StudentServicesWebApi.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

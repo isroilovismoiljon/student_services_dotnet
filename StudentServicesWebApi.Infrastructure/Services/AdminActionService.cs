@@ -32,40 +32,33 @@ public class AdminActionService : IAdminActionService
 
     public async Task<AdminActionDto> UpdateUserRoleAsync(UpdateUserRoleDto dto, int adminId, string? ipAddress = null, CancellationToken ct = default)
     {
-        // Validate that newRole is only User or Admin (not SuperAdmin)
         if (dto.NewRole != UserRole.User && dto.NewRole != UserRole.Admin)
         {
             throw new ArgumentException("Can only change role to User or Admin");
         }
 
-        // Get the target user
         var targetUser = await _userRepository.GetByIdAsync(dto.UserId, ct);
         if (targetUser == null)
         {
             throw new ArgumentException("User not found");
         }
 
-        // Prevent changing SuperAdmin role
         if (targetUser.UserRole == UserRole.SuperAdmin)
         {
             throw new ArgumentException("Cannot change SuperAdmin role");
         }
 
-        // Store previous role
         var previousRole = targetUser.UserRole;
         
-        // Only update if role is different
         if (previousRole == dto.NewRole)
         {
             throw new ArgumentException("User already has the specified role");
         }
 
-        // Update user role
         targetUser.UserRole = dto.NewRole;
         targetUser.UpdatedAt = DateTime.UtcNow;
         await _userRepository.UpdateAsync(targetUser, ct);
 
-        // Create admin action record
         var adminAction = new AdminAction
         {
             AdminId = adminId,
@@ -83,7 +76,6 @@ public class AdminActionService : IAdminActionService
         var createdAction = await _adminActionRepository.AddAsync(adminAction, ct);
         var actionWithDetails = await _adminActionRepository.GetWithDetailsAsync(createdAction.Id, ct);
 
-        // Send Telegram notification
         await SendTelegramNotificationAsync(actionWithDetails!, ct);
 
         return MapToAdminActionDto(actionWithDetails!);
@@ -91,7 +83,6 @@ public class AdminActionService : IAdminActionService
 
     public async Task<AdminActionDto> AddBalanceAsync(ModifyBalanceDto dto, int adminId, string? ipAddress = null, CancellationToken ct = default)
     {
-        // Get the target user
         var targetUser = await _userRepository.GetByIdAsync(dto.UserId, ct);
         if (targetUser == null)
         {
@@ -101,12 +92,10 @@ public class AdminActionService : IAdminActionService
         var previousBalance = targetUser.Balance;
         var newBalance = previousBalance + (int)dto.Amount;
 
-        // Update user balance
         targetUser.Balance = newBalance;
         targetUser.UpdatedAt = DateTime.UtcNow;
         await _userRepository.UpdateAsync(targetUser, ct);
 
-        // Create admin action record
         var adminAction = new AdminAction
         {
             AdminId = adminId,
@@ -143,7 +132,6 @@ public class AdminActionService : IAdminActionService
         var previousBalance = targetUser.Balance;
         var newBalance = previousBalance - (int)dto.Amount;
 
-        // Ensure balance doesn't go negative
         if (newBalance < 0)
         {
             throw new ArgumentException($"Insufficient balance. User has {previousBalance:C}, cannot subtract {dto.Amount:C}");

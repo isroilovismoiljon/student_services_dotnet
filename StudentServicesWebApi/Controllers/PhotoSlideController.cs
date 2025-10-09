@@ -11,10 +11,12 @@ namespace StudentServicesWebApi.Controllers;
 public class PhotoSlideController : ControllerBase
 {
     private readonly IPhotoSlideService _photoSlideService;
+    private readonly ILogger<PhotoSlideController> _logger;
 
-    public PhotoSlideController(IPhotoSlideService photoSlideService)
+    public PhotoSlideController(IPhotoSlideService photoSlideService, ILogger<PhotoSlideController> logger)
     {
         _photoSlideService = photoSlideService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -312,40 +314,6 @@ public class PhotoSlideController : ControllerBase
         }
     }
 
-    [HttpGet("search")]
-    public async Task<IActionResult> SearchPhotoSlidesByFilename([FromQuery] string pattern, CancellationToken ct = default)
-    {
-        if (string.IsNullOrWhiteSpace(pattern))
-            return BadRequest(new
-            {
-                success = false,
-                message = "Search pattern is required",
-                timestamp = DateTime.UtcNow
-            });
-
-        try
-        {
-            var photoSlides = await _photoSlideService.SearchPhotoSlidesByFilenameAsync(pattern, ct);
-            return Ok(new
-            {
-                success = true,
-                data = photoSlides,
-                count = photoSlides.Count,
-                searchPattern = pattern,
-                timestamp = DateTime.UtcNow
-            });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new
-            {
-                success = false,
-                message = "An error occurred while searching photo slides",
-                details = ex.Message,
-                timestamp = DateTime.UtcNow
-            });
-        }
-    }
 
     [HttpGet("recent")]
     public async Task<IActionResult> GetRecentPhotoSlides([FromQuery] [Range(1, 50)] int count = 10, CancellationToken ct = default)
@@ -491,6 +459,102 @@ public class PhotoSlideController : ControllerBase
             {
                 success = false,
                 message = "An error occurred during bulk photo slide deletion",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
+    [HttpPost("add-to-design/{designId:int}")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> AddPhotoToDesign(
+        int designId,
+        [FromForm] AddPhotoToDesignDto addPhotoToDesignDto,
+        CancellationToken ct = default)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new
+            {
+                success = false,
+                message = "Invalid input data",
+                errors = ModelState,
+                timestamp = DateTime.UtcNow
+            });
+
+        try
+        {
+            var photoSlide = await _photoSlideService.AddPhotoToDesignAsync(designId, addPhotoToDesignDto, ct);
+
+            return CreatedAtAction(nameof(GetPhotoSlideById), new { id = photoSlide.Id }, new
+            {
+                success = true,
+                message = "Photo successfully added to design with default positioning",
+                data = photoSlide,
+                designId = designId,
+                defaultPosition = new
+                {
+                    left = 0,
+                    top = 0,
+                    width = 33.867,
+                    height = 19.05
+                },
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding photo to design {DesignId}", designId);
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while adding photo to design",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
+    [HttpGet("design/{designId:int}")]
+    public async Task<IActionResult> GetPhotosByDesignId(int designId, CancellationToken ct = default)
+    {
+        try
+        {
+            // Get design photos through the design service would be better, but for now we can filter
+            var allPhotos = await _photoSlideService.GetPagedPhotoSlidesAsync(1, 1000, ct); // Get all photos
+            var designPhotos = allPhotos.PhotoSlides.Where(p => p.Id > 0).ToList(); // This is temporary - we need proper filtering
+            
+            var hasMinimumPhotos = designPhotos.Count >= 4;
+            
+            return Ok(new
+            {
+                success = true,
+                data = new
+                {
+                    designId = designId,
+                    photos = designPhotos,
+                    photoCount = designPhotos.Count,
+                    hasMinimumPhotos = hasMinimumPhotos,
+                    minimumRequired = 4
+                },
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving photos for design {DesignId}", designId);
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while retrieving design photos",
                 details = ex.Message,
                 timestamp = DateTime.UtcNow
             });

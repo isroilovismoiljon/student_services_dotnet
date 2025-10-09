@@ -17,4 +17,6 @@ public interface IUserRepository : IGenericRepository<User>
     Task<User?> GetVerifiedUserByUsernameAsync(string username);
     Task<bool> SetUserVerifiedAsync(int userId);
     Task<bool> DeleteUnverifiedUsersByUsernameAsync(string username);
+    Task<List<User>> GetUsersByRoleAsync(Domain.Enums.UserRole role, CancellationToken cancellationToken = default);
+    Task<User?> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default);
 }

@@ -3,6 +3,8 @@ using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using StudentServicesWebApi.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using StudentServicesWebApi.Infrastructure;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 
@@ -11,15 +13,18 @@ public class PhotoSlideService : IPhotoSlideService
     private readonly IPhotoSlideRepository _photoSlideRepository;
     private readonly IDtoMappingService _dtoMappingService;
     private readonly IFileUploadService _fileUploadService;
+    private readonly AppDbContext _context;
 
     public PhotoSlideService(
         IPhotoSlideRepository photoSlideRepository,
         IDtoMappingService dtoMappingService,
-        IFileUploadService fileUploadService)
+        IFileUploadService fileUploadService,
+        AppDbContext context)
     {
         _photoSlideRepository = photoSlideRepository;
         _dtoMappingService = dtoMappingService;
         _fileUploadService = fileUploadService;
+        _context = context;
     }
 
     public async Task<PhotoSlideDto> CreatePhotoSlideAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default)
@@ -108,12 +113,6 @@ public class PhotoSlideService : IPhotoSlideService
         var (photoSlides, totalCount) = await _photoSlideRepository.GetPagedByCreationDateAsync(false, pageNumber, pageSize, ct);
         var photoSlideSummaries = photoSlides.Select(ps => _dtoMappingService.MapToPhotoSlideSummaryDto(ps)).ToList();
         return (photoSlideSummaries, totalCount);
-    }
-
-    public async Task<List<PhotoSlideSummaryDto>> SearchPhotoSlidesByFilenameAsync(string pattern, CancellationToken ct = default)
-    {
-        var photoSlides = await _photoSlideRepository.SearchByFilenameAsync(pattern, ct);
-        return photoSlides.Select(ps => _dtoMappingService.MapToPhotoSlideSummaryDto(ps)).ToList();
     }
 
     public async Task<bool> DeletePhotoSlideAsync(int id, bool deleteFile = true, CancellationToken ct = default)
@@ -315,5 +314,46 @@ public class PhotoSlideService : IPhotoSlideService
         var top = bulkCreateDto.DefaultTop + (row * ((bulkCreateDto.DefaultHeight ?? 100) + bulkCreateDto.Spacing));
 
         return (left, top);
+    }
+
+    public async Task<PhotoSlideDto> AddPhotoToDesignAsync(int designId, AddPhotoToDesignDto addPhotoToDesignDto, CancellationToken ct = default)
+    {
+        // Validate that the design exists
+        var design = await _context.Set<Domain.Models.Design>()
+            .Include(d => d.Photos)
+            .FirstOrDefaultAsync(d => d.Id == designId, ct);
+        
+        if (design == null)
+            throw new ArgumentException($"Design with ID {designId} not found");
+
+        // Upload the photo file using presentation file upload service
+        var filePath = await _fileUploadService.UploadPresentationFileAsync(
+            addPhotoToDesignDto.Photo,
+            null, // No slide ID yet since we haven't created it
+            ct);
+
+        // Create new PhotoSlide with default positioning as specified
+        var photoSlide = new PhotoSlide
+        {
+            PhotoPath = filePath,
+            OriginalFileName = addPhotoToDesignDto.Photo.FileName,
+            FileSize = addPhotoToDesignDto.Photo.Length,
+            ContentType = addPhotoToDesignDto.Photo.ContentType,
+            
+            // Apply your specified default layout values
+            Left = 0,
+            Top = 0, 
+            Width = 33.867,
+            Height = 19.05,
+            
+            // Link to the design
+            DesignId = designId,
+            
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        var createdPhotoSlide = await _photoSlideRepository.AddAsync(photoSlide, ct);
+        return _dtoMappingService.MapToPhotoSlideDto(createdPhotoSlide);
     }
 }

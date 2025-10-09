@@ -1,3 +1,4 @@
+using StudentServicesWebApi.Application.DTOs.Design;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
@@ -15,4 +16,6 @@ public interface IDtoMappingService
     TextSlideSummaryDto MapToTextSlideSummaryDto(TextSlide textSlide);
     PhotoSlideDto MapToPhotoSlideDto(PhotoSlide photoSlide);
     PhotoSlideSummaryDto MapToPhotoSlideSummaryDto(PhotoSlide photoSlide);
+    DesignDto MapToDesignDto(Design design);
+    DesignSummaryDto MapToDesignSummaryDto(Design design);
 }

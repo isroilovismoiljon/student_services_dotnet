@@ -9,7 +9,6 @@ public interface IPhotoSlideService
     Task<PhotoSlideDto?> UpdatePhotoSlideAsync(int id, UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default);
     Task<PhotoSlideDto?> GetPhotoSlideByIdAsync(int id, CancellationToken ct = default);
     Task<(List<PhotoSlideSummaryDto> PhotoSlides, int TotalCount)> GetPagedPhotoSlidesAsync(int pageNumber = 1, int pageSize = 10, CancellationToken ct = default);
-    Task<List<PhotoSlideSummaryDto>> SearchPhotoSlidesByFilenameAsync(string pattern, CancellationToken ct = default);
     Task<bool> DeletePhotoSlideAsync(int id, bool deleteFile = true, CancellationToken ct = default);
     Task<BulkPhotoSlideUploadResultDto> BulkCreatePhotoSlidesAsync(BulkCreatePhotoSlideDto bulkCreateDto, CancellationToken ct = default);
     Task<int> BulkDeletePhotoSlidesAsync(BulkPhotoSlideOperationDto bulkOperationDto, bool deleteFiles = true, CancellationToken ct = default);
@@ -18,6 +17,7 @@ public interface IPhotoSlideService
     Task<List<PhotoSlideSummaryDto>> GetRecentPhotoSlidesAsync(int count = 10, CancellationToken ct = default);
     Task<PhotoSlideDto?> DuplicatePhotoSlideAsync(int id, double leftOffset = 10, double topOffset = 10, bool copyFile = true, CancellationToken ct = default);
     Task<PhotoSlideDto?> ReplacePhotoAsync(int id, IFormFile newPhoto, bool deleteOldFile = true, CancellationToken ct = default);
+    Task<PhotoSlideDto> AddPhotoToDesignAsync(int designId, AddPhotoToDesignDto addPhotoToDesignDto, CancellationToken ct = default);
 }
 
 public class PhotoSlideStatsDto

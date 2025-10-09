@@ -322,5 +322,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(pp => pp.TextId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        // Design
+        modelBuilder.Entity<Design>(entity =>
+        {
+            entity.Property(d => d.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+            
+            entity.HasIndex(d => d.Title);
+            entity.HasIndex(d => d.CreatedAt);
+            
+            entity.HasOne(d => d.CreatedBy)
+                .WithMany()
+                .HasForeignKey("CreatedById")
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasMany(d => d.Photos)
+                .WithOne()
+                .HasForeignKey("DesignId")
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

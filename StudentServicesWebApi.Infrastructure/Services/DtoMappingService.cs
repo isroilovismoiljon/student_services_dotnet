@@ -1,4 +1,5 @@
 using AutoMapper;
+using StudentServicesWebApi.Application.DTOs.Design;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
@@ -179,5 +180,44 @@ public class DtoMappingService : IDtoMappingService
         }
         
         return $"{len:0.##} {sizes[order]}";
+    }
+
+    public DesignDto MapToDesignDto(Design design)
+    {
+        var firstPhoto = design.Photos.FirstOrDefault();
+        var firstPhotoUrl = firstPhoto != null 
+            ? _urlService.GetPresentationPhotoUrl(firstPhoto.PhotoPath) 
+            : null;
+            
+        return new DesignDto
+        {
+            Id = design.Id,
+            Title = design.Title,
+            CreatedBy = MapToUserResponseDto(design.CreatedBy),
+            CreatedAt = design.CreatedAt,
+            UpdatedAt = design.UpdatedAt,
+            Photos = design.Photos.Select(MapToPhotoSlideDto).ToList(),
+            FirstPhotoUrl = firstPhotoUrl
+        };
+    }
+
+    public DesignSummaryDto MapToDesignSummaryDto(Design design)
+    {
+        var firstPhoto = design.Photos.FirstOrDefault();
+        var firstPhotoUrl = firstPhoto != null 
+            ? _urlService.GetPresentationPhotoUrl(firstPhoto.PhotoPath) 
+            : null;
+            
+        return new DesignSummaryDto
+        {
+            Id = design.Id,
+            Title = design.Title,
+            FirstPhotoUrl = firstPhotoUrl,
+            CreatedByName = $"{design.CreatedBy.FirstName} {design.CreatedBy.LastName}".Trim(),
+            CreatedByUsername = design.CreatedBy.Username,
+            CreatedAt = design.CreatedAt,
+            UpdatedAt = design.UpdatedAt,
+            PhotoCount = design.Photos.Count
+        };
     }
 }

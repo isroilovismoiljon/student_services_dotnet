@@ -4,7 +4,6 @@ namespace StudentServicesWebApi.Domain.Interfaces;
 
 public interface IPhotoSlideRepository : IGenericRepository<PhotoSlide>
 {
-    Task<List<PhotoSlide>> SearchByFilenameAsync(string pattern, CancellationToken ct = default);
     Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByCreationDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default);
     Task<int> BulkDeleteAsync(List<int> ids, bool deleteFiles = true, CancellationToken ct = default);
     Task<PhotoSlideStatsResult> GetStatsAsync(CancellationToken ct = default);

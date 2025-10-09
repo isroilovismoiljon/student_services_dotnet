@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.Admin;
+using StudentServicesWebApi.Application.Interfaces;
 using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using System.ComponentModel.DataAnnotations;
@@ -15,13 +16,16 @@ namespace StudentServicesWebApi.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IAdminActionService _adminActionService;
+    private readonly IUserService _userService;
     private readonly ILogger<AdminController> _logger;
 
     public AdminController(
         IAdminActionService adminActionService,
+        IUserService userService,
         ILogger<AdminController> logger)
     {
         _adminActionService = adminActionService;
+        _userService = userService;
         _logger = logger;
     }
 
@@ -397,6 +401,83 @@ public class AdminController : ControllerBase
             {
                 success = false,
                 message = "An error occurred while retrieving recent admin actions",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
+    [HttpGet("admins")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> GetAdmins(CancellationToken ct = default)
+    {
+        try
+        {
+            var admins = await _userService.GetUsersByRoleAsync(UserRole.Admin, ct);
+            var superAdmins = await _userService.GetUsersByRoleAsync(UserRole.SuperAdmin, ct);
+            
+            var allAdmins = admins.Concat(superAdmins).OrderBy(a => a.FirstName).ThenBy(a => a.LastName).ToList();
+
+            return Ok(new
+            {
+                success = true,
+                data = allAdmins,
+                adminCount = admins.Count,
+                superAdminCount = superAdmins.Count,
+                totalCount = allAdmins.Count,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving admins");
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while retrieving admins",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
+    [HttpGet("admins/{adminId:int}")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> GetAdminById(int adminId, CancellationToken ct = default)
+    {
+        try
+        {
+            var admin = await _userService.GetUserByIdAsync(adminId, ct);
+            if (admin == null)
+                return NotFound(new
+                {
+                    success = false,
+                    message = $"Admin with ID {adminId} not found",
+                    timestamp = DateTime.UtcNow
+                });
+
+            if (admin.UserRole == UserRole.User)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = $"User with ID {adminId} is not an admin",
+                    timestamp = DateTime.UtcNow
+                });
+
+            return Ok(new
+            {
+                success = true,
+                data = admin,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving admin {AdminId}", adminId);
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while retrieving admin",
                 details = ex.Message,
                 timestamp = DateTime.UtcNow
             });

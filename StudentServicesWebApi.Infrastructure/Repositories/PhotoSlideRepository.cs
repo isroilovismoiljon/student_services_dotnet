@@ -78,22 +78,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .ToListAsync(ct);
     }
 
-    /// <inheritdoc />
-    public async Task<List<PhotoSlide>> SearchByFilenameAsync(string pattern, CancellationToken ct = default)
-    {
-        if (string.IsNullOrWhiteSpace(pattern))
-        {
-            return new List<PhotoSlide>();
-        }
-
-        return await _context.Set<PhotoSlide>()
-            .Where(ps => ps.OriginalFileName.ToLower().Contains(pattern.ToLower()) ||
-                         ps.PhotoPath.ToLower().Contains(pattern.ToLower()))
-            .OrderBy(ps => ps.OriginalFileName.Length) // Shorter matches first
-            .ThenBy(ps => ps.CreatedAt)
-            .ToListAsync(ct);
-    }
-
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByCreationDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();

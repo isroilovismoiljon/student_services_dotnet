@@ -87,9 +87,11 @@ public static class ServiceExtensions
         services.AddScoped<IPresentationRepository, PresentationRepository>();
         services.AddScoped<IPresentationPageRepository, PresentationPageRepository>();
         services.AddScoped<IPresentationPostRepository, PresentationPostRepository>();
+        services.AddScoped<IDesignRepository, DesignRepository>();
 
         // Services
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();
         services.AddScoped<IPaymentService, PaymentService>();
@@ -99,6 +101,7 @@ public static class ServiceExtensions
         services.AddScoped<IPresentationService, PresentationService>();
         services.AddScoped<IPresentationPageService, PresentationPageService>();
         services.AddScoped<IPresentationPostService, PresentationPostService>();
+        services.AddScoped<IDesignService, DesignService>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IDataSeeder, DataSeeder>();
         services.AddScoped<IFileUploadService, FileUploadService>();

@@ -132,6 +132,21 @@ public class UserRepository : GenericRepository<User>, IUserRepository
         return true;
     }
 
+    public async Task<List<User>> GetUsersByRoleAsync(Domain.Enums.UserRole role, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<User>()
+            .Where(u => u.UserRole == role)
+            .OrderBy(u => u.FirstName)
+            .ThenBy(u => u.LastName)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<User?> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<User>()
+            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+    }
+
     // Simple password hashing - in production use BCrypt or similar
     private string HashPassword(string password)
     {
