@@ -3,17 +3,11 @@ using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 
 namespace StudentServicesWebApi.Infrastructure.Repositories;
-
-/// <summary>
-/// Repository implementation for PhotoSlide entity operations
-/// </summary>
 public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRepository
 {
     public PhotoSlideRepository(AppDbContext context) : base(context)
     {
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetByFileExtensionAsync(string extension, CancellationToken ct = default)
     {
         // Normalize extension to include the dot
@@ -25,8 +19,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .OrderBy(ps => ps.CreatedAt)
             .ToListAsync(ct);
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetByFileSizeRangeAsync(long minSize, long maxSize, CancellationToken ct = default)
     {
         return await _context.Set<PhotoSlide>()
@@ -34,8 +26,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .OrderBy(ps => ps.FileSize)
             .ToListAsync(ct);
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetByPositionAreaAsync(double minLeft, double maxLeft, double minTop, double maxTop, CancellationToken ct = default)
     {
         return await _context.Set<PhotoSlide>()
@@ -45,8 +35,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .ThenBy(ps => ps.Top)
             .ToListAsync(ct);
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetByDimensionsAsync(double? minWidth = null, double? maxWidth = null, double? minHeight = null, double? maxHeight = null, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
@@ -138,8 +126,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .OrderBy(ps => ps.CreatedAt)
             .ToListAsync(ct);
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetOrphanedPhotoSlidesAsync(CancellationToken ct = default)
     {
         var photoSlides = await _context.Set<PhotoSlide>().ToListAsync(ct);
@@ -155,8 +141,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
 
         return orphanedSlides;
     }
-
-    /// <inheritdoc />
     public async Task<int> BulkDeleteAsync(List<int> ids, bool deleteFiles = true, CancellationToken ct = default)
     {
         if (!ids.Any())
@@ -192,8 +176,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
 
         return photoSlidesToDelete.Count;
     }
-
-    /// <inheritdoc />
     public async Task<PhotoSlideStatsResult> GetStatsAsync(CancellationToken ct = default)
     {
         var photoSlides = await _context.Set<PhotoSlide>().ToListAsync(ct);
@@ -251,8 +233,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             MostCommonContentType = contentTypeCounts.OrderByDescending(kv => kv.Value).FirstOrDefault().Key ?? string.Empty
         };
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetByContentTypeAsync(string contentType, CancellationToken ct = default)
     {
         return await _context.Set<PhotoSlide>()
@@ -260,8 +240,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .OrderBy(ps => ps.CreatedAt)
             .ToListAsync(ct);
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetLargestPhotoSlidesAsync(int count = 10, CancellationToken ct = default)
     {
         return await _context.Set<PhotoSlide>()
@@ -269,8 +247,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .Take(count)
             .ToListAsync(ct);
     }
-
-    /// <inheritdoc />
     public async Task<List<PhotoSlide>> GetDuplicatePhotoSlidesAsync(CancellationToken ct = default)
     {
         var duplicateGroups = await _context.Set<PhotoSlide>()

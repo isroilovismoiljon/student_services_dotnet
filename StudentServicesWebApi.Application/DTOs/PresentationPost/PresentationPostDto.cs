@@ -29,3 +29,11 @@ public class PresentationPostDto
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
+
+public class PresentationPostSummaryDto
+{
+    public int Id { get; set; }
+    public int? TitleId { get; set; }
+    public int TextId { get; set; }
+    public DateTime CreatedAt { get; set; }
+}

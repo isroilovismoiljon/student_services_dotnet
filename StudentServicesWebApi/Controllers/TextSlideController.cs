@@ -6,13 +6,13 @@ using System.ComponentModel.DataAnnotations;
 namespace StudentServicesWebApi.Controllers;
 
 [ApiController]
-[Route("api/TextSlides")]
+[Route("api/TextSlide")]
 [Produces("application/json")]
-public class TextSlidesController : ControllerBase
+public class TextSlideController : ControllerBase
 {
     private readonly ITextSlideService _textSlideService;
 
-    public TextSlidesController(ITextSlideService textSlideService)
+    public TextSlideController(ITextSlideService textSlideService)
     {
         _textSlideService = textSlideService;
     }

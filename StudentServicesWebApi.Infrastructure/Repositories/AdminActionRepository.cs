@@ -14,6 +14,7 @@ public class AdminActionRepository : GenericRepository<AdminAction>, IAdminActio
     public async Task<List<AdminAction>> GetByAdminIdAsync(int adminId, AdminActionType? actionType = null, CancellationToken ct = default)
     {
         var query = _context.AdminActions
+            .Where(a => !a.IsDeleted)
             .Include(a => a.Admin)
             .Include(a => a.TargetUser)
             .Where(a => a.AdminId == adminId);
@@ -31,6 +32,7 @@ public class AdminActionRepository : GenericRepository<AdminAction>, IAdminActio
     public async Task<List<AdminAction>> GetByTargetUserIdAsync(int targetUserId, AdminActionType? actionType = null, CancellationToken ct = default)
     {
         var query = _context.AdminActions
+            .Where(a => !a.IsDeleted)
             .Include(a => a.Admin)
             .Include(a => a.TargetUser)
             .Where(a => a.TargetUserId == targetUserId);
@@ -48,6 +50,7 @@ public class AdminActionRepository : GenericRepository<AdminAction>, IAdminActio
     public async Task<AdminAction?> GetWithDetailsAsync(int actionId, CancellationToken ct = default)
     {
         return await _context.AdminActions
+            .Where(a => !a.IsDeleted)
             .Include(a => a.Admin)
             .Include(a => a.TargetUser)
             .FirstOrDefaultAsync(a => a.Id == actionId, ct);
@@ -56,6 +59,7 @@ public class AdminActionRepository : GenericRepository<AdminAction>, IAdminActio
     public async Task<List<AdminAction>> GetPagedAsync(int pageNumber, int pageSize, AdminActionType? actionType = null, CancellationToken ct = default)
     {
         var query = _context.AdminActions
+            .Where(a => !a.IsDeleted)
             .Include(a => a.Admin)
             .Include(a => a.TargetUser)
             .AsQueryable();
@@ -74,7 +78,9 @@ public class AdminActionRepository : GenericRepository<AdminAction>, IAdminActio
 
     public async Task<int> GetCountAsync(AdminActionType? actionType = null, CancellationToken ct = default)
     {
-        var query = _context.AdminActions.AsQueryable();
+        var query = _context.AdminActions
+            .Where(a => !a.IsDeleted)
+            .AsQueryable();
 
         if (actionType.HasValue)
         {
@@ -87,6 +93,7 @@ public class AdminActionRepository : GenericRepository<AdminAction>, IAdminActio
     public async Task<List<AdminAction>> GetRecentActionsAsync(int count = 50, CancellationToken ct = default)
     {
         return await _context.AdminActions
+            .Where(a => !a.IsDeleted)
             .Include(a => a.Admin)
             .Include(a => a.TargetUser)
             .OrderByDescending(a => a.CreatedAt)

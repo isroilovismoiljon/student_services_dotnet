@@ -15,6 +15,7 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<List<Payment>> GetBySenderIdAsync(int senderId, PaymentStatus? status = null, CancellationToken ct = default)
     {
         var query = _context.Payments
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Sender)
             .Include(p => p.ProcessedByAdmin)
             .Where(p => p.SenderId == senderId);
@@ -32,6 +33,7 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<List<Payment>> GetByProcessedByAdminIdAsync(int adminId, PaymentStatus? status = null, CancellationToken ct = default)
     {
         var query = _context.Payments
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Sender)
             .Include(p => p.ProcessedByAdmin)
             .Where(p => p.ProcessedByAdminId == adminId);
@@ -49,6 +51,7 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<List<Payment>> GetPendingPaymentsAsync(CancellationToken ct = default)
     {
         var query = _context.Payments
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Sender)
             .Include(p => p.ProcessedByAdmin)
             .Where(p => p.PaymentStatus == PaymentStatus.Waiting);
@@ -61,6 +64,7 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<List<Payment>> GetProcessedByAdminAsync(int adminId, CancellationToken ct = default)
     {
         return await _context.Payments
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Sender)
             .Include(p => p.ProcessedByAdmin)
             .Where(p => p.ProcessedByAdminId == adminId && p.PaymentStatus != PaymentStatus.Waiting)
@@ -71,6 +75,7 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<Payment?> GetWithDetailsAsync(int paymentId, CancellationToken ct = default)
     {
         return await _context.Payments
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Sender)
             .Include(p => p.ProcessedByAdmin)
             .FirstOrDefaultAsync(p => p.Id == paymentId, ct);
@@ -79,6 +84,7 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<List<Payment>> GetPagedAsync(int pageNumber, int pageSize, PaymentStatus? status = null, CancellationToken ct = default)
     {
         var query = _context.Payments
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Sender)
             .Include(p => p.ProcessedByAdmin)
             .AsQueryable();
@@ -97,7 +103,9 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
 
     public async Task<int> GetCountAsync(PaymentStatus? status = null, CancellationToken ct = default)
     {
-        var query = _context.Payments.AsQueryable();
+        var query = _context.Payments
+            .Where(p => !p.IsDeleted)
+            .AsQueryable();
 
         if (status.HasValue)
         {
@@ -110,10 +118,11 @@ public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     public async Task<bool> CanBeProcessedByAdminAsync(int paymentId, int adminId, CancellationToken ct = default)
     {
         var payment = await _context.Payments
+            .Where(p => !p.IsDeleted)
             .FirstOrDefaultAsync(p => p.Id == paymentId, ct);
 
         var admins = await _context.Users
-            .Where(p => p.UserRole == UserRole.Admin || p.UserRole == UserRole.SuperAdmin)
+            .Where(p => !p.IsDeleted && (p.UserRole == UserRole.Admin || p.UserRole == UserRole.SuperAdmin))
             .Select(p => p.Id)
             .ToListAsync();
 

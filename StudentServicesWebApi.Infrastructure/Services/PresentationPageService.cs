@@ -64,14 +64,21 @@ public class PresentationPageService : IPresentationPageService
 
     public async Task<PresentationPageDto> CreatePageAsync(CreatePresentationPageDto createDto, CancellationToken ct = default)
     {
+        throw new NotImplementedException("Use CreatePresentationPageAsync instead");
+    }
+    
+    public async Task<PresentationPageDto> CreatePresentationPageAsync(int presentationId, CreatePresentationPageDto createDto, CancellationToken ct = default)
+    {
         var page = new PresentationPage
         {
-            PresentationIsroilovId = createDto.PresentationIsroilovId
+            PresentationIsroilovId = presentationId,
+            PhotoId = createDto.PhotoId,
+            BackgroundPhotoId = createDto.BackgroundPhotoId
         };
 
         var createdPage = await _pageRepository.AddAsync(page, ct);
         
-        await _presentationRepository.UpdatePageCountAsync(createDto.PresentationIsroilovId, ct);
+        await _presentationRepository.UpdatePageCountAsync(presentationId, ct);
 
         return new PresentationPageDto
         {
@@ -83,6 +90,11 @@ public class PresentationPageService : IPresentationPageService
             UpdatedAt = createdPage.UpdatedAt,
             Posts = new List<PresentationPostSummaryDto>()
         };
+    }
+
+    public async Task<PresentationPage> CreatePageDirectAsync(PresentationPage presentationPage, CancellationToken ct = default)
+    {
+        return await _pageRepository.AddAsync(presentationPage, ct);
     }
 
     public async Task<PresentationPageDto?> UpdatePageAsync(int id, UpdatePresentationPageDto updateDto, CancellationToken ct = default)

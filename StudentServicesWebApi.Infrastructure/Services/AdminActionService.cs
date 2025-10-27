@@ -101,7 +101,7 @@ public class AdminActionService : IAdminActionService
             AdminId = adminId,
             TargetUserId = dto.UserId,
             ActionType = AdminActionType.BalanceAdd,
-            Description = $"Added {dto.Amount:C} to user balance",
+            Description = $"Added {(int)dto.Amount} sum to user balance",
             PreviousValue = previousBalance.ToString(),
             NewValue = newBalance.ToString(),
             Amount = dto.Amount,
@@ -134,7 +134,7 @@ public class AdminActionService : IAdminActionService
 
         if (newBalance < 0)
         {
-            throw new ArgumentException($"Insufficient balance. User has {previousBalance:C}, cannot subtract {dto.Amount:C}");
+            throw new ArgumentException($"Insufficient balance. User has {(int)previousBalance} UZS, cannot subtract {(int)dto.Amount} UZS");
         }
 
         // Update user balance
@@ -148,7 +148,7 @@ public class AdminActionService : IAdminActionService
             AdminId = adminId,
             TargetUserId = dto.UserId,
             ActionType = AdminActionType.BalanceSubtract,
-            Description = $"Subtracted {dto.Amount:C} from user balance",
+            Description = $"Subtracted {(int)dto.Amount} UZS from user balance",
             PreviousValue = previousBalance.ToString(),
             NewValue = newBalance.ToString(),
             Amount = dto.Amount,
@@ -251,7 +251,7 @@ public class AdminActionService : IAdminActionService
                $"**Admin:** {adminName} (@{action.Admin.Username})\n" +
                $"**Target User:** {targetName} (@{action.TargetUser.Username})\n" +
                $"**Description:** {action.Description}\n" +
-               (action.Amount.HasValue ? $"**Amount:** {action.Amount:C}\n" : "") +
+               (action.Amount.HasValue ? $"**Amount:** {(int)action.Amount} UZS\n" : "") +
                (string.IsNullOrEmpty(action.Reason) ? "" : $"**Reason:** {action.Reason}\n") +
                $"**Time:** {action.CreatedAt:yyyy-MM-dd HH:mm:ss} UTC";
     }

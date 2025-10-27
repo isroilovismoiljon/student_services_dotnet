@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Http;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
+using StudentServicesWebApi.Domain.Models;
 
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
 
 public interface IPhotoSlideService
 {
     Task<PhotoSlideDto> CreatePhotoSlideAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default);
+    Task<PhotoSlideDto> CreatePlaceholderPhotoSlideAsync(PhotoSlide placeholderPhoto, CancellationToken ct = default);
+    Task<PhotoSlideDto> UpdatePhotoSlideFileAsync(int id, IFormFile photoFile, CancellationToken ct = default);
     Task<PhotoSlideDto?> UpdatePhotoSlideAsync(int id, UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default);
     Task<PhotoSlideDto?> GetPhotoSlideByIdAsync(int id, CancellationToken ct = default);
     Task<(List<PhotoSlideSummaryDto> PhotoSlides, int TotalCount)> GetPagedPhotoSlidesAsync(int pageNumber = 1, int pageSize = 10, CancellationToken ct = default);

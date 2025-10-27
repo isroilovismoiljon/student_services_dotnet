@@ -17,6 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<PresentationPost> PresentationPosts => Set<PresentationPost>();
     public DbSet<Design> Designs => Set<Design>();
     public DbSet<Plan> Plans => Set<Plan>();
+    public DbSet<OpenaiKey> OpenaiKeys => Set<OpenaiKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -247,21 +248,23 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // PresentationIsroilov
         modelBuilder.Entity<PresentationIsroilov>(entity =>
         {
-            entity.Property(p => p.Title)
-                .IsRequired()
-                .HasMaxLength(200);
-            
-            entity.Property(p => p.Author)
-                .IsRequired()
-                .HasMaxLength(100);
-            
             entity.Property(p => p.FilePath)
                 .HasMaxLength(2000);
             
-            entity.HasIndex(p => p.Title);
-            entity.HasIndex(p => p.Author);
+            entity.HasIndex(p => p.TitleId);
+            entity.HasIndex(p => p.AuthorId);
             entity.HasIndex(p => p.IsActive);
             entity.HasIndex(p => p.CreatedAt);
+            
+            entity.HasOne(p => p.Title)
+                .WithMany()
+                .HasForeignKey(p => p.TitleId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(p => p.Author)
+                .WithMany()
+                .HasForeignKey(p => p.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
             
             entity.HasOne(p => p.Design)
                 .WithMany()
@@ -287,13 +290,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             
             entity.HasOne(pp => pp.Photo)
                 .WithMany()
-                .HasForeignKey("PhotoId")
+                .HasForeignKey(pp => pp.PhotoId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
             
             entity.HasOne(pp => pp.BackgroundPhoto)
                 .WithMany()
-                .HasForeignKey("BackgroundPhotoId")
+                .HasForeignKey(pp => pp.BackgroundPhotoId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
         });
@@ -342,6 +345,30 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithOne()
                 .HasForeignKey("DesignId")
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // OpenaiKey
+        modelBuilder.Entity<OpenaiKey>(entity =>
+        {
+            // Required fields
+            entity.Property(ok => ok.Key)
+                .IsRequired()
+                .HasMaxLength(256); // OpenAI API keys can be up to 256 characters
+            
+            entity.Property(ok => ok.UseCount)
+                .IsRequired();
+            
+            // Unique constraint on Key to prevent duplicates
+            entity.HasIndex(ok => ok.Key)
+                .IsUnique();
+            
+            // Indexes for performance
+            entity.HasIndex(ok => ok.UseCount);
+            entity.HasIndex(ok => ok.CreatedAt);
+            entity.HasIndex(ok => ok.UpdatedAt);
+            
+            // Composite index for filtering by usage range
+            entity.HasIndex(ok => new { ok.UseCount, ok.CreatedAt });
         });
     }
 }

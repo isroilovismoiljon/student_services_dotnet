@@ -2,13 +2,17 @@
 
 public class PresentationIsroilov : BaseEntity
 {
-    public string Title { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
-    public int PageCount { get; set; }
+    public int TitleId { get; set; }
+    public TextSlide Title { get; set; } = new();
+
+    public int AuthorId { get; set; }
+    public TextSlide Author { get; set; } = new();
+    
+    public bool WithPhoto { get; set; } = false;
+    public int PageCount { get; set; } = 10;
     public bool IsActive { get; set; }
     public string FilePath { get; set; } = string.Empty;
 
-    // Foreign keys and navigation properties
     public int DesignId { get; set; }
     public Design Design { get; set; } = new();
     

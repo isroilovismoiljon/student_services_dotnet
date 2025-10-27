@@ -217,11 +217,6 @@ public class PaymentService : IPaymentService
             TotalApprovedAmount = allPayments.Where(p => p.ApprovedAmount.HasValue).Sum(p => p.ApprovedAmount!.Value)
         };
     }
-
-
-    /// <summary>
-    /// Validates payment status transitions according to business rules
-    /// </summary>
     private (bool IsValid, string Message, PaymentProcessResultCode ResultCode) ValidateStatusTransition(PaymentStatus currentStatus, PaymentStatus newStatus)
     {
         // Rule 1: If trying to approve an already successful payment

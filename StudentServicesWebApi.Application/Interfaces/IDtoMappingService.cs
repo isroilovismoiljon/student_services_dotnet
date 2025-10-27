@@ -1,6 +1,8 @@
 using StudentServicesWebApi.Application.DTOs.Design;
+using StudentServicesWebApi.Application.DTOs.OpenaiKey;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
+using StudentServicesWebApi.Application.DTOs.Plan;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Models;
@@ -18,4 +20,8 @@ public interface IDtoMappingService
     PhotoSlideSummaryDto MapToPhotoSlideSummaryDto(PhotoSlide photoSlide);
     DesignDto MapToDesignDto(Design design);
     DesignSummaryDto MapToDesignSummaryDto(Design design);
+    Task<OpenaiKeyDto> MapToOpenaiKeyDtoAsync(OpenaiKey openaiKey);
+    Task<OpenaiKeySummaryDto> MapToOpenaiKeySummaryDtoAsync(OpenaiKey openaiKey);
+    Task<PlanDto> MapToPlanDtoAsync(Plan plan);
+    Task<PlanSummaryDto> MapToPlanSummaryDtoAsync(Plan plan);
 }

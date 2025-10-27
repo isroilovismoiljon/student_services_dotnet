@@ -7,11 +7,27 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace StudentServicesWebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreatewfegrtj : Migration
+    public partial class Inisdgdgdgdht : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "OpenaiKeys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Key = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    UseCount = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OpenaiKeys", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "TextSlides",
                 columns: table => new
@@ -161,6 +177,7 @@ namespace StudentServicesWebApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     CreatedById = table.Column<int>(type: "integer", nullable: false),
+                    IsValid = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -451,6 +468,32 @@ namespace StudentServicesWebApi.Migrations
                 columns: new[] { "UserId", "Status" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_OpenaiKeys_CreatedAt",
+                table: "OpenaiKeys",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpenaiKeys_Key",
+                table: "OpenaiKeys",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpenaiKeys_UpdatedAt",
+                table: "OpenaiKeys",
+                column: "UpdatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpenaiKeys_UseCount",
+                table: "OpenaiKeys",
+                column: "UseCount");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpenaiKeys_UseCount_CreatedAt",
+                table: "OpenaiKeys",
+                columns: new[] { "UseCount", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_CreatedAt",
                 table: "Payments",
                 column: "CreatedAt");
@@ -681,6 +724,9 @@ namespace StudentServicesWebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Notifications");
+
+            migrationBuilder.DropTable(
+                name: "OpenaiKeys");
 
             migrationBuilder.DropTable(
                 name: "Payments");

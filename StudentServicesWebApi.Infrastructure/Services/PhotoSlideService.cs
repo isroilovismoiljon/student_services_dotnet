@@ -316,6 +316,44 @@ public class PhotoSlideService : IPhotoSlideService
         return (left, top);
     }
 
+    public async Task<PhotoSlideDto> CreatePlaceholderPhotoSlideAsync(PhotoSlide placeholderPhoto, CancellationToken ct = default)
+    {
+        var createdPhotoSlide = await _photoSlideRepository.AddAsync(placeholderPhoto, ct);
+        return _dtoMappingService.MapToPhotoSlideDto(createdPhotoSlide);
+    }
+
+    public async Task<PhotoSlideDto> UpdatePhotoSlideFileAsync(int id, IFormFile photoFile, CancellationToken ct = default)
+    {
+        var existingPhotoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
+        if (existingPhotoSlide == null)
+        {
+            throw new ArgumentException($"PhotoSlide with ID {id} not found.");
+        }
+
+        // Upload the new photo file
+        var newFilePath = await _fileUploadService.UploadPresentationFileAsync(photoFile, id, ct);
+
+        // Delete the old placeholder file if it exists and is not a placeholder
+        if (existingPhotoSlide.PhotoPath != "placeholder" && File.Exists(existingPhotoSlide.PhotoPath))
+        {
+            try
+            {
+                File.Delete(existingPhotoSlide.PhotoPath);
+            }
+            catch { }
+        }
+
+        // Update the PhotoSlide with the new file information
+        existingPhotoSlide.PhotoPath = newFilePath;
+        existingPhotoSlide.OriginalFileName = photoFile.FileName;
+        existingPhotoSlide.FileSize = photoFile.Length;
+        existingPhotoSlide.ContentType = photoFile.ContentType;
+        existingPhotoSlide.UpdatedAt = DateTime.UtcNow;
+
+        var updatedPhotoSlide = await _photoSlideRepository.UpdateAsync(existingPhotoSlide, ct);
+        return _dtoMappingService.MapToPhotoSlideDto(updatedPhotoSlide);
+    }
+
     public async Task<PhotoSlideDto> AddPhotoToDesignAsync(int designId, AddPhotoToDesignDto addPhotoToDesignDto, CancellationToken ct = default)
     {
         // Validate that the design exists

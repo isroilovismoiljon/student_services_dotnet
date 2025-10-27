@@ -72,13 +72,15 @@ public class DesignRepository : GenericRepository<Design>, IDesignRepository
         
         try
         {
+            bool isValid = photos.Length >= 4;
             // Create the design
             var design = new Design
             {
                 Title = title,
                 CreatedById = createdByUserId,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                IsValid = isValid
             };
 
             _context.Set<Design>().Add(design);

@@ -29,11 +29,10 @@ public class AdminController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPut("users/{userId:int}/role")]
+    [HttpPut("users/role")]
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> UpdateUserRole(
-        int userId,
-        [FromBody] UpdateUserRoleDto updateUserRoleDto,
+        [FromForm] UpdateUserRoleDto updateUserRoleDto,
         CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
@@ -44,8 +43,6 @@ public class AdminController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
-        updateUserRoleDto.UserId = userId;
 
         try
         {
@@ -86,7 +83,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating user role for user {UserId}", userId);
+            _logger.LogError(ex, "Error updating user role for user {UserId}", updateUserRoleDto.UserId);
             return StatusCode(500, new
             {
                 success = false,
@@ -97,11 +94,10 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("users/{userId:int}/balance/add")]
+    [HttpPost("balance/add")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> AddUserBalance(
-        int userId,
-        [FromBody] ModifyBalanceDto modifyBalanceDto,
+        [FromForm] ModifyBalanceDto modifyBalanceDto,
         CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
@@ -112,8 +108,6 @@ public class AdminController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
-        modifyBalanceDto.UserId = userId;
 
         try
         {
@@ -125,7 +119,7 @@ public class AdminController : ControllerBase
             return Ok(new
             {
                 success = true,
-                message = $"Balance of {modifyBalanceDto.Amount:C} added successfully",
+                message = $"Balance of {(int)modifyBalanceDto.Amount} UZS added successfully",
                 data = result,
                 timestamp = DateTime.UtcNow
             });
@@ -150,7 +144,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error adding balance for user {UserId}", userId);
+            _logger.LogError(ex, "Error adding balance for user {UserId}", modifyBalanceDto.UserId);
             return StatusCode(500, new
             {
                 success = false,
@@ -161,11 +155,10 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("users/{userId:int}/balance/subtract")]
+    [HttpPost("balance/subtract")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> SubtractUserBalance(
-        int userId,
-        [FromBody] ModifyBalanceDto modifyBalanceDto,
+        [FromForm] ModifyBalanceDto modifyBalanceDto,
         CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
@@ -177,8 +170,6 @@ public class AdminController : ControllerBase
                 timestamp = DateTime.UtcNow
             });
 
-        modifyBalanceDto.UserId = userId;
-
         try
         {
             var adminId = GetCurrentUserId();
@@ -189,7 +180,7 @@ public class AdminController : ControllerBase
             return Ok(new
             {
                 success = true,
-                message = $"Balance of {modifyBalanceDto.Amount:C} subtracted successfully",
+                message = $"Balance of {(int)modifyBalanceDto.Amount} UZS subtracted successfully",
                 data = result,
                 timestamp = DateTime.UtcNow
             });
@@ -214,7 +205,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error subtracting balance for user {UserId}", userId);
+            _logger.LogError(ex, "Error subtracting balance for user {UserId}", modifyBalanceDto.UserId);
             return StatusCode(500, new
             {
                 success = false,

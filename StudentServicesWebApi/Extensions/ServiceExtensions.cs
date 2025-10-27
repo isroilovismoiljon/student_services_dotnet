@@ -1,27 +1,25 @@
 using System.Text;
-using System.Reflection;
 using FluentValidation;
+using System.Reflection;
+using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using StudentServicesWebApi.Application.Mappings;
 using StudentServicesWebApi.Infrastructure;
-using StudentServicesWebApi.Infrastructure.Configuration;
+using StudentServicesWebApi.Domain.Interfaces;
+using StudentServicesWebApi.Application.Services;
+using StudentServicesWebApi.Application.Mappings;
+using StudentServicesWebApi.Application.Interfaces;
+using StudentServicesWebApi.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using StudentServicesWebApi.Infrastructure.Repositories;
-using StudentServicesWebApi.Infrastructure.Services;
-using StudentServicesWebApi.Domain.Interfaces;
-using StudentServicesWebApi.Application.Interfaces;
+using StudentServicesWebApi.Infrastructure.Configuration;
 
 namespace StudentServicesWebApi.Extensions;
 
 public static class ServiceExtensions
 {
-
-    /// Adds database context with PostgreSQL configuration
-
     public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
@@ -32,19 +30,11 @@ public static class ServiceExtensions
 
         return services;
     }
-
-
-    /// Adds AutoMapper configuration
-
     public static IServiceCollection AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(NotificationProfile).Assembly);
         return services;
     }
-
-
-    /// Adds FluentValidation configuration
-
     public static IServiceCollection AddFluentValidationConfiguration(this IServiceCollection services)
     {
         services.AddFluentValidationAutoValidation();
@@ -55,14 +45,17 @@ public static class ServiceExtensions
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.ProcessPaymentDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreateTextSlideDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePhotoSlideDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.OpenaiKey.CreateOpenaiKeyDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.Plan.CreatePlanDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePresentationDataDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePresentationMixedDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePresentationJsonDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePresentationWithPositionsDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.UpdatePresentationPhotosDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.PhotoPositionDtoValidator>();
 
         return services;
     }
-
-
-
-    /// Adds application configuration options
-
     public static IServiceCollection AddApplicationConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<TelegramBotConfiguration>(configuration.GetSection(TelegramBotConfiguration.SectionName));
@@ -70,10 +63,6 @@ public static class ServiceExtensions
 
         return services;
     }
-
-
-    /// Adds all application services and repositories
-
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         // Repositories
@@ -88,6 +77,8 @@ public static class ServiceExtensions
         services.AddScoped<IPresentationPageRepository, PresentationPageRepository>();
         services.AddScoped<IPresentationPostRepository, PresentationPostRepository>();
         services.AddScoped<IDesignRepository, DesignRepository>();
+        services.AddScoped<IOpenaiKeyRepository, OpenaiKeyRepository>();
+        services.AddScoped<IPlanRepository, PlanRepository>();
 
         // Services
         services.AddScoped<INotificationService, NotificationService>();
@@ -102,6 +93,8 @@ public static class ServiceExtensions
         services.AddScoped<IPresentationPageService, PresentationPageService>();
         services.AddScoped<IPresentationPostService, PresentationPostService>();
         services.AddScoped<IDesignService, DesignService>();
+        services.AddScoped<IOpenaiKeyService, OpenaiKeyService>();
+        services.AddScoped<IPlanService, PlanService>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IDataSeeder, DataSeeder>();
         services.AddScoped<IFileUploadService, FileUploadService>();
@@ -116,9 +109,6 @@ public static class ServiceExtensions
 
         return services;
     }
-
-
-    /// Adds JWT authentication configuration
 
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
@@ -151,19 +141,12 @@ public static class ServiceExtensions
 
         return services;
     }
-
-
-    /// Adds hosted services
-
     public static IServiceCollection AddHostedServices(this IServiceCollection services)
     {
-        services.AddHostedService<TelegramBotHostedService>();
+        // Temporarily disabled to isolate database errors
+        // services.AddHostedService<TelegramBotHostedService>();
         return services;
     }
-
-
-    /// Adds CORS configuration
-
     public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
     {
         services.AddCors(options =>
@@ -178,10 +161,6 @@ public static class ServiceExtensions
         
         return services;
     }
-
-
-    /// Adds Swagger/OpenAPI configuration with API versioning support
-
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();

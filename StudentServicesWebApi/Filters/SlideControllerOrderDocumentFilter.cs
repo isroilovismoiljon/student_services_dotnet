@@ -2,11 +2,6 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace StudentServicesWebApi.Filters;
-
-/// <summary>
-/// Document filter to control the order of slide controllers in Swagger UI
-/// Ensures PhotoSlides appear before TextSlides
-/// </summary>
 public class SlideControllerOrderDocumentFilter : IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)

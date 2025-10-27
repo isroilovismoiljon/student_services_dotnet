@@ -98,80 +98,38 @@ public class BulkCreatePhotoSlideDto
     public BulkLayoutDirection LayoutDirection { get; set; } = BulkLayoutDirection.Horizontal;
 }
 
-
-/// Layout direction for bulk photo slide creation
-
 public enum BulkLayoutDirection
 {
 
-    /// Arrange photos horizontally (left to right)
-
     Horizontal,
 
-
-    /// Arrange photos vertically (top to bottom)
-
     Vertical,
-
-
-    /// Arrange photos in a grid pattern
 
     Grid
 }
 
-
-/// DTO for photo slide upload result
-
 public class PhotoSlideUploadResultDto
 {
 
-    /// Whether the upload was successful
-
     public bool Success { get; set; }
-
-
-    /// Created photo slide (if successful)
 
     public PhotoSlideDto? PhotoSlide { get; set; }
 
-
-    /// Error message (if failed)
-
     public string? ErrorMessage { get; set; }
-
-
-    /// Original filename that was attempted to upload
 
     public string OriginalFileName { get; set; } = string.Empty;
 }
 
-
-/// DTO for bulk photo slide upload results
-
 public class BulkPhotoSlideUploadResultDto
 {
 
-    /// Total number of photos attempted
-
     public int TotalAttempted { get; set; }
-
-
-    /// Number of successful uploads
 
     public int SuccessfulUploads { get; set; }
 
-
-    /// Number of failed uploads
-
     public int FailedUploads { get; set; }
 
-
-    /// List of individual upload results
-
     public List<PhotoSlideUploadResultDto> Results { get; set; } = new();
-
-
-    /// Overall success rate as a percentage
 
     public double SuccessRate => TotalAttempted > 0 ? (double)SuccessfulUploads / TotalAttempted * 100 : 0;
 }

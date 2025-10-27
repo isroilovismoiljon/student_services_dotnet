@@ -29,22 +29,20 @@ public class ResetPasswordDtoValidator : AbstractValidator<ResetPasswordDto>
             .MaximumLength(30)
             .WithMessage("Username must not exceed 30 characters");
 
-        RuleFor(x => x.ResetCode)
+        RuleFor(x => x.VerificationCode)
             .NotEmpty()
-            .WithMessage("Reset code is required")
+            .WithMessage("Verification code is required")
             .Length(4)
-            .WithMessage("Reset code must be exactly 4 digits")
+            .WithMessage("Verification code must be exactly 4 digits")
             .Matches(@"^\d{4}$")
-            .WithMessage("Reset code must contain only digits");
+            .WithMessage("Verification code must contain only digits");
 
-        RuleFor(x => x.NewPassword)
+        RuleFor(x => x.Password)
             .NotEmpty()
             .WithMessage("New password is required")
             .MinimumLength(6)
             .WithMessage("Password must be at least 6 characters")
             .MaximumLength(100)
-            .WithMessage("Password must not exceed 100 characters")
-            .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)")
-            .WithMessage("Password must contain at least one lowercase letter, one uppercase letter, and one digit");
+            .WithMessage("Password must not exceed 100 characters");
     }
 }

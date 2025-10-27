@@ -5,9 +5,6 @@ namespace StudentServicesWebApi.Extensions;
 
 public static class MiddlewareExtensions
 {
-    /// <summary>
-    /// Seeds the database with default data
-    /// </summary>
     public static async Task<WebApplication> SeedDatabaseAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
@@ -16,10 +13,6 @@ public static class MiddlewareExtensions
         
         return app;
     }
-
-    /// <summary>
-    /// Configures Swagger middleware for API documentation
-    /// </summary>
     public static WebApplication UseSwaggerConfiguration(this WebApplication app)
     {
         app.UseSwagger(); // Use default settings for OpenAPI 3.0
@@ -36,8 +29,6 @@ public static class MiddlewareExtensions
 
         return app;
     }
-
-    /// Configures the complete middleware pipeline
     public static WebApplication UseApplicationMiddleware(this WebApplication app)
     {
         // Configure Swagger (enabled for all environments for testing purposes)

@@ -43,6 +43,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -51,6 +54,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<string>("IpAddress")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("NewValue")
                         .HasMaxLength(100)
@@ -104,6 +110,15 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<int>("CreatedById")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -137,11 +152,17 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IconUrl")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsGlobal")
                         .HasColumnType("boolean");
@@ -179,6 +200,50 @@ namespace StudentServicesWebApi.Migrations
                     b.ToTable("Notifications");
                 });
 
+            modelBuilder.Entity("StudentServicesWebApi.Domain.Models.OpenaiKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UseCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedAt");
+
+                    b.HasIndex("UseCount");
+
+                    b.HasIndex("UseCount", "CreatedAt");
+
+                    b.ToTable("OpenaiKeys");
+                });
+
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -198,9 +263,15 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("integer");
@@ -259,6 +330,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int?>("DesignId")
                         .HasColumnType("integer");
 
@@ -268,6 +342,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<double?>("Height")
                         .HasPrecision(18, 6)
                         .HasColumnType("double precision");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<double>("Left")
                         .HasPrecision(18, 6)
@@ -326,22 +403,16 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Plan_1Id")
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PlanTextId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Plan_2Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Plan_3Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Plan_4Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Plan_5Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TitleId")
+                    b.Property<int>("PlansId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -349,17 +420,9 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Plan_1Id");
+                    b.HasIndex("PlanTextId");
 
-                    b.HasIndex("Plan_2Id");
-
-                    b.HasIndex("Plan_3Id");
-
-                    b.HasIndex("Plan_4Id");
-
-                    b.HasIndex("Plan_5Id");
-
-                    b.HasIndex("TitleId");
+                    b.HasIndex("PlansId");
 
                     b.ToTable("Plans");
                 });
@@ -372,12 +435,13 @@ namespace StudentServicesWebApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("DesignId")
@@ -391,23 +455,27 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("PageCount")
                         .HasColumnType("integer");
 
                     b.Property<int>("PlanId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                    b.Property<int>("TitleId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("WithPhoto")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Author");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("CreatedAt");
 
@@ -417,7 +485,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.HasIndex("Title");
+                    b.HasIndex("TitleId");
 
                     b.ToTable("PresentationIsroilovs");
                 });
@@ -436,6 +504,12 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<int?>("PhotoId")
                         .HasColumnType("integer");
 
@@ -444,6 +518,9 @@ namespace StudentServicesWebApi.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("WithPhoto")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -468,6 +545,12 @@ namespace StudentServicesWebApi.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("PresentationPageId")
                         .HasColumnType("integer");
@@ -510,6 +593,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Font")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -523,6 +609,9 @@ namespace StudentServicesWebApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsBold")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsItalic")
@@ -589,9 +678,15 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
@@ -655,8 +750,14 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("boolean");
@@ -748,53 +849,31 @@ namespace StudentServicesWebApi.Migrations
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Plan", b =>
                 {
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_1")
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "PlanText")
                         .WithMany()
-                        .HasForeignKey("Plan_1Id")
+                        .HasForeignKey("PlanTextId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_2")
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plans")
                         .WithMany()
-                        .HasForeignKey("Plan_2Id")
+                        .HasForeignKey("PlansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_3")
-                        .WithMany()
-                        .HasForeignKey("Plan_3Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("PlanText");
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_4")
-                        .WithMany()
-                        .HasForeignKey("Plan_4Id");
-
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_5")
-                        .WithMany()
-                        .HasForeignKey("Plan_5Id");
-
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Title")
-                        .WithMany()
-                        .HasForeignKey("TitleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Plan_1");
-
-                    b.Navigation("Plan_2");
-
-                    b.Navigation("Plan_3");
-
-                    b.Navigation("Plan_4");
-
-                    b.Navigation("Plan_5");
-
-                    b.Navigation("Title");
+                    b.Navigation("Plans");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationIsroilov", b =>
                 {
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StudentServicesWebApi.Domain.Models.Design", "Design")
                         .WithMany()
                         .HasForeignKey("DesignId")
@@ -807,9 +886,19 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Title")
+                        .WithMany()
+                        .HasForeignKey("TitleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
                     b.Navigation("Design");
 
                     b.Navigation("Plan");
+
+                    b.Navigation("Title");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationPage", b =>

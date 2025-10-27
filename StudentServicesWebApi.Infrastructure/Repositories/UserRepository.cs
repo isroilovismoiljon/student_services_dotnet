@@ -14,18 +14,21 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<User?> GetByUsernameAsync(string username)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.Username == username);
     }
 
     public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
     }
 
     public async Task<User?> GetByTelegramIdAsync(string telegramId)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.TelegramId == telegramId);
     }
 
@@ -33,12 +36,15 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     {
         // Assuming you might add email field later
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.Username == email);
     }
 
     public async Task<bool> ExistsAsync(string? username = null, string? phoneNumber = null, string? telegramId = null, string? email = null)
     {
-        var query = _context.Set<User>().AsQueryable();
+        var query = _context.Set<User>()
+            .Where(u => !u.IsDeleted)
+            .AsQueryable();
 
         if (!string.IsNullOrEmpty(username))
             query = query.Where(u => u.Username.ToLower() == username.ToLower());
@@ -58,6 +64,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
         var hashedPassword = HashPassword(password);
 
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == hashedPassword);
     }
 
@@ -68,6 +75,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 
         // Check if TelegramId already exists for another user
         var existsForOtherUser = await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .AnyAsync(u => u.TelegramId == telegramId && u.Id != userId);
             
         if (existsForOtherUser)
@@ -85,25 +93,28 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<bool> TelegramIdExistsAsync(string telegramId)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .AnyAsync(u => u.TelegramId == telegramId);
     }
 
     public async Task<IEnumerable<User>> GetReferralsByUserIdAsync(int userId)
     {
         return await _context.Set<User>()
-            .Where(u => u.ReferralId == userId)
+            .Where(u => !u.IsDeleted && u.ReferralId == userId)
             .ToListAsync();
     }
 
     public async Task<bool> VerifiedUsernameExistsAsync(string username)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .AnyAsync(u => u.Username.ToLower() == username.ToLower() && u.IsVerified);
     }
 
     public async Task<User?> GetVerifiedUserByUsernameAsync(string username)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower() && u.IsVerified);
     }
 
@@ -122,12 +133,18 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<bool> DeleteUnverifiedUsersByUsernameAsync(string username)
     {
         var unverifiedUsers = await _context.Set<User>()
-            .Where(u => u.Username.ToLower() == username.ToLower() && !u.IsVerified)
+            .Where(u => !u.IsDeleted && u.Username.ToLower() == username.ToLower() && !u.IsVerified)
             .ToListAsync();
 
         if (!unverifiedUsers.Any()) return false;
 
-        _context.Set<User>().RemoveRange(unverifiedUsers);
+        // Soft delete
+        foreach (var user in unverifiedUsers)
+        {
+            user.IsDeleted = true;
+            user.DeletedAt = DateTime.UtcNow;
+        }
+        
         await _context.SaveChangesAsync();
         return true;
     }
@@ -135,7 +152,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<List<User>> GetUsersByRoleAsync(Domain.Enums.UserRole role, CancellationToken cancellationToken = default)
     {
         return await _context.Set<User>()
-            .Where(u => u.UserRole == role)
+            .Where(u => !u.IsDeleted && u.UserRole == role)
             .OrderBy(u => u.FirstName)
             .ThenBy(u => u.LastName)
             .ToListAsync(cancellationToken);
@@ -144,6 +161,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<User?> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default)
     {
         return await _context.Set<User>()
+            .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }
 

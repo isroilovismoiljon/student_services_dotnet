@@ -14,6 +14,9 @@ public class PresentationRepository : GenericRepository<PresentationIsroilov>, I
     public async Task<List<PresentationIsroilov>> GetAllWithPagesAsync(CancellationToken ct = default)
     {
         return await _context.Set<PresentationIsroilov>()
+            .Where(p => !p.IsDeleted)
+            .Include(p => p.Title)
+            .Include(p => p.Author)
             .Include(p => p.PresentationPages)
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync(ct);
@@ -22,6 +25,9 @@ public class PresentationRepository : GenericRepository<PresentationIsroilov>, I
     public async Task<PresentationIsroilov?> GetByIdWithPagesAsync(int id, CancellationToken ct = default)
     {
         return await _context.Set<PresentationIsroilov>()
+            .Where(p => !p.IsDeleted)
+            .Include(p => p.Title)
+            .Include(p => p.Author)
             .Include(p => p.PresentationPages)
                 .ThenInclude(pp => pp.PresentationPosts)
             .FirstOrDefaultAsync(p => p.Id == id, ct);
@@ -33,6 +39,7 @@ public class PresentationRepository : GenericRepository<PresentationIsroilov>, I
         if (presentation != null)
         {
             var pageCount = await _context.Set<PresentationPage>()
+                .Where(pp => !pp.IsDeleted)
                 .CountAsync(pp => pp.PresentationIsroilovId == presentationId, ct);
             
             presentation.PageCount = pageCount;

@@ -15,7 +15,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     public async Task<IEnumerable<Notification>> GetNotificationsByUserIdAsync(int userId)
     {
         return await _context.Set<Notification>()
-            .Where(n => n.UserId == userId || n.IsGlobal)
+            .Where(n => !n.IsDeleted && (n.UserId == userId || n.IsGlobal))
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
     }
@@ -23,7 +23,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     public async Task<IEnumerable<Notification>> GetUnreadNotificationsByUserIdAsync(int userId)
     {
         return await _context.Set<Notification>()
-            .Where(n => (n.UserId == userId || n.IsGlobal) && n.Status == NotificationStatus.Unread)
+            .Where(n => !n.IsDeleted && (n.UserId == userId || n.IsGlobal) && n.Status == NotificationStatus.Unread)
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
     }
@@ -31,7 +31,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     public async Task<IEnumerable<Notification>> GetGlobalNotificationsAsync()
     {
         return await _context.Set<Notification>()
-            .Where(n => n.IsGlobal)
+            .Where(n => !n.IsDeleted && n.IsGlobal)
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
     }
@@ -39,6 +39,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     public async Task<bool> MarkAsReadAsync(int notificationId, int userId)
     {
         var notification = await _context.Set<Notification>()
+            .Where(n => !n.IsDeleted)
             .FirstOrDefaultAsync(n => n.Id == notificationId && (n.UserId == userId || n.IsGlobal));
 
         if (notification == null) return false;
@@ -54,7 +55,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     public async Task<bool> MarkAllAsReadAsync(int userId)
     {
         var notifications = await _context.Set<Notification>()
-            .Where(n => (n.UserId == userId || n.IsGlobal) && n.Status == NotificationStatus.Unread)
+            .Where(n => !n.IsDeleted && (n.UserId == userId || n.IsGlobal) && n.Status == NotificationStatus.Unread)
             .ToListAsync();
 
         foreach (var notification in notifications)
@@ -71,13 +72,14 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     public async Task<int> GetUnreadCountAsync(int userId)
     {
         return await _context.Set<Notification>()
+            .Where(n => !n.IsDeleted)
             .CountAsync(n => (n.UserId == userId || n.IsGlobal) && n.Status == NotificationStatus.Unread);
     }
 
     public async Task<IEnumerable<Notification>> GetNotificationsByTypeAsync(int userId, NotificationType type)
     {
         return await _context.Set<Notification>()
-            .Where(n => (n.UserId == userId || n.IsGlobal) && n.Type == type)
+            .Where(n => !n.IsDeleted && (n.UserId == userId || n.IsGlobal) && n.Type == type)
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
     }
@@ -86,7 +88,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     {
         var now = DateTime.UtcNow;
         return await _context.Set<Notification>()
-            .Where(n => (n.UserId == userId || n.IsGlobal) && 
+            .Where(n => !n.IsDeleted && (n.UserId == userId || n.IsGlobal) && 
                        (n.ExpiresAt == null || n.ExpiresAt > now))
             .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();

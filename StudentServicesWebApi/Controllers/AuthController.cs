@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using StudentServicesWebApi.Application.DTOs.Auth;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 
@@ -73,11 +74,33 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
+    [SwaggerOperation(Summary = "Request password reset", Description = "Sends a verification code to the user's Telegram account for password reset.")]
+    [SwaggerResponse(200, "Password reset code sent successfully")]
+    [SwaggerResponse(400, "Invalid request or user not found")]
+    [SwaggerResponse(500, "Internal server error")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
     {
         try
         {
             var result = await _userService.ForgotPasswordAsync(forgotPasswordDto);
+            return Ok(new { success = true, data = result, timestamp = DateTime.UtcNow });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
+        }
+    }
+
+    [HttpPost("reset-password")]
+    [SwaggerOperation(Summary = "Reset password", Description = "Resets the user's password using username, verification code, and new password.")]
+    [SwaggerResponse(200, "Password reset successfully")]
+    [SwaggerResponse(400, "Invalid request, user not found, or invalid verification code")]
+    [SwaggerResponse(500, "Internal server error")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        try
+        {
+            var result = await _userService.ResetPasswordAsync(resetPasswordDto);
             return Ok(new { success = true, data = result, timestamp = DateTime.UtcNow });
         }
         catch (Exception ex)

@@ -246,23 +246,23 @@ public class AuthService : IAuthService
         }
 
         // Validate reset code
-        var isValidCode = await _verificationCodeService.ValidatePasswordResetCodeAsync(user.Id, resetPasswordDto.ResetCode);
+        var isValidCode = await _verificationCodeService.ValidatePasswordResetCodeAsync(user.Id, resetPasswordDto.VerificationCode);
         if (!isValidCode)
         {
             return new AuthResponseDto
             {
                 Success = false,
-                Message = "Invalid or expired reset code"
+                Message = "Invalid or expired verification code"
             };
         }
 
         // Update password
-        user.PasswordHash = HashPassword(resetPasswordDto.NewPassword);
+        user.PasswordHash = HashPassword(resetPasswordDto.Password);
         user.UpdatedAt = DateTime.UtcNow;
         await _userRepository.UpdateAsync(user);
 
         // Mark reset code as used
-        var verificationCode = await _verificationCodeService.GetVerificationByCodeAsync(resetPasswordDto.ResetCode);
+        var verificationCode = await _verificationCodeService.GetVerificationByCodeAsync(resetPasswordDto.VerificationCode);
         if (verificationCode != null)
         {
             await _verificationCodeService.MarkCodeAsUsedAsync(verificationCode.Id);

@@ -6,10 +6,6 @@ using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 
 namespace StudentServicesWebApi.Attributes;
-
-/// <summary>
-/// Validates that the current user can create payments (must be a User role)
-/// </summary>
 public class ValidateUserCanCreatePaymentAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -33,10 +29,6 @@ public class ValidateUserCanCreatePaymentAttribute : ActionFilterAttribute
         await next();
     }
 }
-
-/// <summary>
-/// Validates that the current user can process payments (must be Admin or SuperAdmin role)
-/// </summary>
 public class ValidateAdminCanProcessPaymentAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -60,10 +52,6 @@ public class ValidateAdminCanProcessPaymentAttribute : ActionFilterAttribute
         await next();
     }
 }
-
-/// <summary>
-/// Validates that the payment ID exists and the current user has access to it
-/// </summary>
 public class ValidatePaymentAccessAttribute : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)

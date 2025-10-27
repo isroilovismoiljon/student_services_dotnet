@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Interfaces;
+using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 
 namespace StudentServicesWebApi.Infrastructure.Repositories;
@@ -21,12 +22,27 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
         await _context.SaveChangesAsync(ct);
     }
 
-    public Task<T?> GetByIdAsync(object id, CancellationToken ct = default)
-        => _context.Set<T>().FindAsync([id], ct).AsTask();
+    public async Task<T?> GetByIdAsync(object id, CancellationToken ct = default)
+    {
+        var entity = await _context.Set<T>().FindAsync([id], ct);
+        
+        // Check if entity is soft-deleted
+        if (entity is BaseEntity baseEntity && baseEntity.IsDeleted)
+            return null;
+            
+        return entity;
+    }
 
     public async Task<List<T>> ListAsync(Func<IQueryable<T>, IQueryable<T>>? transform = null, CancellationToken ct = default)
     {
         IQueryable<T> q = _context.Set<T>().AsQueryable();
+        
+        // Filter out soft-deleted entities if T inherits from BaseEntity
+        if (typeof(BaseEntity).IsAssignableFrom(typeof(T)))
+        {
+            q = q.Where(e => !((BaseEntity)(object)e).IsDeleted);
+        }
+        
         if (transform is not null) q = transform(q);
         return await q.ToListAsync(ct);
     }
@@ -40,17 +56,39 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
 
     public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
-        var entity = await GetByIdAsync(id, ct);
+        var entity = await _context.Set<T>().FindAsync([id], ct);
         if (entity == null) return false;
         
-        _context.Set<T>().Remove(entity);
+        // Soft delete if entity inherits from BaseEntity
+        if (entity is BaseEntity baseEntity)
+        {
+            baseEntity.IsDeleted = true;
+            baseEntity.DeletedAt = DateTime.UtcNow;
+            _context.Set<T>().Update(entity);
+        }
+        else
+        {
+            _context.Set<T>().Remove(entity);
+        }
+        
         await _context.SaveChangesAsync(ct);
         return true;
     }
 
     public async Task DeleteAsync(T entity, CancellationToken ct = default)
     {
-        _context.Set<T>().Remove(entity);
+        // Soft delete if entity inherits from BaseEntity
+        if (entity is BaseEntity baseEntity)
+        {
+            baseEntity.IsDeleted = true;
+            baseEntity.DeletedAt = DateTime.UtcNow;
+            _context.Set<T>().Update(entity);
+        }
+        else
+        {
+            _context.Set<T>().Remove(entity);
+        }
+        
         await _context.SaveChangesAsync(ct);
     }
 

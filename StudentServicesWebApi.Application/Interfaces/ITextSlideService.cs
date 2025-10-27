@@ -5,7 +5,6 @@ namespace StudentServicesWebApi.Infrastructure.Interfaces;
 
 public interface ITextSlideService
 {
-    /// <returns>Created text slide DTO</returns>
     Task<TextSlideDto> CreateTextSlideAsync(CreateTextSlideDto createTextSlideDto, CancellationToken ct = default);
     Task<TextSlideDto?> UpdateTextSlideAsync(int id, UpdateTextSlideDto updateTextSlideDto, CancellationToken ct = default);
     Task<TextSlideDto?> GetTextSlideByIdAsync(int id, CancellationToken ct = default);

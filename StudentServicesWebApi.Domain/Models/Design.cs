@@ -9,6 +9,7 @@ public class Design : BaseEntity
     public string Title { get; set; } = string.Empty;
     
     public int CreatedById { get; set; }
+    public bool IsValid { get; set; } = false;
     
     // Navigation property
     public List<PhotoSlide> Photos { get; set; } = new();

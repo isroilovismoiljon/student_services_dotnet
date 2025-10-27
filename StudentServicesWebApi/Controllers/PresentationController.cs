@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.Presentation;
+using StudentServicesWebApi.Application.DTOs.TextSlide;
+using StudentServicesWebApi.Application.DTOs.Plan;
 using StudentServicesWebApi.Application.Interfaces;
 
 namespace StudentServicesWebApi.Controllers;
 
 [ApiController]
-[Route("api/Presentations")]
+[Route("api/Presentation")]
 [Produces("application/json")]
 public class PresentationController : ControllerBase
 {
@@ -76,25 +78,66 @@ public class PresentationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePresentation([FromBody] CreatePresentationDto createDto, CancellationToken ct = default)
+    [Consumes("application/json")]
+    public async Task<IActionResult> CreatePresentation(
+        [FromBody] CreatePresentationWithPositionsDto createDto,
+        CancellationToken ct = default)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(new
-            {
-                success = false,
-                message = "Invalid input data",
-                errors = ModelState,
-                timestamp = DateTime.UtcNow
-            });
-
         try
         {
-            var presentation = await _presentationService.CreatePresentationAsync(createDto, ct);
+            // Validate model state first
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid input data",
+                    errors = ModelState,
+                    timestamp = DateTime.UtcNow
+                });
+
+            // Validate photo positions when WithPhoto is true
+            if (createDto.WithPhoto)
+            {
+                var expectedPhotoCount = (createDto.PageCount - 2) / 2;
+                if (createDto.PhotoPositions.Count != expectedPhotoCount)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = $"When WithPhoto is true and PageCount is {createDto.PageCount}, exactly {expectedPhotoCount} photo positions are required. Got {createDto.PhotoPositions.Count}.",
+                        timestamp = DateTime.UtcNow
+                    });
+                }
+            }
+            else
+            {
+                if (createDto.PhotoPositions.Count > 0)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "PhotoPositions should be empty when WithPhoto is false",
+                        timestamp = DateTime.UtcNow
+                    });
+                }
+            }
+
+            // Call service to create presentation with placeholder PhotoSlides
+            var presentation = await _presentationService.CreatePresentationWithPositionsAsync(createDto, ct);
             return CreatedAtAction(nameof(GetPresentationById), new { id = presentation.Id }, new
             {
                 success = true,
-                message = "Presentation created successfully",
+                message = "Presentation created successfully. Use UpdatePresentationPhotos endpoint to upload photo files.",
                 data = presentation,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message,
                 timestamp = DateTime.UtcNow
             });
         }
@@ -104,6 +147,89 @@ public class PresentationController : ControllerBase
             {
                 success = false,
                 message = "An error occurred while creating the presentation",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
+
+    [HttpPut("{id:int}/photos")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UpdatePresentationPhotos(
+        int id,
+        [FromForm] UpdatePresentationPhotosDto photosDto,
+        CancellationToken ct = default)
+    {
+        try
+        {
+            // Validate model state first
+            if (!ModelState.IsValid)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid input data",
+                    errors = ModelState,
+                    timestamp = DateTime.UtcNow
+                });
+
+            // Check if presentation exists
+            var existingPresentation = await _presentationService.GetPresentationByIdAsync(id, ct);
+            if (existingPresentation == null)
+                return NotFound(new
+                {
+                    success = false,
+                    message = $"Presentation with ID {id} not found",
+                    timestamp = DateTime.UtcNow
+                });
+
+            // Validate that this presentation was created with WithPhoto = true
+            if (!existingPresentation.WithPhoto)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "This presentation was created with WithPhoto=false. Photos cannot be added.",
+                    timestamp = DateTime.UtcNow
+                });
+            }
+
+            // Validate photo count matches expected count
+            var expectedPhotoCount = (existingPresentation.PageCount - 2) / 2;
+            if (photosDto.Photos.Count != expectedPhotoCount)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = $"Expected {expectedPhotoCount} photos for this presentation (PageCount: {existingPresentation.PageCount}), but got {photosDto.Photos.Count}",
+                    timestamp = DateTime.UtcNow
+                });
+            }
+
+            // Call service to update photos
+            var updatedPresentation = await _presentationService.UpdatePresentationPhotosAsync(id, photosDto.Photos, ct);
+            return Ok(new
+            {
+                success = true,
+                message = "Presentation photos updated successfully",
+                data = updatedPresentation,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while updating presentation photos",
                 details = ex.Message,
                 timestamp = DateTime.UtcNow
             });

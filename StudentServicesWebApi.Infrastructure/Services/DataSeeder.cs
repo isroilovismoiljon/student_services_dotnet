@@ -59,6 +59,30 @@ public class DataSeeder : IDataSeeder
             {
                 _logger.LogInformation("SuperAdmin user already exists, skipping creation.");
             }
+            
+            // Create default Design if it doesn't exist
+            var defaultDesignExists = await _context.Designs.AnyAsync();
+            if (!defaultDesignExists)
+            {
+                var superAdmin = await _context.Users
+                    .FirstAsync(u => u.UserRole == UserRole.SuperAdmin);
+                    
+                _logger.LogInformation("Creating default Design...");
+                
+                var defaultDesign = new Design
+                {
+                    Title = "Default Design",
+                    IsValid = true,
+                    CreatedById = superAdmin.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                
+                await _context.Designs.AddAsync(defaultDesign);
+                await _context.SaveChangesAsync();
+                
+                _logger.LogInformation("Default Design created successfully!");
+            }
         }
         catch (Exception ex)
         {

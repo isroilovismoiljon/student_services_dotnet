@@ -1,7 +1,9 @@
 using AutoMapper;
 using StudentServicesWebApi.Application.DTOs.Design;
+using StudentServicesWebApi.Application.DTOs.OpenaiKey;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
+using StudentServicesWebApi.Application.DTOs.Plan;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Interfaces;
@@ -218,6 +220,88 @@ public class DtoMappingService : IDtoMappingService
             CreatedAt = design.CreatedAt,
             UpdatedAt = design.UpdatedAt,
             PhotoCount = design.Photos.Count
+        };
+    }
+
+    public async Task<OpenaiKeyDto> MapToOpenaiKeyDtoAsync(OpenaiKey openaiKey)
+    {
+        return new OpenaiKeyDto
+        {
+            Id = openaiKey.Id,
+            Key = openaiKey.Key,
+            UseCount = openaiKey.UseCount,
+            CreatedAt = openaiKey.CreatedAt,
+            UpdatedAt = openaiKey.UpdatedAt
+        };
+    }
+
+    public async Task<OpenaiKeySummaryDto> MapToOpenaiKeySummaryDtoAsync(OpenaiKey openaiKey)
+    {
+        var maskedKey = await MaskKeyForDisplay(openaiKey.Key);
+        var status = GetKeyStatus(openaiKey.UseCount);
+        
+        return new OpenaiKeySummaryDto
+        {
+            Id = openaiKey.Id,
+            KeyMasked = maskedKey,
+            UseCount = openaiKey.UseCount,
+            Status = status,
+            CreatedAt = openaiKey.CreatedAt,
+            UpdatedAt = openaiKey.UpdatedAt
+        };
+    }
+
+    private static async Task<string> MaskKeyForDisplay(string key)
+    {
+        await Task.CompletedTask; // Make it async for consistency
+        
+        if (string.IsNullOrEmpty(key) || key.Length < 10)
+            return "****";
+
+        return $"{key[..4]}****{key[^4..]}";
+    }
+
+    private static string GetKeyStatus(int useCount)
+    {
+        return useCount switch
+        {
+            >= 1000 => "Very High Usage",
+            >= 500 => "High Usage",
+            >= 100 => "Moderate Usage",
+            >= 50 => "Low Usage",
+            _ => "Active"
+        };
+    }
+
+    public async Task<PlanDto> MapToPlanDtoAsync(Plan plan)
+    {
+        return new PlanDto
+        {
+            Id = plan.Id,
+            PlanText = MapToTextSlideDto(plan.PlanText),
+            Plans = MapToTextSlideDto(plan.Plans),
+            CreatedAt = plan.CreatedAt,
+            UpdatedAt = plan.UpdatedAt
+        };
+    }
+
+    public async Task<PlanSummaryDto> MapToPlanSummaryDtoAsync(Plan plan)
+    {
+        var planTextPreview = plan.PlanText.Text.Length <= 50 
+            ? plan.PlanText.Text 
+            : plan.PlanText.Text.Substring(0, 50) + "...";
+            
+        var plansPreview = plan.Plans.Text.Length <= 50 
+            ? plan.Plans.Text 
+            : plan.Plans.Text.Substring(0, 50) + "...";
+
+        return new PlanSummaryDto
+        {
+            Id = plan.Id,
+            PlanTextPreview = planTextPreview,
+            PlansPreview = plansPreview,
+            CreatedAt = plan.CreatedAt,
+            UpdatedAt = plan.UpdatedAt
         };
     }
 }

@@ -22,11 +22,11 @@ public class TextSlideService : ITextSlideService
     public async Task<TextSlideDto> CreateTextSlideAsync(CreateTextSlideDto createTextSlideDto, CancellationToken ct = default)
     {
         // Validate for duplicates if needed
-        var isValid = await ValidateTextSlideCreationAsync(createTextSlideDto, ct);
-        if (!isValid)
-        {
-            throw new InvalidOperationException("A text slide with the same content and position already exists.");
-        }
+        //var isValid = await ValidateTextSlideCreationAsync(createTextSlideDto, ct);
+        //if (!isValid)
+        //{
+        //    throw new InvalidOperationException("A text slide with the same content and position already exists.");
+        //}
 
         var textSlide = new TextSlide
         {

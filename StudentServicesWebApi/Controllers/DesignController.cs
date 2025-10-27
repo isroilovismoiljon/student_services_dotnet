@@ -10,7 +10,6 @@ namespace StudentServicesWebApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Authorize]
 public class DesignController : ControllerBase
 {
     private readonly IDesignService _designService;
@@ -27,7 +26,7 @@ public class DesignController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetDesigns(
         [FromQuery] int pageNumber = 1,
-        [FromQuery] [Range(1, 100)] int pageSize = 10,
+        [FromQuery] [Range(1, 100)] int pageSize = 50,
         CancellationToken ct = default)
     {
         try
@@ -99,6 +98,7 @@ public class DesignController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateDesign(
         [FromForm] DesignCreateWithPhotosDto createDesignWithPhotosDto,
         CancellationToken ct = default)
@@ -160,6 +160,7 @@ public class DesignController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateDesign(int id, [FromBody] UpdateDesignDto updateDesignDto, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)

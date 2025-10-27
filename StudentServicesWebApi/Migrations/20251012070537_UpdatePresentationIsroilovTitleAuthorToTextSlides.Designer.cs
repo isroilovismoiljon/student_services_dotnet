@@ -12,8 +12,8 @@ using StudentServicesWebApi.Infrastructure;
 namespace StudentServicesWebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251009052516_InitialCreatewfegrtj")]
-    partial class InitialCreatewfegrtj
+    [Migration("20251012070537_UpdatePresentationIsroilovTitleAuthorToTextSlides")]
+    partial class UpdatePresentationIsroilovTitleAuthorToTextSlides
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,6 +107,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<int>("CreatedById")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -180,6 +183,44 @@ namespace StudentServicesWebApi.Migrations
                     b.HasIndex("UserId", "Status");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("StudentServicesWebApi.Domain.Models.OpenaiKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UseCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedAt");
+
+                    b.HasIndex("UseCount");
+
+                    b.HasIndex("UseCount", "CreatedAt");
+
+                    b.ToTable("OpenaiKeys");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Payment", b =>
@@ -329,22 +370,10 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Plan_1Id")
+                    b.Property<int>("PlanTextId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Plan_2Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Plan_3Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Plan_4Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Plan_5Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TitleId")
+                    b.Property<int>("PlansId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -352,17 +381,9 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Plan_1Id");
+                    b.HasIndex("PlanTextId");
 
-                    b.HasIndex("Plan_2Id");
-
-                    b.HasIndex("Plan_3Id");
-
-                    b.HasIndex("Plan_4Id");
-
-                    b.HasIndex("Plan_5Id");
-
-                    b.HasIndex("TitleId");
+                    b.HasIndex("PlansId");
 
                     b.ToTable("Plans");
                 });
@@ -375,10 +396,8 @@ namespace StudentServicesWebApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -400,17 +419,15 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<int>("PlanId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                    b.Property<int>("TitleId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Author");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("CreatedAt");
 
@@ -420,7 +437,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.HasIndex("Title");
+                    b.HasIndex("TitleId");
 
                     b.ToTable("PresentationIsroilovs");
                 });
@@ -751,53 +768,31 @@ namespace StudentServicesWebApi.Migrations
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Plan", b =>
                 {
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_1")
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "PlanText")
                         .WithMany()
-                        .HasForeignKey("Plan_1Id")
+                        .HasForeignKey("PlanTextId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_2")
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plans")
                         .WithMany()
-                        .HasForeignKey("Plan_2Id")
+                        .HasForeignKey("PlansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_3")
-                        .WithMany()
-                        .HasForeignKey("Plan_3Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("PlanText");
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_4")
-                        .WithMany()
-                        .HasForeignKey("Plan_4Id");
-
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Plan_5")
-                        .WithMany()
-                        .HasForeignKey("Plan_5Id");
-
-                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Title")
-                        .WithMany()
-                        .HasForeignKey("TitleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Plan_1");
-
-                    b.Navigation("Plan_2");
-
-                    b.Navigation("Plan_3");
-
-                    b.Navigation("Plan_4");
-
-                    b.Navigation("Plan_5");
-
-                    b.Navigation("Title");
+                    b.Navigation("Plans");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationIsroilov", b =>
                 {
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StudentServicesWebApi.Domain.Models.Design", "Design")
                         .WithMany()
                         .HasForeignKey("DesignId")
@@ -810,9 +805,19 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Title")
+                        .WithMany()
+                        .HasForeignKey("TitleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
                     b.Navigation("Design");
 
                     b.Navigation("Plan");
+
+                    b.Navigation("Title");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationPage", b =>

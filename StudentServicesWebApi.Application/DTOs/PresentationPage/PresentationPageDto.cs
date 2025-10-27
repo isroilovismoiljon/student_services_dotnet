@@ -4,9 +4,6 @@ namespace StudentServicesWebApi.Application.DTOs.PresentationPage;
 
 public class CreatePresentationPageDto
 {
-    [Required]
-    public int PresentationIsroilovId { get; set; }
-    
     public int? PhotoId { get; set; }
     public int? BackgroundPhotoId { get; set; }
 }
