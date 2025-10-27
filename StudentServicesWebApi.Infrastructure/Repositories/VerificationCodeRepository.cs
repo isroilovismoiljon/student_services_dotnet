@@ -15,6 +15,7 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
     {
         var now = DateTime.UtcNow;
         return await _context.Set<VerificationCode>()
+            .Where(vc => !vc.IsDeleted)
             .FirstOrDefaultAsync(vc => 
                 vc.UserId == userId && 
                 vc.Code == code && 
@@ -26,6 +27,7 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
     {
         var now = DateTime.UtcNow;
         return await _context.Set<VerificationCode>()
+            .Where(vc => !vc.IsDeleted)
             .Include(vc => vc.User)
             .FirstOrDefaultAsync(vc => 
                 vc.Code == code && 
@@ -48,7 +50,7 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
     public async Task<bool> InvalidateUserCodesAsync(int userId)
     {
         var codes = await _context.Set<VerificationCode>()
-            .Where(vc => vc.UserId == userId && !vc.IsUsed)
+            .Where(vc => !vc.IsDeleted && vc.UserId == userId && !vc.IsUsed)
             .ToListAsync();
 
         foreach (var code in codes)
@@ -65,7 +67,7 @@ public class VerificationCodeRepository : GenericRepository<VerificationCode>, I
     {
         var now = DateTime.UtcNow;
         return await _context.Set<VerificationCode>()
-            .Where(vc => vc.ExpiresAt <= now && !vc.IsUsed)
+            .Where(vc => !vc.IsDeleted && vc.ExpiresAt <= now && !vc.IsUsed)
             .ToListAsync();
     }
 }

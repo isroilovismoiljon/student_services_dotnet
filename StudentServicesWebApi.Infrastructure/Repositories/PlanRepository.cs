@@ -18,6 +18,7 @@ public class PlanRepository(AppDbContext context) : IPlanRepository
     public async Task<Plan?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Plans
+            .Where(p => !p.IsDeleted)
             .Include(p => p.PlanText)
             .Include(p => p.Plans)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
@@ -26,6 +27,7 @@ public class PlanRepository(AppDbContext context) : IPlanRepository
     public async Task<List<Plan>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Plans
+            .Where(p => !p.IsDeleted)
             .Include(p => p.PlanText)
             .Include(p => p.Plans)
             .OrderBy(p => p.Id)
@@ -35,6 +37,7 @@ public class PlanRepository(AppDbContext context) : IPlanRepository
     public async Task<(List<Plan> Plans, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = _context.Plans
+            .Where(p => !p.IsDeleted)
             .Include(p => p.PlanText)
             .Include(p => p.Plans);
 
@@ -62,16 +65,20 @@ public class PlanRepository(AppDbContext context) : IPlanRepository
 
     public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        var plan = await GetByIdAsync(id, cancellationToken);
+        var plan = await _context.Plans.FindAsync([id], cancellationToken);
         if (plan == null) return false;
 
-        _context.Plans.Remove(plan);
+        // Soft delete
+        plan.IsDeleted = true;
+        plan.DeletedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
 
     public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.Plans.AnyAsync(p => p.Id == id, cancellationToken);
+        return await _context.Plans
+            .Where(p => !p.IsDeleted)
+            .AnyAsync(p => p.Id == id, cancellationToken);
     }
 }
