@@ -143,8 +143,7 @@ public static class ServiceExtensions
     }
     public static IServiceCollection AddHostedServices(this IServiceCollection services)
     {
-        // Temporarily disabled to isolate database errors
-        // services.AddHostedService<TelegramBotHostedService>();
+        services.AddHostedService<TelegramBotHostedService>();
         return services;
     }
     public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
