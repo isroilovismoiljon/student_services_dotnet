@@ -1,5 +1,4 @@
-﻿namespace StudentServicesWebApi.Domain.Interfaces;
-
+namespace StudentServicesWebApi.Domain.Interfaces;
 public interface IGenericRepository<T> where T : class
 {
     Task<T> AddAsync(T entity, CancellationToken ct = default);

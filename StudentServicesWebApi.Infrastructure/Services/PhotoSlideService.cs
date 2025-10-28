@@ -5,16 +5,13 @@ using Microsoft.AspNetCore.Http;
 using StudentServicesWebApi.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Infrastructure;
-
 namespace StudentServicesWebApi.Infrastructure.Services;
-
 public class PhotoSlideService : IPhotoSlideService
 {
     private readonly IPhotoSlideRepository _photoSlideRepository;
     private readonly IDtoMappingService _dtoMappingService;
     private readonly IFileUploadService _fileUploadService;
     private readonly AppDbContext _context;
-
     public PhotoSlideService(
         IPhotoSlideRepository photoSlideRepository,
         IDtoMappingService dtoMappingService,
@@ -26,11 +23,9 @@ public class PhotoSlideService : IPhotoSlideService
         _fileUploadService = fileUploadService;
         _context = context;
     }
-
     public async Task<PhotoSlideDto> CreatePhotoSlideAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default)
     {
         var filePath = await _fileUploadService.UploadPresentationFileAsync(createPhotoSlideDto.Photo, null, ct);
-
         var photoSlide = new PhotoSlide
         {
             PhotoPath = filePath,
@@ -42,11 +37,9 @@ public class PhotoSlideService : IPhotoSlideService
             Width = createPhotoSlideDto.Width,
             Height = createPhotoSlideDto.Height
         };
-
         var createdPhotoSlide = await _photoSlideRepository.AddAsync(photoSlide, ct);
         return _dtoMappingService.MapToPhotoSlideDto(createdPhotoSlide);
     }
-
     public async Task<PhotoSlideDto?> UpdatePhotoSlideAsync(int id, UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default)
     {
         var existingPhotoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
@@ -54,11 +47,9 @@ public class PhotoSlideService : IPhotoSlideService
         {
             return null;
         }
-
         if (updatePhotoSlideDto.Photo != null)
         {
             var newFilePath = await _fileUploadService.UploadPresentationFileAsync(updatePhotoSlideDto.Photo, id, ct);
-
             try
             {
                 if (File.Exists(existingPhotoSlide.PhotoPath))
@@ -67,22 +58,17 @@ public class PhotoSlideService : IPhotoSlideService
                 }
             }
             catch { }
-
             existingPhotoSlide.PhotoPath = newFilePath;
             existingPhotoSlide.OriginalFileName = updatePhotoSlideDto.Photo.FileName;
             existingPhotoSlide.FileSize = updatePhotoSlideDto.Photo.Length;
             existingPhotoSlide.ContentType = updatePhotoSlideDto.Photo.ContentType;
         }
-
         if (updatePhotoSlideDto.Left.HasValue)
             existingPhotoSlide.Left = updatePhotoSlideDto.Left.Value;
-        
         if (updatePhotoSlideDto.Top.HasValue)
             existingPhotoSlide.Top = updatePhotoSlideDto.Top.Value;
-        
         if (updatePhotoSlideDto.Width.HasValue)
             existingPhotoSlide.Width = updatePhotoSlideDto.Width.Value;
-        
         if (updatePhotoSlideDto.Height.HasValue)
         {
             if(updatePhotoSlideDto.Height.Value == 0)
@@ -93,28 +79,22 @@ public class PhotoSlideService : IPhotoSlideService
             {
             existingPhotoSlide.Height = updatePhotoSlideDto.Height.Value;
             }
-
         }
-
         existingPhotoSlide.UpdatedAt = DateTime.UtcNow;
-
         var updatedPhotoSlide = await _photoSlideRepository.UpdateAsync(existingPhotoSlide, ct);
         return _dtoMappingService.MapToPhotoSlideDto(updatedPhotoSlide);
     }
-
     public async Task<PhotoSlideDto?> GetPhotoSlideByIdAsync(int id, CancellationToken ct = default)
     {
         var photoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
         return photoSlide != null ? _dtoMappingService.MapToPhotoSlideDto(photoSlide) : null;
     }
-
     public async Task<(List<PhotoSlideSummaryDto> PhotoSlides, int TotalCount)> GetPagedPhotoSlidesAsync(int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var (photoSlides, totalCount) = await _photoSlideRepository.GetPagedByCreationDateAsync(false, pageNumber, pageSize, ct);
         var photoSlideSummaries = photoSlides.Select(ps => _dtoMappingService.MapToPhotoSlideSummaryDto(ps)).ToList();
         return (photoSlideSummaries, totalCount);
     }
-
     public async Task<bool> DeletePhotoSlideAsync(int id, bool deleteFile = true, CancellationToken ct = default)
     {
         var photoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
@@ -122,7 +102,6 @@ public class PhotoSlideService : IPhotoSlideService
         {
             return false;
         }
-
         if (deleteFile)
         {
             try
@@ -134,19 +113,15 @@ public class PhotoSlideService : IPhotoSlideService
             }
             catch
             {
-                // Continue with database deletion even if file deletion fails
             }
         }
-
         await _photoSlideRepository.DeleteAsync(photoSlide, ct);
         return true;
     }
-
     public async Task<BulkPhotoSlideUploadResultDto> BulkCreatePhotoSlidesAsync(BulkCreatePhotoSlideDto bulkCreateDto, CancellationToken ct = default)
     {
         var results = new List<PhotoSlideUploadResultDto>();
         var successfulUploads = 0;
-
         for (int i = 0; i < bulkCreateDto.Photos.Count; i++)
         {
             var photo = bulkCreateDto.Photos[i];
@@ -154,12 +129,9 @@ public class PhotoSlideService : IPhotoSlideService
             {
                 OriginalFileName = photo.FileName
             };
-
             try
             {
-                // Calculate position based on layout direction
                 var position = CalculatePosition(i, bulkCreateDto);
-
                 var createDto = new CreatePhotoSlideDto
                 {
                     Photo = photo,
@@ -168,7 +140,6 @@ public class PhotoSlideService : IPhotoSlideService
                     Width = bulkCreateDto.DefaultWidth,
                     Height = bulkCreateDto.DefaultHeight
                 };
-
                 var photoSlideDto = await CreatePhotoSlideAsync(createDto, ct);
                 result.Success = true;
                 result.PhotoSlide = photoSlideDto;
@@ -179,10 +150,8 @@ public class PhotoSlideService : IPhotoSlideService
                 result.Success = false;
                 result.ErrorMessage = ex.Message;
             }
-
             results.Add(result);
         }
-
         return new BulkPhotoSlideUploadResultDto
         {
             TotalAttempted = bulkCreateDto.Photos.Count,
@@ -191,16 +160,13 @@ public class PhotoSlideService : IPhotoSlideService
             Results = results
         };
     }
-
     public async Task<int> BulkDeletePhotoSlidesAsync(BulkPhotoSlideOperationDto bulkOperationDto, bool deleteFiles = true, CancellationToken ct = default)
     {
         return await _photoSlideRepository.BulkDeleteAsync(bulkOperationDto.PhotoSlideIds, deleteFiles, ct);
     }
-
     public async Task<PhotoSlideStatsDto> GetPhotoSlideStatsAsync(CancellationToken ct = default)
     {
         var stats = await _photoSlideRepository.GetStatsAsync(ct);
-
         return new PhotoSlideStatsDto
         {
             TotalPhotoSlides = stats.TotalPhotoSlides,
@@ -224,19 +190,16 @@ public class PhotoSlideService : IPhotoSlideService
             MostCommonContentType = stats.MostCommonContentType
         };
     }
-
     public async Task<bool> PhotoSlideExistsAsync(int id, CancellationToken ct = default)
     {
         var photoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
         return photoSlide != null;
     }
-
     public async Task<List<PhotoSlideSummaryDto>> GetRecentPhotoSlidesAsync(int count = 10, CancellationToken ct = default)
     {
         var (photoSlides, _) = await _photoSlideRepository.GetPagedByCreationDateAsync(false, 1, count, ct);
         return photoSlides.Select(ps => _dtoMappingService.MapToPhotoSlideSummaryDto(ps)).ToList();
     }
-
     public async Task<PhotoSlideDto?> DuplicatePhotoSlideAsync(int id, double leftOffset = 10, double topOffset = 10, bool copyFile = true, CancellationToken ct = default)
     {
         var originalPhotoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
@@ -244,14 +207,11 @@ public class PhotoSlideService : IPhotoSlideService
         {
             return null;
         }
-
         string newPhotoPath = originalPhotoSlide.PhotoPath;
-        
         if (copyFile)
         {
             try
             {
-                // Create a copy of the physical file
                 var fileInfo = new FileInfo(originalPhotoSlide.PhotoPath);
                 var newFileName = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}_copy_{DateTime.UtcNow:yyyyMMddHHmmss}{fileInfo.Extension}";
                 newPhotoPath = Path.Combine(fileInfo.DirectoryName!, newFileName);
@@ -259,11 +219,9 @@ public class PhotoSlideService : IPhotoSlideService
             }
             catch
             {
-                // If file copy fails, use the same file path
                 newPhotoPath = originalPhotoSlide.PhotoPath;
             }
         }
-
         var duplicatePhotoSlide = new PhotoSlide
         {
             PhotoPath = newPhotoPath,
@@ -275,17 +233,14 @@ public class PhotoSlideService : IPhotoSlideService
             Width = originalPhotoSlide.Width,
             Height = originalPhotoSlide.Height
         };
-
         var createdPhotoSlide = await _photoSlideRepository.AddAsync(duplicatePhotoSlide, ct);
         return _dtoMappingService.MapToPhotoSlideDto(createdPhotoSlide);
     }
-
     public async Task<PhotoSlideDto?> ReplacePhotoAsync(int id, IFormFile newPhoto, bool deleteOldFile = true, CancellationToken ct = default)
     {
         var updateDto = new UpdatePhotoSlideDto { Photo = newPhoto };
         return await UpdatePhotoSlideAsync(id, updateDto, ct);
     }
-
     private static (double Left, double Top) CalculatePosition(int index, BulkCreatePhotoSlideDto bulkCreateDto)
     {
         return bulkCreateDto.LayoutDirection switch
@@ -302,26 +257,20 @@ public class PhotoSlideService : IPhotoSlideService
             _ => (bulkCreateDto.DefaultLeft, bulkCreateDto.DefaultTop)
         };
     }
-
     private static (double Left, double Top) CalculateGridPosition(int index, BulkCreatePhotoSlideDto bulkCreateDto)
     {
-        // Calculate grid dimensions (roughly square)
         var gridSize = (int)Math.Ceiling(Math.Sqrt(bulkCreateDto.Photos.Count));
         var row = index / gridSize;
         var col = index % gridSize;
-
         var left = bulkCreateDto.DefaultLeft + (col * (bulkCreateDto.DefaultWidth + bulkCreateDto.Spacing));
         var top = bulkCreateDto.DefaultTop + (row * ((bulkCreateDto.DefaultHeight ?? 100) + bulkCreateDto.Spacing));
-
         return (left, top);
     }
-
     public async Task<PhotoSlideDto> CreatePlaceholderPhotoSlideAsync(PhotoSlide placeholderPhoto, CancellationToken ct = default)
     {
         var createdPhotoSlide = await _photoSlideRepository.AddAsync(placeholderPhoto, ct);
         return _dtoMappingService.MapToPhotoSlideDto(createdPhotoSlide);
     }
-
     public async Task<PhotoSlideDto> UpdatePhotoSlideFileAsync(int id, IFormFile photoFile, CancellationToken ct = default)
     {
         var existingPhotoSlide = await _photoSlideRepository.GetByIdAsync(id, ct);
@@ -329,11 +278,7 @@ public class PhotoSlideService : IPhotoSlideService
         {
             throw new ArgumentException($"PhotoSlide with ID {id} not found.");
         }
-
-        // Upload the new photo file
         var newFilePath = await _fileUploadService.UploadPresentationFileAsync(photoFile, id, ct);
-
-        // Delete the old placeholder file if it exists and is not a placeholder
         if (existingPhotoSlide.PhotoPath != "placeholder" && File.Exists(existingPhotoSlide.PhotoPath))
         {
             try
@@ -342,55 +287,39 @@ public class PhotoSlideService : IPhotoSlideService
             }
             catch { }
         }
-
-        // Update the PhotoSlide with the new file information
         existingPhotoSlide.PhotoPath = newFilePath;
         existingPhotoSlide.OriginalFileName = photoFile.FileName;
         existingPhotoSlide.FileSize = photoFile.Length;
         existingPhotoSlide.ContentType = photoFile.ContentType;
         existingPhotoSlide.UpdatedAt = DateTime.UtcNow;
-
         var updatedPhotoSlide = await _photoSlideRepository.UpdateAsync(existingPhotoSlide, ct);
         return _dtoMappingService.MapToPhotoSlideDto(updatedPhotoSlide);
     }
-
     public async Task<PhotoSlideDto> AddPhotoToDesignAsync(int designId, AddPhotoToDesignDto addPhotoToDesignDto, CancellationToken ct = default)
     {
-        // Validate that the design exists
         var design = await _context.Set<Domain.Models.Design>()
             .Include(d => d.Photos)
             .FirstOrDefaultAsync(d => d.Id == designId, ct);
-        
         if (design == null)
             throw new ArgumentException($"Design with ID {designId} not found");
-
-        // Upload the photo file using presentation file upload service
         var filePath = await _fileUploadService.UploadPresentationFileAsync(
             addPhotoToDesignDto.Photo,
-            null, // No slide ID yet since we haven't created it
+            null, 
             ct);
-
-        // Create new PhotoSlide with default positioning as specified
         var photoSlide = new PhotoSlide
         {
             PhotoPath = filePath,
             OriginalFileName = addPhotoToDesignDto.Photo.FileName,
             FileSize = addPhotoToDesignDto.Photo.Length,
             ContentType = addPhotoToDesignDto.Photo.ContentType,
-            
-            // Apply your specified default layout values
             Left = 0,
             Top = 0, 
             Width = 33.867,
             Height = 19.05,
-            
-            // Link to the design
             DesignId = designId,
-            
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
-
         var createdPhotoSlide = await _photoSlideRepository.AddAsync(photoSlide, ct);
         return _dtoMappingService.MapToPhotoSlideDto(createdPhotoSlide);
     }

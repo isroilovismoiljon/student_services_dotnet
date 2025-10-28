@@ -1,5 +1,4 @@
-﻿namespace StudentServicesWebApi.Domain.Models;
-
+namespace StudentServicesWebApi.Domain.Models;
 public class PhotoSlide : BaseEntity
 {
     public string PhotoPath { get; set; } = string.Empty;

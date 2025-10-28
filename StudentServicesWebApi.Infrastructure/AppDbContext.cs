@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Infrastructure;
-
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
@@ -18,168 +16,116 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Design> Designs => Set<Design>();
     public DbSet<Plan> Plans => Set<Plan>();
     public DbSet<OpenaiKey> OpenaiKeys => Set<OpenaiKey>();
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // User
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique();
-            
         modelBuilder.Entity<User>()
             .HasIndex(u => u.TelegramId)
-            .IsUnique(); // TelegramId unique constraint
-
-        // Notification
+            .IsUnique(); 
         modelBuilder.Entity<Notification>()
             .HasIndex(n => new { n.UserId, n.Status });
-
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.User)
             .WithMany()
             .HasForeignKey(n => n.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // VerificationCode
         modelBuilder.Entity<VerificationCode>()
             .HasIndex(vc => vc.Code);
-
         modelBuilder.Entity<VerificationCode>()
             .HasIndex(vc => new { vc.UserId, vc.IsUsed });
-
         modelBuilder.Entity<VerificationCode>()
             .HasOne(vc => vc.User)
             .WithMany()
             .HasForeignKey(vc => vc.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // Payment
         modelBuilder.Entity<Payment>(entity =>
         {
-            // Required fields
             entity.Property(p => p.Photo)
                 .IsRequired()
-                .HasMaxLength(2000); // Allow for URLs or file paths
-            
+                .HasMaxLength(2000); 
             entity.Property(p => p.RequestedAmount)
                 .IsRequired()
-                .HasPrecision(18, 2); // Decimal precision for currency
-            
+                .HasPrecision(18, 2); 
             entity.Property(p => p.ApprovedAmount)
-                .HasPrecision(18, 2); // Optional decimal for approved amount
-            
-            // String length constraints
+                .HasPrecision(18, 2); 
             entity.Property(p => p.Description)
                 .HasMaxLength(500);
-            
             entity.Property(p => p.RejectReason)
                 .HasMaxLength(1000);
-            
             entity.Property(p => p.AdminNotes)
                 .HasMaxLength(1000);
-            
-            // Indexes for performance
             entity.HasIndex(p => p.PaymentStatus);
             entity.HasIndex(p => new { p.SenderId, p.PaymentStatus });
             entity.HasIndex(p => p.ProcessedByAdminId);
             entity.HasIndex(p => p.CreatedAt);
-            
-            // Foreign key relationships
             entity.HasOne(p => p.Sender)
                 .WithMany()
                 .HasForeignKey(p => p.SenderId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
-            
-            
+                .OnDelete(DeleteBehavior.Restrict); 
             entity.HasOne(p => p.ProcessedByAdmin)
                 .WithMany()
                 .HasForeignKey(p => p.ProcessedByAdminId)
-                .OnDelete(DeleteBehavior.Restrict) // Prevent cascade delete
+                .OnDelete(DeleteBehavior.Restrict) 
                 .IsRequired(false);
         });
-
-        // AdminAction
         modelBuilder.Entity<AdminAction>(entity =>
         {
-            // String length constraints
             entity.Property(a => a.Description)
                 .IsRequired()
                 .HasMaxLength(1000);
-            
             entity.Property(a => a.PreviousValue)
                 .HasMaxLength(100);
-            
             entity.Property(a => a.NewValue)
                 .HasMaxLength(100);
-            
             entity.Property(a => a.Reason)
                 .HasMaxLength(500);
-            
             entity.Property(a => a.IpAddress)
                 .HasMaxLength(50);
-            
             entity.Property(a => a.Amount)
-                .HasPrecision(18, 2); // Decimal precision for currency
-            
-            // Indexes for performance
+                .HasPrecision(18, 2); 
             entity.HasIndex(a => a.AdminId);
             entity.HasIndex(a => a.TargetUserId);
             entity.HasIndex(a => a.ActionType);
             entity.HasIndex(a => a.CreatedAt);
             entity.HasIndex(a => new { a.AdminId, a.ActionType });
             entity.HasIndex(a => new { a.TargetUserId, a.ActionType });
-            
-            // Foreign key relationships
             entity.HasOne(a => a.Admin)
                 .WithMany()
                 .HasForeignKey(a => a.AdminId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
-            
+                .OnDelete(DeleteBehavior.Restrict); 
             entity.HasOne(a => a.TargetUser)
                 .WithMany()
                 .HasForeignKey(a => a.TargetUserId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                .OnDelete(DeleteBehavior.Restrict); 
         });
-
-        // TextSlide
         modelBuilder.Entity<TextSlide>(entity =>
         {
-            // Required fields
             entity.Property(ts => ts.Text)
                 .IsRequired()
-                .HasMaxLength(5000); // Allow for large text content
-            
+                .HasMaxLength(5000); 
             entity.Property(ts => ts.Font)
                 .IsRequired()
-                .HasMaxLength(100); // Font name constraint
-            
+                .HasMaxLength(100); 
             entity.Property(ts => ts.ColorHex)
                 .IsRequired()
-                .HasMaxLength(7) // #FFFFFF format
+                .HasMaxLength(7) 
 ;
-            
-            // Numeric constraints
             entity.Property(ts => ts.Size)
                 .IsRequired();
-            
             entity.Property(ts => ts.Left)
                 .IsRequired()
-                .HasPrecision(18, 6); // High precision for positioning
-            
+                .HasPrecision(18, 6); 
             entity.Property(ts => ts.Top)
                 .IsRequired()
                 .HasPrecision(18, 6);
-            
             entity.Property(ts => ts.Width)
                 .IsRequired()
                 .HasPrecision(18, 6);
-            
             entity.Property(ts => ts.Height)
-                .HasPrecision(18, 6); // Optional, so nullable
-            
-            // Indexes for performance
+                .HasPrecision(18, 6); 
             entity.HasIndex(ts => ts.Font);
             entity.HasIndex(ts => ts.ColorHex);
             entity.HasIndex(ts => ts.Size);
@@ -187,51 +133,33 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasIndex(ts => new { ts.Left, ts.Top });
             entity.HasIndex(ts => ts.CreatedAt);
             entity.HasIndex(ts => ts.UpdatedAt);
-            
-            // Full text search index for text content (PostgreSQL specific)
-            // entity.HasIndex(ts => ts.Text).HasMethod("gin").IsTsVectorExpressionIndex("english");
-            
-            // Composite index for duplicate detection
             entity.HasIndex(ts => new { ts.Text, ts.Left, ts.Top })
 ;
         });
-
-        // PhotoSlide
         modelBuilder.Entity<PhotoSlide>(entity =>
         {
-            // Required fields
             entity.Property(ps => ps.PhotoPath)
                 .IsRequired()
-                .HasMaxLength(2000); // Allow for long file paths
-            
+                .HasMaxLength(2000); 
             entity.Property(ps => ps.OriginalFileName)
                 .IsRequired()
-                .HasMaxLength(500); // Filename constraint
-            
+                .HasMaxLength(500); 
             entity.Property(ps => ps.ContentType)
                 .IsRequired()
-                .HasMaxLength(100); // MIME type constraint
-            
-            // Numeric constraints
+                .HasMaxLength(100); 
             entity.Property(ps => ps.FileSize)
                 .IsRequired();
-            
             entity.Property(ps => ps.Left)
                 .IsRequired()
-                .HasPrecision(18, 6); // High precision for positioning
-            
+                .HasPrecision(18, 6); 
             entity.Property(ps => ps.Top)
                 .IsRequired()
                 .HasPrecision(18, 6);
-            
             entity.Property(ps => ps.Width)
                 .IsRequired()
                 .HasPrecision(18, 6);
-            
             entity.Property(ps => ps.Height)
-                .HasPrecision(18, 6); // Optional, so nullable
-            
-            // Indexes for performance
+                .HasPrecision(18, 6); 
             entity.HasIndex(ps => ps.PhotoPath);
             entity.HasIndex(ps => ps.OriginalFileName);
             entity.HasIndex(ps => ps.ContentType);
@@ -239,135 +167,101 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasIndex(ps => new { ps.Left, ps.Top });
             entity.HasIndex(ps => ps.CreatedAt);
             entity.HasIndex(ps => ps.UpdatedAt);
-            
-            // Composite index for duplicate position detection
             entity.HasIndex(ps => new { ps.Left, ps.Top })
 ;
         });
-
-        // PresentationIsroilov
         modelBuilder.Entity<PresentationIsroilov>(entity =>
         {
             entity.Property(p => p.FilePath)
                 .HasMaxLength(2000);
-            
             entity.HasIndex(p => p.TitleId);
             entity.HasIndex(p => p.AuthorId);
             entity.HasIndex(p => p.IsActive);
             entity.HasIndex(p => p.CreatedAt);
-            
             entity.HasOne(p => p.Title)
                 .WithMany()
                 .HasForeignKey(p => p.TitleId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
             entity.HasOne(p => p.Author)
                 .WithMany()
                 .HasForeignKey(p => p.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
             entity.HasOne(p => p.Design)
                 .WithMany()
                 .HasForeignKey(p => p.DesignId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
             entity.HasOne(p => p.Plan)
                 .WithMany()
                 .HasForeignKey(p => p.PlanId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
-        // PresentationPage
         modelBuilder.Entity<PresentationPage>(entity =>
         {
             entity.HasIndex(pp => pp.PresentationIsroilovId);
             entity.HasIndex(pp => pp.CreatedAt);
-            
             entity.HasOne(pp => pp.PresentationIsroilov)
                 .WithMany(p => p.PresentationPages)
                 .HasForeignKey(pp => pp.PresentationIsroilovId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
             entity.HasOne(pp => pp.Photo)
                 .WithMany()
                 .HasForeignKey(pp => pp.PhotoId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
-            
             entity.HasOne(pp => pp.BackgroundPhoto)
                 .WithMany()
                 .HasForeignKey(pp => pp.BackgroundPhotoId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
         });
-
-        // PresentationPost
         modelBuilder.Entity<PresentationPost>(entity =>
         {
             entity.HasIndex(pp => pp.PresentationPageId);
             entity.HasIndex(pp => pp.TitleId);
             entity.HasIndex(pp => pp.TextId);
             entity.HasIndex(pp => pp.CreatedAt);
-            
             entity.HasOne(pp => pp.PresentationPage)
                 .WithMany(p => p.PresentationPosts)
                 .HasForeignKey(pp => pp.PresentationPageId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
             entity.HasOne(pp => pp.Title)
                 .WithMany()
                 .HasForeignKey(pp => pp.TitleId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
-            
             entity.HasOne(pp => pp.Text)
                 .WithMany()
                 .HasForeignKey(pp => pp.TextId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-
-        // Design
         modelBuilder.Entity<Design>(entity =>
         {
             entity.Property(d => d.Title)
                 .IsRequired()
                 .HasMaxLength(200);
-            
             entity.HasIndex(d => d.Title);
             entity.HasIndex(d => d.CreatedAt);
-            
             entity.HasOne(d => d.CreatedBy)
                 .WithMany()
                 .HasForeignKey("CreatedById")
                 .OnDelete(DeleteBehavior.Restrict);
-            
             entity.HasMany(d => d.Photos)
                 .WithOne()
                 .HasForeignKey("DesignId")
                 .OnDelete(DeleteBehavior.Cascade);
         });
-
-        // OpenaiKey
         modelBuilder.Entity<OpenaiKey>(entity =>
         {
-            // Required fields
             entity.Property(ok => ok.Key)
                 .IsRequired()
-                .HasMaxLength(256); // OpenAI API keys can be up to 256 characters
-            
+                .HasMaxLength(256); 
             entity.Property(ok => ok.UseCount)
                 .IsRequired();
-            
-            // Unique constraint on Key to prevent duplicates
             entity.HasIndex(ok => ok.Key)
                 .IsUnique();
-            
-            // Indexes for performance
             entity.HasIndex(ok => ok.UseCount);
             entity.HasIndex(ok => ok.CreatedAt);
             entity.HasIndex(ok => ok.UpdatedAt);
-            
-            // Composite index for filtering by usage range
             entity.HasIndex(ok => new { ok.UseCount, ok.CreatedAt });
         });
     }

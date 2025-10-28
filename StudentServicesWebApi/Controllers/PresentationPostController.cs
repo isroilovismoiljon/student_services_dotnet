@@ -1,21 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.PresentationPost;
 using StudentServicesWebApi.Application.Interfaces;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/PresentationPosts")]
 [Produces("application/json")]
 public class PresentationPostController : ControllerBase
 {
     private readonly IPresentationPostService _postService;
-
     public PresentationPostController(IPresentationPostService postService)
     {
         _postService = postService;
     }
-
     [HttpGet("page/{presentationPageId:int}")]
     public async Task<IActionResult> GetPostsByPresentationPageId(int presentationPageId, CancellationToken ct = default)
     {
@@ -42,7 +38,6 @@ public class PresentationPostController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetPostById(int id, CancellationToken ct = default)
     {
@@ -56,7 +51,6 @@ public class PresentationPostController : ControllerBase
                     message = $"Post with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -75,7 +69,6 @@ public class PresentationPostController : ControllerBase
             });
         }
     }
-
     [HttpPost]
     public async Task<IActionResult> CreatePost([FromBody] CreatePresentationPostDto createDto, CancellationToken ct = default)
     {
@@ -87,7 +80,6 @@ public class PresentationPostController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var post = await _postService.CreatePostAsync(createDto, ct);
@@ -110,7 +102,6 @@ public class PresentationPostController : ControllerBase
             });
         }
     }
-
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePresentationPostDto updateDto, CancellationToken ct = default)
     {
@@ -122,7 +113,6 @@ public class PresentationPostController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var post = await _postService.UpdatePostAsync(id, updateDto, ct);
@@ -133,7 +123,6 @@ public class PresentationPostController : ControllerBase
                     message = $"Post with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -153,7 +142,6 @@ public class PresentationPostController : ControllerBase
             });
         }
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePost(int id, CancellationToken ct = default)
     {
@@ -167,7 +155,6 @@ public class PresentationPostController : ControllerBase
                     message = $"Post with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,

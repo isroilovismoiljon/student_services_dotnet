@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Application.DTOs.PresentationPage;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Application.Interfaces;
-
 public interface IPresentationPageService
 {
     Task<List<PresentationPageDto>> GetPagesByPresentationIdAsync(int presentationId, CancellationToken ct = default);

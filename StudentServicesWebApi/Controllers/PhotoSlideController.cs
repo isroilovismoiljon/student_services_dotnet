@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using System.ComponentModel.DataAnnotations;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/PhotoSlides")]
 [Produces("application/json")]
@@ -12,20 +10,17 @@ public class PhotoSlideController : ControllerBase
 {
     private readonly IPhotoSlideService _photoSlideService;
     private readonly ILogger<PhotoSlideController> _logger;
-
     public PhotoSlideController(IPhotoSlideService photoSlideService, ILogger<PhotoSlideController> logger)
     {
         _photoSlideService = photoSlideService;
         _logger = logger;
     }
-
     [HttpGet]
     public async Task<IActionResult> GetAllPhotoSlides([FromQuery] int pageNumber = 1, [FromQuery] [Range(1, 100)] int pageSize = 10, CancellationToken ct = default)
     {
         try
         {
             var (photoSlides, totalCount) = await _photoSlideService.GetPagedPhotoSlidesAsync(pageNumber, pageSize, ct);
-            
             return Ok(new
             {
                 success = true,
@@ -54,7 +49,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetPhotoSlideById(int id, CancellationToken ct = default)
     {
@@ -68,7 +62,6 @@ public class PhotoSlideController : ControllerBase
                     message = $"Photo slide with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -87,7 +80,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpPost]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> CreatePhotoSlide([FromForm] CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default)
@@ -100,7 +92,6 @@ public class PhotoSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var photoSlide = await _photoSlideService.CreatePhotoSlideAsync(createPhotoSlideDto, ct);
@@ -141,7 +132,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpPut("{id:int}")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UpdatePhotoSlide(int id, [FromForm] UpdatePhotoSlideDto updatePhotoSlideDto, CancellationToken ct = default)
@@ -154,7 +144,6 @@ public class PhotoSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var photoSlide = await _photoSlideService.UpdatePhotoSlideAsync(id, updatePhotoSlideDto, ct);
@@ -165,7 +154,6 @@ public class PhotoSlideController : ControllerBase
                     message = $"Photo slide with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -203,7 +191,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePhotoSlide(int id, [FromQuery] bool deleteFile = true, CancellationToken ct = default)
     {
@@ -217,7 +204,6 @@ public class PhotoSlideController : ControllerBase
                     message = $"Photo slide with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -236,7 +222,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpPost("{id:int}/duplicate")]
     public async Task<IActionResult> DuplicatePhotoSlide(int id, [FromQuery] double leftOffset = 10, [FromQuery] double topOffset = 10, [FromQuery] bool copyFile = true, CancellationToken ct = default)
     {
@@ -250,7 +235,6 @@ public class PhotoSlideController : ControllerBase
                     message = $"Photo slide with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return CreatedAtAction(nameof(GetPhotoSlideById), new { id = result.Id }, new
             {
                 success = true,
@@ -270,7 +254,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpPost("{id:int}/replace-photo")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> ReplacePhoto(int id, IFormFile newPhoto, [FromQuery] bool deleteOldFile = true, CancellationToken ct = default)
@@ -282,7 +265,6 @@ public class PhotoSlideController : ControllerBase
                 message = "New photo file is required",
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var result = await _photoSlideService.ReplacePhotoAsync(id, newPhoto, deleteOldFile, ct);
@@ -293,7 +275,6 @@ public class PhotoSlideController : ControllerBase
                     message = $"Photo slide with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -313,8 +294,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
-
     [HttpGet("recent")]
     public async Task<IActionResult> GetRecentPhotoSlides([FromQuery] [Range(1, 50)] int count = 10, CancellationToken ct = default)
     {
@@ -341,7 +320,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("statistics")]
     public async Task<IActionResult> GetPhotoSlideStats(CancellationToken ct = default)
     {
@@ -366,7 +344,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}/exists")]
     public async Task<IActionResult> CheckPhotoSlideExists(int id, CancellationToken ct = default)
     {
@@ -392,7 +369,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpPost("bulk")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> BulkCreatePhotoSlides([FromForm] BulkCreatePhotoSlideDto bulkCreateDto, CancellationToken ct = default)
@@ -405,7 +381,6 @@ public class PhotoSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var result = await _photoSlideService.BulkCreatePhotoSlidesAsync(bulkCreateDto, ct);
@@ -428,7 +403,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpDelete("bulk")]
     public async Task<IActionResult> BulkDeletePhotoSlides([FromBody] BulkPhotoSlideOperationDto bulkOperationDto, [FromQuery] bool deleteFiles = true, CancellationToken ct = default)
     {
@@ -440,7 +414,6 @@ public class PhotoSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var deletedCount = await _photoSlideService.BulkDeletePhotoSlidesAsync(bulkOperationDto, deleteFiles, ct);
@@ -464,7 +437,6 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpPost("add-to-design/{designId:int}")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> AddPhotoToDesign(
@@ -480,11 +452,9 @@ public class PhotoSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var photoSlide = await _photoSlideService.AddPhotoToDesignAsync(designId, addPhotoToDesignDto, ct);
-
             return CreatedAtAction(nameof(GetPhotoSlideById), new { id = photoSlide.Id }, new
             {
                 success = true,
@@ -522,18 +492,14 @@ public class PhotoSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("design/{designId:int}")]
     public async Task<IActionResult> GetPhotosByDesignId(int designId, CancellationToken ct = default)
     {
         try
         {
-            // Get design photos through the design service would be better, but for now we can filter
-            var allPhotos = await _photoSlideService.GetPagedPhotoSlidesAsync(1, 1000, ct); // Get all photos
-            var designPhotos = allPhotos.PhotoSlides.Where(p => p.Id > 0).ToList(); // This is temporary - we need proper filtering
-            
+            var allPhotos = await _photoSlideService.GetPagedPhotoSlidesAsync(1, 1000, ct); 
+            var designPhotos = allPhotos.PhotoSlides.Where(p => p.Id > 0).ToList(); 
             var hasMinimumPhotos = designPhotos.Count >= 4;
-            
             return Ok(new
             {
                 success = true,

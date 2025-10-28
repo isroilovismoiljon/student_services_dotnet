@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations;
 namespace StudentServicesWebApi.Domain.Models;
-
 public class OpenaiKey : BaseEntity
 {
     public required string Key { get; set; } = string.Empty;

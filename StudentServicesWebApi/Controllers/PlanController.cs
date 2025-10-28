@@ -4,16 +4,13 @@ using Swashbuckle.AspNetCore.Annotations;
 using StudentServicesWebApi.Application.DTOs.Plan;
 using StudentServicesWebApi.Application.Interfaces;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Controllers;
-
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class PlanController(IPlanService planService) : ControllerBase
 {
     private readonly IPlanService _planService = planService;
-
     [HttpPost]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Create a new plan", Description = "Creates a new plan with PlanText and Plans slides.")]
@@ -33,7 +30,6 @@ public class PlanController(IPlanService planService) : ControllerBase
             return StatusCode(500, new { message = "An error occurred while creating the plan.", details = ex.Message });
         }
     }
-
     [HttpGet("{id}")]
     [SwaggerOperation(Summary = "Get plan by ID", Description = "Retrieves a specific plan by its unique identifier.")]
     [SwaggerResponse(200, "Plan found", typeof(PlanDto))]
@@ -44,7 +40,6 @@ public class PlanController(IPlanService planService) : ControllerBase
         var result = await _planService.GetByIdAsync(id, cancellationToken);
         return result == null ? NotFound(new { message = $"Plan with ID {id} not found." }) : Ok(result);
     }
-
     [HttpGet]
     [SwaggerOperation(Summary = "Get all plans", Description = "Retrieves all plans in the system.")]
     [SwaggerResponse(200, "List of all plans", typeof(List<PlanDto>))]
@@ -54,7 +49,6 @@ public class PlanController(IPlanService planService) : ControllerBase
         var result = await _planService.GetAllAsync(cancellationToken);
         return Ok(result);
     }
-
     [HttpGet("paged")]
     [SwaggerOperation(Summary = "Get paginated plans", Description = "Retrieves plans with pagination support.")]
     [SwaggerResponse(200, "Paginated list of plans")]
@@ -68,7 +62,6 @@ public class PlanController(IPlanService planService) : ControllerBase
         try
         {
             var (plans, totalCount) = await _planService.GetPagedAsync(pageNumber, pageSize, cancellationToken);
-            
             var response = new
             {
                 Data = plans,
@@ -77,7 +70,6 @@ public class PlanController(IPlanService planService) : ControllerBase
                 PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
             };
-            
             return Ok(response);
         }
         catch (Exception ex)
@@ -85,7 +77,6 @@ public class PlanController(IPlanService planService) : ControllerBase
             return StatusCode(500, new { message = "An error occurred while retrieving paginated plans.", details = ex.Message });
         }
     }
-
     [HttpPut("{id}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Update plan", Description = "Updates an existing plan.")]
@@ -108,7 +99,6 @@ public class PlanController(IPlanService planService) : ControllerBase
             return StatusCode(500, new { message = "An error occurred while updating the plan.", details = ex.Message });
         }
     }
-
     [HttpDelete("{id}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Delete plan", Description = "Deletes a plan from the system.")]
@@ -123,7 +113,6 @@ public class PlanController(IPlanService planService) : ControllerBase
             ? NoContent() 
             : NotFound(new { message = $"Plan with ID {id} not found." });
     }
-
     [HttpGet("exists/{id}")]
     [SwaggerOperation(Summary = "Check if plan exists", Description = "Checks if a plan exists by its ID.")]
     [SwaggerResponse(200, "Plan existence status")]

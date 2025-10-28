@@ -1,5 +1,4 @@
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IUrlService
 {
     string? GetPaymentImageUrl(string? relativePath);

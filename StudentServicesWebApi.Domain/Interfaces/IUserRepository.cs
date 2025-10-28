@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IUserRepository : IGenericRepository<User>
 {
     Task<User?> GetByUsernameAsync(string username);

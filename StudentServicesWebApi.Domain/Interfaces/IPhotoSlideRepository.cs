@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IPhotoSlideRepository : IGenericRepository<PhotoSlide>
 {
     Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByCreationDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default);
@@ -9,7 +7,6 @@ public interface IPhotoSlideRepository : IGenericRepository<PhotoSlide>
     Task<PhotoSlideStatsResult> GetStatsAsync(CancellationToken ct = default);
     Task<bool> UpdatePhotoPathAsync(int id, string newPhotoPath, CancellationToken ct = default);
 }
-
 public class PhotoSlideStatsResult
 {
     public int TotalPhotoSlides { get; set; }

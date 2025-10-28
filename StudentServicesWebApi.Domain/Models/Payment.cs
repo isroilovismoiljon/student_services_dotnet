@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Domain.Models;
 public class Payment : BaseEntity
 {
@@ -13,9 +12,7 @@ public class Payment : BaseEntity
     public required string Photo { get; set; }
     [MaxLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
     public string? Description { get; set; }
-    
     #endregion
-    
     #region Admin-Processed Information
     [Range(0.01, double.MaxValue, ErrorMessage = "Approved amount must be greater than 0")]
     public decimal? ApprovedAmount { get; set; }
@@ -27,14 +24,11 @@ public class Payment : BaseEntity
     public DateTime? ProcessedAt { get; set; }
     [MaxLength(1000, ErrorMessage = "Admin notes cannot exceed 1000 characters")]
     public string? AdminNotes { get; set; }
-    
     #endregion
-    
     #region Business Logic Methods
     public bool CanBeProcessed => PaymentStatus == PaymentStatus.Waiting;
     public bool IsProcessed => PaymentStatus != PaymentStatus.Waiting;
     public decimal FinalAmount => ApprovedAmount ?? RequestedAmount;
     public bool AmountWasAdjusted => ApprovedAmount.HasValue && ApprovedAmount != RequestedAmount;
-    
     #endregion
 }

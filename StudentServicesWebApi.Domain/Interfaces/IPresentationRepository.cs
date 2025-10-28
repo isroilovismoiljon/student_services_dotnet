@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IPresentationRepository : IGenericRepository<PresentationIsroilov>
 {
     Task<List<PresentationIsroilov>> GetAllWithPagesAsync(CancellationToken ct = default);

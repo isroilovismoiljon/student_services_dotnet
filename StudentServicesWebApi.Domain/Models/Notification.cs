@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Domain.Models;
-
 public class Notification : BaseEntity
 {
     public string Title { get; set; } = default!;
@@ -15,5 +13,5 @@ public class Notification : BaseEntity
     public DateTime? ReadAt { get; set; }
     public DateTime? ExpiresAt { get; set; }
     public bool IsGlobal { get; set; } = false;
-    public string? Metadata { get; set; } // JSON string for additional data
+    public string? Metadata { get; set; } 
 }

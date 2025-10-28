@@ -3,36 +3,26 @@ using Microsoft.Extensions.Logging;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Domain.Interfaces;
-
 namespace StudentServicesWebApi.Infrastructure.Services;
-
 public class DataSeeder : IDataSeeder
 {
     private readonly AppDbContext _context;
     private readonly ILogger<DataSeeder> _logger;
-
     public DataSeeder(AppDbContext context, ILogger<DataSeeder> logger)
     {
         _context = context;
         _logger = logger;
     }
-
     public async Task SeedAsync()
     {
         try
         {
-            // Ensure database is created
             await _context.Database.EnsureCreatedAsync();
-            
-            // Check if SuperAdmin user already exists
             var superAdminExists = await _context.Users
                 .AnyAsync(u => u.UserRole == UserRole.SuperAdmin || u.Username == "Isroilov");
-
             if (!superAdminExists)
             {
                 _logger.LogInformation("Creating default SuperAdmin user...");
-
-                // Create default SuperAdmin user
                 var superAdminUser = new User
                 {
                     Username = "Isroilov",
@@ -46,10 +36,8 @@ public class DataSeeder : IDataSeeder
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-
                 await _context.Users.AddAsync(superAdminUser);
                 await _context.SaveChangesAsync();
-
                 _logger.LogInformation("Default SuperAdmin user created successfully!");
                 _logger.LogInformation("Username: Isroilov");
                 _logger.LogInformation("TelegramId: 1364757999");
@@ -59,16 +47,12 @@ public class DataSeeder : IDataSeeder
             {
                 _logger.LogInformation("SuperAdmin user already exists, skipping creation.");
             }
-            
-            // Create default Design if it doesn't exist
             var defaultDesignExists = await _context.Designs.AnyAsync();
             if (!defaultDesignExists)
             {
                 var superAdmin = await _context.Users
                     .FirstAsync(u => u.UserRole == UserRole.SuperAdmin);
-                    
                 _logger.LogInformation("Creating default Design...");
-                
                 var defaultDesign = new Design
                 {
                     Title = "Default Design",
@@ -77,10 +61,8 @@ public class DataSeeder : IDataSeeder
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-                
                 await _context.Designs.AddAsync(defaultDesign);
                 await _context.SaveChangesAsync();
-                
                 _logger.LogInformation("Default Design created successfully!");
             }
         }
@@ -90,11 +72,8 @@ public class DataSeeder : IDataSeeder
             throw;
         }
     }
-
     private string HashPassword(string password)
     {
-        // Using the same hashing method as in AuthService for consistency
-        // TODO: In production, use BCrypt, Argon2, or similar secure hashing
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password + "salt"));
     }
 }

@@ -1,8 +1,6 @@
 using System.Security.Claims;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IJwtService
 {
     string GenerateToken(User user);

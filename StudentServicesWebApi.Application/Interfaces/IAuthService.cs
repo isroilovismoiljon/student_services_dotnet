@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Application.DTOs.Auth;
 using StudentServicesWebApi.Application.DTOs.User;
-
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
-
 public interface IAuthService
 {
     Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto);

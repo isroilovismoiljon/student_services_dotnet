@@ -1,8 +1,6 @@
 using FluentValidation;
 using StudentServicesWebApi.Application.DTOs.OpenaiKey;
-
 namespace StudentServicesWebApi.Application.Validators.OpenaiKey;
-
 public class CreateOpenaiKeyDtoValidator : AbstractValidator<CreateOpenaiKeyDto>
 {
     public CreateOpenaiKeyDtoValidator()
@@ -16,7 +14,6 @@ public class CreateOpenaiKeyDtoValidator : AbstractValidator<CreateOpenaiKeyDto>
             .WithMessage("Key must start with 'sk-' followed by alphanumeric characters");
     }
 }
-
 public class UpdateOpenaiKeyDtoValidator : AbstractValidator<UpdateOpenaiKeyDto>
 {
     public UpdateOpenaiKeyDtoValidator()
@@ -29,7 +26,6 @@ public class UpdateOpenaiKeyDtoValidator : AbstractValidator<UpdateOpenaiKeyDto>
             .When(x => !string.IsNullOrEmpty(x.Key));
     }
 }
-
 public class BulkCreateOpenaiKeyDtoValidator : AbstractValidator<BulkCreateOpenaiKeyDto>
 {
     public BulkCreateOpenaiKeyDtoValidator()
@@ -41,24 +37,19 @@ public class BulkCreateOpenaiKeyDtoValidator : AbstractValidator<BulkCreateOpena
             .WithMessage("At least one OpenAI key is required")
             .Must(keys => keys.Count <= 100)
             .WithMessage("Cannot create more than 100 OpenAI keys at once");
-
         RuleForEach(x => x.OpenaiKeys)
             .SetValidator(new CreateOpenaiKeyDtoValidator());
-
         RuleFor(x => x.OpenaiKeys)
             .Must(BeUniqueKeys)
             .WithMessage("Duplicate keys are not allowed in the same request");
     }
-
     private static bool BeUniqueKeys(List<CreateOpenaiKeyDto> keys)
     {
         if (keys == null || keys.Count <= 1) return true;
-        
         var keyValues = keys.Select(k => k.Key).ToList();
         return keyValues.Count == keyValues.Distinct().Count();
     }
 }
-
 public class BulkOpenaiKeyOperationDtoValidator : AbstractValidator<BulkOpenaiKeyOperationDto>
 {
     public BulkOpenaiKeyOperationDtoValidator()
@@ -70,24 +61,19 @@ public class BulkOpenaiKeyOperationDtoValidator : AbstractValidator<BulkOpenaiKe
             .WithMessage("At least one OpenAI key ID is required")
             .Must(ids => ids.Count <= 100)
             .WithMessage("Cannot operate on more than 100 OpenAI keys at once");
-
         RuleForEach(x => x.OpenaiKeyIds)
             .GreaterThan(0)
             .WithMessage("OpenAI key ID must be a positive integer");
-
         RuleFor(x => x.OpenaiKeyIds)
             .Must(BeUniqueIds)
             .WithMessage("Duplicate IDs are not allowed in the same request");
     }
-
     private static bool BeUniqueIds(List<int> ids)
     {
         if (ids == null || ids.Count <= 1) return true;
-        
         return ids.Count == ids.Distinct().Count();
     }
 }
-
 public class IncrementUsageDtoValidator : AbstractValidator<IncrementUsageDto>
 {
     public IncrementUsageDtoValidator()

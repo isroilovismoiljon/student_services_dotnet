@@ -1,21 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.PresentationPage;
 using StudentServicesWebApi.Application.Interfaces;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/PresentationPages")]
 [Produces("application/json")]
 public class PresentationPageController : ControllerBase
 {
     private readonly IPresentationPageService _pageService;
-
     public PresentationPageController(IPresentationPageService pageService)
     {
         _pageService = pageService;
     }
-
     [HttpGet("presentation/{presentationId:int}")]
     public async Task<IActionResult> GetPagesByPresentationId(int presentationId, CancellationToken ct = default)
     {
@@ -42,7 +38,6 @@ public class PresentationPageController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetPageById(int id, CancellationToken ct = default)
     {
@@ -56,7 +51,6 @@ public class PresentationPageController : ControllerBase
                     message = $"Page with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -75,7 +69,6 @@ public class PresentationPageController : ControllerBase
             });
         }
     }
-
     [HttpPost]
     public async Task<IActionResult> CreatePage([FromBody] CreatePresentationPageDto createDto, CancellationToken ct = default)
     {
@@ -87,7 +80,6 @@ public class PresentationPageController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var page = await _pageService.CreatePageAsync(createDto, ct);
@@ -110,7 +102,6 @@ public class PresentationPageController : ControllerBase
             });
         }
     }
-
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePage(int id, [FromBody] UpdatePresentationPageDto updateDto, CancellationToken ct = default)
     {
@@ -122,7 +113,6 @@ public class PresentationPageController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var page = await _pageService.UpdatePageAsync(id, updateDto, ct);
@@ -133,7 +123,6 @@ public class PresentationPageController : ControllerBase
                     message = $"Page with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -153,7 +142,6 @@ public class PresentationPageController : ControllerBase
             });
         }
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePage(int id, CancellationToken ct = default)
     {
@@ -167,7 +155,6 @@ public class PresentationPageController : ControllerBase
                     message = $"Page with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,

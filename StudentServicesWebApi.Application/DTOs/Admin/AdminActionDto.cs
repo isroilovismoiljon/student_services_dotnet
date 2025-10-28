@@ -1,6 +1,5 @@
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Application.DTOs.Admin;
 public class AdminActionDto
 {

@@ -6,9 +6,7 @@ using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
@@ -18,7 +16,6 @@ public class AdminController : ControllerBase
     private readonly IAdminActionService _adminActionService;
     private readonly IUserService _userService;
     private readonly ILogger<AdminController> _logger;
-
     public AdminController(
         IAdminActionService adminActionService,
         IUserService userService,
@@ -28,7 +25,6 @@ public class AdminController : ControllerBase
         _userService = userService;
         _logger = logger;
     }
-
     [HttpPut("users/role")]
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> UpdateUserRole(
@@ -43,14 +39,11 @@ public class AdminController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var adminId = GetCurrentUserId();
             var ipAddress = GetClientIpAddress();
-
             var result = await _adminActionService.UpdateUserRoleAsync(updateUserRoleDto, adminId, ipAddress, ct);
-
             return Ok(new
             {
                 success = true,
@@ -93,7 +86,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpPost("balance/add")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> AddUserBalance(
@@ -108,14 +100,11 @@ public class AdminController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var adminId = GetCurrentUserId();
             var ipAddress = GetClientIpAddress();
-
             var result = await _adminActionService.AddBalanceAsync(modifyBalanceDto, adminId, ipAddress, ct);
-
             return Ok(new
             {
                 success = true,
@@ -154,7 +143,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpPost("balance/subtract")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> SubtractUserBalance(
@@ -169,14 +157,11 @@ public class AdminController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var adminId = GetCurrentUserId();
             var ipAddress = GetClientIpAddress();
-
             var result = await _adminActionService.SubtractBalanceAsync(modifyBalanceDto, adminId, ipAddress, ct);
-
             return Ok(new
             {
                 success = true,
@@ -215,7 +200,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("actions/{actionId:int}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdminAction(int actionId, CancellationToken ct = default)
@@ -230,7 +214,6 @@ public class AdminController : ControllerBase
                     message = $"Admin action with ID {actionId} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -250,7 +233,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("actions")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdminActions(
@@ -263,7 +245,6 @@ public class AdminController : ControllerBase
         {
             var (actions, totalCount) = await _adminActionService.GetPagedAdminActionsAsync(
                 pageNumber, pageSize, actionType, ct);
-
             return Ok(new
             {
                 success = true,
@@ -297,7 +278,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("admins/{adminId:int}/actions")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdminActionsByAdmin(
@@ -308,7 +288,6 @@ public class AdminController : ControllerBase
         try
         {
             var actions = await _adminActionService.GetAdminActionsByAdminIdAsync(adminId, actionType, ct);
-
             return Ok(new
             {
                 success = true,
@@ -331,7 +310,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("users/{userId:int}/actions")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdminActionsByUser(
@@ -342,7 +320,6 @@ public class AdminController : ControllerBase
         try
         {
             var actions = await _adminActionService.GetAdminActionsByUserIdAsync(userId, actionType, ct);
-
             return Ok(new
             {
                 success = true,
@@ -365,7 +342,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("actions/recent")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetRecentAdminActions(
@@ -375,7 +351,6 @@ public class AdminController : ControllerBase
         try
         {
             var actions = await _adminActionService.GetRecentActionsAsync(count, ct);
-
             return Ok(new
             {
                 success = true,
@@ -397,7 +372,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("admins")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdmins(CancellationToken ct = default)
@@ -406,9 +380,7 @@ public class AdminController : ControllerBase
         {
             var admins = await _userService.GetUsersByRoleAsync(UserRole.Admin, ct);
             var superAdmins = await _userService.GetUsersByRoleAsync(UserRole.SuperAdmin, ct);
-            
             var allAdmins = admins.Concat(superAdmins).OrderBy(a => a.FirstName).ThenBy(a => a.LastName).ToList();
-
             return Ok(new
             {
                 success = true,
@@ -431,7 +403,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     [HttpGet("admins/{adminId:int}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdminById(int adminId, CancellationToken ct = default)
@@ -446,7 +417,6 @@ public class AdminController : ControllerBase
                     message = $"Admin with ID {adminId} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             if (admin.UserRole == UserRole.User)
                 return BadRequest(new
                 {
@@ -454,7 +424,6 @@ public class AdminController : ControllerBase
                     message = $"User with ID {adminId} is not an admin",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -474,7 +443,6 @@ public class AdminController : ControllerBase
             });
         }
     }
-
     private int GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -484,11 +452,9 @@ public class AdminController : ControllerBase
         }
         return userId;
     }
-
     private string? GetClientIpAddress()
     {
         var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-        
         if (HttpContext.Request.Headers.ContainsKey("X-Forwarded-For"))
         {
             var forwardedFor = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
@@ -505,7 +471,6 @@ public class AdminController : ControllerBase
                 ipAddress = realIp;
             }
         }
-
         return ipAddress;
     }
 }

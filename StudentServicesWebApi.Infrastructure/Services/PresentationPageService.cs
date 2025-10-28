@@ -2,14 +2,11 @@ using StudentServicesWebApi.Application.DTOs.PresentationPage;
 using StudentServicesWebApi.Application.Interfaces;
 using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Infrastructure.Services;
-
 public class PresentationPageService : IPresentationPageService
 {
     private readonly IPresentationPageRepository _pageRepository;
     private readonly IPresentationRepository _presentationRepository;
-
     public PresentationPageService(
         IPresentationPageRepository pageRepository,
         IPresentationRepository presentationRepository)
@@ -17,7 +14,6 @@ public class PresentationPageService : IPresentationPageService
         _pageRepository = pageRepository;
         _presentationRepository = presentationRepository;
     }
-
     public async Task<List<PresentationPageDto>> GetPagesByPresentationIdAsync(int presentationId, CancellationToken ct = default)
     {
         var pages = await _pageRepository.GetByPresentationIdAsync(presentationId, ct);
@@ -38,12 +34,10 @@ public class PresentationPageService : IPresentationPageService
             }).ToList()
         }).ToList();
     }
-
     public async Task<PresentationPageDto?> GetPageByIdAsync(int id, CancellationToken ct = default)
     {
         var page = await _pageRepository.GetByIdWithPostsAsync(id, ct);
         if (page == null) return null;
-
         return new PresentationPageDto
         {
             Id = page.Id,
@@ -61,12 +55,10 @@ public class PresentationPageService : IPresentationPageService
             }).ToList()
         };
     }
-
     public async Task<PresentationPageDto> CreatePageAsync(CreatePresentationPageDto createDto, CancellationToken ct = default)
     {
         throw new NotImplementedException("Use CreatePresentationPageAsync instead");
     }
-    
     public async Task<PresentationPageDto> CreatePresentationPageAsync(int presentationId, CreatePresentationPageDto createDto, CancellationToken ct = default)
     {
         var page = new PresentationPage
@@ -75,11 +67,8 @@ public class PresentationPageService : IPresentationPageService
             PhotoId = createDto.PhotoId,
             BackgroundPhotoId = createDto.BackgroundPhotoId
         };
-
         var createdPage = await _pageRepository.AddAsync(page, ct);
-        
         await _presentationRepository.UpdatePageCountAsync(presentationId, ct);
-
         return new PresentationPageDto
         {
             Id = createdPage.Id,
@@ -91,38 +80,29 @@ public class PresentationPageService : IPresentationPageService
             Posts = new List<PresentationPostSummaryDto>()
         };
     }
-
     public async Task<PresentationPage> CreatePageDirectAsync(PresentationPage presentationPage, CancellationToken ct = default)
     {
         return await _pageRepository.AddAsync(presentationPage, ct);
     }
-
     public async Task<PresentationPageDto?> UpdatePageAsync(int id, UpdatePresentationPageDto updateDto, CancellationToken ct = default)
     {
         var page = await _pageRepository.GetByIdAsync(id, ct);
         if (page == null) return null;
-
         if (updateDto.PresentationIsroilovId.HasValue)
             page.PresentationIsroilovId = updateDto.PresentationIsroilovId.Value;
-
         page.UpdatedAt = DateTime.UtcNow;
         var updatedPage = await _pageRepository.UpdateAsync(page, ct);
-
         return await GetPageByIdAsync(updatedPage.Id, ct);
     }
-
     public async Task<bool> DeletePageAsync(int id, CancellationToken ct = default)
     {
         var page = await _pageRepository.GetByIdAsync(id, ct);
         if (page == null) return false;
-
         var presentationId = page.PresentationIsroilovId;
         await _pageRepository.DeleteAsync(page, ct);
         await _presentationRepository.UpdatePageCountAsync(presentationId, ct);
-        
         return true;
     }
-
     public async Task<bool> PageExistsAsync(int id, CancellationToken ct = default)
     {
         var page = await _pageRepository.GetByIdAsync(id, ct);

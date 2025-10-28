@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Infrastructure.Interfaces;
-
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
-
 public interface ITextSlideService
 {
     Task<TextSlideDto> CreateTextSlideAsync(CreateTextSlideDto createTextSlideDto, CancellationToken ct = default);
@@ -19,7 +17,6 @@ public interface ITextSlideService
     Task<bool> TextSlideExistsAsync(int id, CancellationToken ct = default);
     Task<List<TextSlideSummaryDto>> GetTextSlidesByPresentationPostIdAsync(int presentationPostId, CancellationToken ct = default);
 }
-
 public class TextSlideStatsDto
 {
     public int TotalTextSlides { get; set; }

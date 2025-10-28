@@ -1,8 +1,6 @@
 using FluentValidation;
 using StudentServicesWebApi.Application.DTOs.Presentation;
-
 namespace StudentServicesWebApi.Application.Validators;
-
 public class CreatePresentationDataDtoValidator : AbstractValidator<CreatePresentationDataDto>
 {
     public CreatePresentationDataDtoValidator()
@@ -10,37 +8,28 @@ public class CreatePresentationDataDtoValidator : AbstractValidator<CreatePresen
         RuleFor(x => x.Title)
             .NotNull()
             .WithMessage("Title is required");
-
         RuleFor(x => x.Author)
             .NotNull()
             .WithMessage("Author is required");
-
         RuleFor(x => x.PlanData)
             .NotNull()
             .WithMessage("Plan data is required");
-
         RuleFor(x => x.DesignId)
             .GreaterThan(0)
             .WithMessage("Design ID must be greater than 0");
-
         RuleFor(x => x.PageCount)
             .InclusiveBetween(1, 100)
             .WithMessage("Page count must be between 1 and 100");
-
         RuleFor(x => x.PostTexts)
             .NotNull()
             .NotEmpty()
             .WithMessage("At least one post text is required");
-
         RuleFor(x => x.FilePath)
             .NotNull()
             .WithMessage("File path cannot be null");
-
         RuleFor(x => x.PhotoPositions)
             .NotNull()
             .WithMessage("Photo positions cannot be null");
-
-        // Validate photo positions count when WithPhoto is true
         When(x => x.WithPhoto, () =>
         {
             RuleFor(x => x.PhotoPositions)
@@ -55,15 +44,12 @@ public class CreatePresentationDataDtoValidator : AbstractValidator<CreatePresen
                     return $"With WithPhoto=true and PageCount={dto.PageCount}, exactly {requiredCount} photo positions are required, but {dto.PhotoPositions.Count} were provided.";
                 });
         });
-
-        // Validate no photo positions when WithPhoto is false
         When(x => !x.WithPhoto, () =>
         {
             RuleFor(x => x.PhotoPositions)
                 .Must(positions => positions.Count == 0)
                 .WithMessage("Photo positions should be empty when WithPhoto is false");
         });
-
         RuleForEach(x => x.PhotoPositions).SetValidator(new PhotoPositionDtoValidator());
     }
 }

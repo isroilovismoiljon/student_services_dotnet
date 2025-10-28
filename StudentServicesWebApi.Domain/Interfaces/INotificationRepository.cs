@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface INotificationRepository : IGenericRepository<Notification>
 {
     Task<IEnumerable<Notification>> GetNotificationsByUserIdAsync(int userId);

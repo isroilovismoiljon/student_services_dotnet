@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IPlanRepository
 {
     Task<Plan> CreateAsync(Plan plan, CancellationToken cancellationToken = default);

@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Application.DTOs.OpenaiKey;
-
 namespace StudentServicesWebApi.Application.Interfaces;
-
 public interface IOpenaiKeyService
 {
     Task<OpenaiKeyDto> CreateAsync(CreateOpenaiKeyDto createDto, CancellationToken cancellationToken = default);

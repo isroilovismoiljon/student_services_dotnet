@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Application.DTOs.User;
-
 public class UserResponseDto
 {
     public int Id { get; set; }

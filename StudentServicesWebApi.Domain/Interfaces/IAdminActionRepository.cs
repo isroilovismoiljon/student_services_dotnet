@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Domain.Enums;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IAdminActionRepository : IGenericRepository<AdminAction>
 {
     Task<List<AdminAction>> GetByAdminIdAsync(int adminId, AdminActionType? actionType = null, CancellationToken ct = default);

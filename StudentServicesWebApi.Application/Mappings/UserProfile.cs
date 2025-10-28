@@ -1,9 +1,7 @@
 using AutoMapper;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Application.Mappings;
-
 public class UserProfile : Profile
 {
     public UserProfile()

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-
 namespace StudentServicesWebApi.Application.DTOs.Payment;
 public class CreatePaymentDto
 {

@@ -9,9 +9,7 @@ using Telegram.Bot.Types.Enums;
 using StudentServicesWebApi.Infrastructure.Configuration;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using StudentServicesWebApi.Domain.Interfaces;
-
 namespace StudentServicesWebApi.Infrastructure.Services;
-
 public class TelegramBotService : ITelegramBotService
 {
     private readonly ILogger<TelegramBotService> _logger;
@@ -19,7 +17,6 @@ public class TelegramBotService : ITelegramBotService
     private readonly TelegramBotConfiguration _config;
     private TelegramBotClient? _botClient;
     private CancellationTokenSource? _cancellationTokenSource;
-
     public TelegramBotService(
         ILogger<TelegramBotService> logger,
         IServiceProvider serviceProvider,
@@ -29,40 +26,30 @@ public class TelegramBotService : ITelegramBotService
         _serviceProvider = serviceProvider;
         _config = config.Value;
     }
-
     public async Task StartBotAsync()
     {
         try
         {
             _logger.LogInformation("Starting Telegram bot...");
-            
             if (string.IsNullOrEmpty(_config.BotToken))
             {
                 _logger.LogWarning("Bot token is not configured. Telegram bot will not start.");
                 return;
             }
-
             _botClient = new TelegramBotClient(_config.BotToken);
             _cancellationTokenSource = new CancellationTokenSource();
-            
-            // Test the bot token
             var me = await _botClient.GetMe(_cancellationTokenSource.Token);
             _logger.LogInformation($"Bot @{me.Username} (ID: {me.Id}) started successfully!");
-            
-            // Configure update handler
             var receiverOptions = new ReceiverOptions
             {
-                AllowedUpdates = Array.Empty<UpdateType>() // receive all update types
+                AllowedUpdates = Array.Empty<UpdateType>() 
             };
-            
-            // Start receiving updates
             _botClient.StartReceiving(
                 HandleUpdateAsync,
                 HandlePollingErrorAsync,
                 receiverOptions,
                 _cancellationTokenSource.Token
             );
-            
             _logger.LogInformation("Telegram bot is now listening for messages...");
         }
         catch (Exception ex)
@@ -71,17 +58,14 @@ public class TelegramBotService : ITelegramBotService
             throw;
         }
     }
-
     public async Task StopBotAsync()
     {
         try
         {
             _logger.LogInformation("Stopping Telegram bot...");
-            
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
             _botClient = null;
-            
             _logger.LogInformation("Telegram bot stopped.");
             await Task.CompletedTask;
         }
@@ -91,7 +75,6 @@ public class TelegramBotService : ITelegramBotService
             throw;
         }
     }
-
     public async Task SendVerificationCodeAsync(string telegramId, string code)
     {
         try
@@ -105,7 +88,6 @@ public class TelegramBotService : ITelegramBotService
             throw;
         }
     }
-
     public async Task SendPasswordResetCodeAsync(string telegramId, string code)
     {
         try
@@ -123,7 +105,6 @@ public class TelegramBotService : ITelegramBotService
             throw;
         }
     }
-
     public async Task HandleStartCommandAsync(string telegramId, string? startParameter)
     {
         try
@@ -133,44 +114,30 @@ public class TelegramBotService : ITelegramBotService
                 await SendMessageAsync(telegramId, "Welcome! Please register through our web application first.");
                 return;
             }
-
-            // Create a scope to access scoped services
             using var scope = _serviceProvider.CreateScope();
             var verificationCodeService = scope.ServiceProvider.GetRequiredService<IVerificationCodeService>();
             var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
-            
-            // startParameter should be the verification code
             var verificationCode = await verificationCodeService.GetVerificationByCodeAsync(startParameter);
-            
             if (verificationCode == null)
             {
                 await SendMessageAsync(telegramId, "❌ Invalid or expired verification code. Please try registering again.");
                 return;
             }
-
-            // Check if this TelegramId is already linked to another user
             var existingUserWithTelegram = await userRepository.GetByTelegramIdAsync(telegramId);
             if (existingUserWithTelegram != null && existingUserWithTelegram.Id != verificationCode.UserId)
             {
                 await SendMessageAsync(telegramId, "❌ This Telegram account is already linked to another user.");
                 return;
             }
-
-            // Auto-link the Telegram account to the user
             try
             {
                 var success = await userRepository.UpdateTelegramIdAsync(verificationCode.UserId, telegramId);
-                
                 if (success)
                 {
-                    // Don't mark code as used yet - user still needs to verify in the app
-                    // await verificationCodeService.MarkCodeAsUsedAsync(verificationCode.Id);
-                    
                     await SendMessageAsync(telegramId,
                         $"✅ Great! Your Telegram account has been successfully linked!\n\n" +
                         $"🔑 Your verification code: *{startParameter}*\n\n" +
                         $"📱 You can now use this code in the app to complete your registration verification.");
-                        
                     _logger.LogInformation($"Successfully linked Telegram ID {telegramId} to User ID {verificationCode.UserId} with code {startParameter}");
                 }
                 else
@@ -191,7 +158,6 @@ public class TelegramBotService : ITelegramBotService
             await SendMessageAsync(telegramId, "An error occurred. Please try again later.");
         }
     }
-
     public async Task SendMessageAsync(string telegramId, string message)
     {
         try
@@ -201,7 +167,6 @@ public class TelegramBotService : ITelegramBotService
                 _logger.LogWarning($"Bot client is not initialized. Cannot send message to {telegramId}");
                 return;
             }
-
             if (long.TryParse(telegramId, out var chatId))
             {
                 await _botClient.SendMessage(chatId, message);
@@ -218,27 +183,21 @@ public class TelegramBotService : ITelegramBotService
             throw;
         }
     }
-
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         try
         {
             if (update.Message is not { } message)
                 return;
-
             if (message.Text is not { } messageText)
                 return;
-
             var chatId = message.Chat.Id;
             var telegramId = chatId.ToString();
-            
             _logger.LogInformation($"Received message from {telegramId}: {messageText}");
-
             if (messageText.StartsWith("/start"))
             {
                 var parts = messageText.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
                 var startParameter = parts.Length > 1 ? parts[1] : null;
-                
                 await HandleStartCommandAsync(telegramId, startParameter);
             }
             else if (messageText.StartsWith("/reset"))
@@ -264,7 +223,6 @@ public class TelegramBotService : ITelegramBotService
             _logger.LogError(ex, "Error handling Telegram update");
         }
     }
-
     private async Task HandleResetCommandAsync(string telegramId, string messageText)
     {
         try
@@ -272,24 +230,18 @@ public class TelegramBotService : ITelegramBotService
             using var scope = _serviceProvider.CreateScope();
             var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
             var verificationCodeService = scope.ServiceProvider.GetRequiredService<IVerificationCodeService>();
-            
-            // Find user by Telegram ID
             var user = await userRepository.GetByTelegramIdAsync(telegramId);
             if (user == null)
             {
                 await SendMessageAsync(telegramId, "❌ No account found linked to this Telegram. Please register first.");
                 return;
             }
-
-            // Check for active password reset codes
-            var activeCode = await verificationCodeService.GetVerificationByCodeAsync(""); // We'll need to modify this to get by user ID and type
-            
+            var activeCode = await verificationCodeService.GetVerificationByCodeAsync(""); 
             await SendMessageAsync(telegramId, 
                 "🔐 Password Reset Help\n\n" +
                 "If you've requested a password reset, you should have received a code.\n\n" +
                 "Use the code in the app to reset your password.\n\n" +
                 "If you haven't received a code, please use the 'Forgot Password' option in the app.");
-                
             _logger.LogInformation($"User {user.Username} (Telegram ID: {telegramId}) requested password reset help");
         }
         catch (Exception ex)
@@ -298,7 +250,6 @@ public class TelegramBotService : ITelegramBotService
             await SendMessageAsync(telegramId, "An error occurred. Please try again later.");
         }
     }
-
     private async Task HandleHelpCommandAsync(string telegramId)
     {
         try
@@ -314,7 +265,6 @@ public class TelegramBotService : ITelegramBotService
                              "3. Complete verification with the received code\n\n" +
                              "🔐 Password Reset:\n" +
                              "Use 'Forgot Password' in the app to receive reset codes here.";
-                             
             await SendMessageAsync(telegramId, helpMessage);
         }
         catch (Exception ex)
@@ -323,7 +273,6 @@ public class TelegramBotService : ITelegramBotService
             await SendMessageAsync(telegramId, "An error occurred. Please try again later.");
         }
     }
-
     private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         var errorMessage = exception switch
@@ -331,7 +280,6 @@ public class TelegramBotService : ITelegramBotService
             ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString()
         };
-
         _logger.LogError(exception, "Telegram bot polling error: {ErrorMessage}", errorMessage);
         return Task.CompletedTask;
     }

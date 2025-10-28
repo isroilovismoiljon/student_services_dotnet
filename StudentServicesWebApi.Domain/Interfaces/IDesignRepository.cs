@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IDesignRepository : IGenericRepository<Design>
 {
     Task<Design?> GetByIdWithPhotosAsync(int id, CancellationToken cancellationToken = default);

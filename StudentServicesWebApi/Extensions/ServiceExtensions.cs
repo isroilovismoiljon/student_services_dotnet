@@ -15,9 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using StudentServicesWebApi.Infrastructure.Repositories;
 using StudentServicesWebApi.Infrastructure.Configuration;
-
 namespace StudentServicesWebApi.Extensions;
-
 public static class ServiceExtensions
 {
     public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
@@ -27,7 +25,6 @@ public static class ServiceExtensions
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("StudentServicesWebApi"));
         });
-
         return services;
     }
     public static IServiceCollection AddAutoMapperConfiguration(this IServiceCollection services)
@@ -53,19 +50,16 @@ public static class ServiceExtensions
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePresentationWithPositionsDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.UpdatePresentationPhotosDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.PhotoPositionDtoValidator>();
-
         return services;
     }
     public static IServiceCollection AddApplicationConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<TelegramBotConfiguration>(configuration.GetSection(TelegramBotConfiguration.SectionName));
         services.Configure<JwtConfiguration>(configuration.GetSection(JwtConfiguration.SectionName));
-
         return services;
     }
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        // Repositories
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
@@ -79,8 +73,6 @@ public static class ServiceExtensions
         services.AddScoped<IDesignRepository, DesignRepository>();
         services.AddScoped<IOpenaiKeyRepository, OpenaiKeyRepository>();
         services.AddScoped<IPlanRepository, PlanRepository>();
-
-        // Services
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
@@ -100,21 +92,14 @@ public static class ServiceExtensions
         services.AddScoped<IFileUploadService, FileUploadService>();
         services.AddScoped<IUrlService, UrlService>();
         services.AddScoped<IDtoMappingService, DtoMappingService>();
-
-        // Singleton services
         services.AddSingleton<ITelegramBotService, TelegramBotService>();
-        
-        // Add HttpContextAccessor for URL generation
         services.AddHttpContextAccessor();
-
         return services;
     }
-
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtConfig = configuration.GetSection(JwtConfiguration.SectionName).Get<JwtConfiguration>();
         var key = Encoding.ASCII.GetBytes(jwtConfig!.SecretKey);
-
         services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -136,9 +121,7 @@ public static class ServiceExtensions
                 ClockSkew = TimeSpan.Zero
             };
         });
-
         services.AddAuthorization();
-
         return services;
     }
     public static IServiceCollection AddHostedServices(this IServiceCollection services)
@@ -157,17 +140,13 @@ public static class ServiceExtensions
                       .AllowAnyMethod();
             });
         });
-        
         return services;
     }
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        
-        // Configure Swagger
         services.AddSwaggerGen(c =>
         {
-
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {
                 Title = "Student Services API",
@@ -184,20 +163,13 @@ public static class ServiceExtensions
                     Url = new Uri("https://opensource.org/licenses/MIT")
                 }
             });
-
-
-            // Include XML comments
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath))
             {
                 c.IncludeXmlComments(xmlPath);
             }
-
-            // Enable annotations for better schema documentation
             c.EnableAnnotations();
-
-            // Add JWT Bearer Authentication
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
@@ -206,7 +178,6 @@ public static class ServiceExtensions
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -222,7 +193,6 @@ public static class ServiceExtensions
                 }
             });
         });
-
         return services;
     }
 }

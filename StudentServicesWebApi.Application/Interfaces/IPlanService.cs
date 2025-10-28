@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Application.DTOs.Plan;
-
 namespace StudentServicesWebApi.Application.Interfaces;
-
 public interface IPlanService
 {
     Task<PlanDto> CreateAsync(CreatePlanDto createDto, CancellationToken cancellationToken = default);

@@ -1,8 +1,6 @@
 using FluentValidation;
 using StudentServicesWebApi.Application.DTOs.Auth;
-
 namespace StudentServicesWebApi.Application.Validators;
-
 public class ForgotPasswordDtoValidator : AbstractValidator<ForgotPasswordDto>
 {
     public ForgotPasswordDtoValidator()
@@ -16,7 +14,6 @@ public class ForgotPasswordDtoValidator : AbstractValidator<ForgotPasswordDto>
             .WithMessage("Username must not exceed 30 characters");
     }
 }
-
 public class ResetPasswordDtoValidator : AbstractValidator<ResetPasswordDto>
 {
     public ResetPasswordDtoValidator()
@@ -28,7 +25,6 @@ public class ResetPasswordDtoValidator : AbstractValidator<ResetPasswordDto>
             .WithMessage("Username must be at least 3 characters")
             .MaximumLength(30)
             .WithMessage("Username must not exceed 30 characters");
-
         RuleFor(x => x.VerificationCode)
             .NotEmpty()
             .WithMessage("Verification code is required")
@@ -36,7 +32,6 @@ public class ResetPasswordDtoValidator : AbstractValidator<ResetPasswordDto>
             .WithMessage("Verification code must be exactly 4 digits")
             .Matches(@"^\d{4}$")
             .WithMessage("Verification code must contain only digits");
-
         RuleFor(x => x.Password)
             .NotEmpty()
             .WithMessage("New password is required")

@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Domain.Models;
-
 public class User : BaseEntity
 {
     public string FirstName { get; set; } = default!;

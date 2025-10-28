@@ -2,21 +2,17 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using StudentServicesWebApi.Application.DTOs.Auth;
 using StudentServicesWebApi.Infrastructure.Interfaces;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/Auth")]
 [Produces("application/json")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _userService;
-
     public AuthController(IAuthService userService)
     {
         _userService = userService;
     }
-
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
@@ -30,7 +26,6 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
@@ -44,7 +39,6 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpPost("verify")]
     public async Task<IActionResult> Verify([FromBody] VerificationDto verificationDto)
     {
@@ -58,7 +52,6 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpPost("resend-verification-code")]
     public async Task<IActionResult> ResendVerificationCode([FromBody] ResendVerificationCodeDto resendDto)
     {
@@ -72,7 +65,6 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpPost("forgot-password")]
     [SwaggerOperation(Summary = "Request password reset", Description = "Sends a verification code to the user's Telegram account for password reset.")]
     [SwaggerResponse(200, "Password reset code sent successfully")]
@@ -90,7 +82,6 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpPost("reset-password")]
     [SwaggerOperation(Summary = "Reset password", Description = "Resets the user's password using username, verification code, and new password.")]
     [SwaggerResponse(200, "Password reset successfully")]
@@ -108,11 +99,9 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpGet("exists")]
     public IActionResult CheckUserExists([FromQuery] string? username = null)
     {
-        // Simple implementation for now
         return Ok(new { exists = false, timestamp = DateTime.UtcNow });
     }
 }

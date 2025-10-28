@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IPresentationPageRepository : IGenericRepository<PresentationPage>
 {
     Task<List<PresentationPage>> GetByPresentationIdAsync(int presentationId, CancellationToken ct = default);

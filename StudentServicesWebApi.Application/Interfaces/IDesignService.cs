@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Application.DTOs.Design;
-
 namespace StudentServicesWebApi.Application.Interfaces;
-
 public interface IDesignService
 {
     Task<DesignDto> CreateDesignAsync(DesignCreateWithPhotosDto createDesignWithPhotosDto, int createdByUserId, CancellationToken cancellationToken = default);

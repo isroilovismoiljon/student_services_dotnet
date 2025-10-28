@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Application.DTOs.PresentationPost;
-
 namespace StudentServicesWebApi.Application.Interfaces;
-
 public interface IPresentationPostService
 {
     Task<List<PresentationPostDto>> GetPostsByPresentationPageIdAsync(int presentationPageId, CancellationToken ct = default);

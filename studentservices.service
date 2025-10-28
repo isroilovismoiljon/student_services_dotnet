@@ -1,0 +1,22 @@
+[Unit]
+Description=Student Services Web API
+After=network.target
+
+[Service]
+Type=notify
+WorkingDirectory=/var/www/studentservices
+ExecStart=/usr/share/dotnet/dotnet /var/www/studentservices/StudentServicesWebApi.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=studentservices
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://localhost:5000
+
+# Logging configuration
+StandardOutput=append:/var/logs/myapp/stdout.log
+StandardError=append:/var/logs/myapp/stderr.log
+
+[Install]
+WantedBy=multi-user.target

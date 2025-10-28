@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IOpenaiKeyRepository
 {
     Task<OpenaiKey> CreateAsync(OpenaiKey openaiKey, CancellationToken cancellationToken = default);

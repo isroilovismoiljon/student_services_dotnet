@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface IVerificationCodeRepository : IGenericRepository<VerificationCode>
 {
     Task<VerificationCode?> GetValidCodeAsync(int userId, string code);

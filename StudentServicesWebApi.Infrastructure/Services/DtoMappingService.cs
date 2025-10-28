@@ -9,28 +9,22 @@ using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
-
 namespace StudentServicesWebApi.Infrastructure.Services;
-
 public class DtoMappingService : IDtoMappingService
 {
     private readonly IMapper _mapper;
     private readonly IUrlService _urlService;
-
     public DtoMappingService(IMapper mapper, IUrlService urlService)
     {
         _mapper = mapper;
         _urlService = urlService;
     }
-
     public UserResponseDto MapToUserResponseDto(User user)
     {
         var dto = _mapper.Map<UserResponseDto>(user);
         dto.Photo = _urlService.GetPaymentImageUrl(user.Photo);
-        
         return dto;
     }
-
     public PaymentDto MapToPaymentDto(Payment payment)
     {
         var dto = new PaymentDto
@@ -41,7 +35,7 @@ public class DtoMappingService : IDtoMappingService
             RequestedAmount = payment.RequestedAmount,
             ApprovedAmount = payment.ApprovedAmount,
             FinalAmount = payment.FinalAmount,
-            Photo = _urlService.GetPaymentImageUrl(payment.Photo) ?? string.Empty, // Transform photo path to full URL
+            Photo = _urlService.GetPaymentImageUrl(payment.Photo) ?? string.Empty, 
             Description = payment.Description,
             PaymentStatus = payment.PaymentStatus,
             RejectReason = payment.RejectReason,
@@ -51,10 +45,8 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = payment.UpdatedAt,
             AmountWasAdjusted = payment.AmountWasAdjusted
         };
-
         return dto;
     }
-
     public PaymentSummaryDto MapToPaymentSummaryDto(Payment payment)
     {
         return new PaymentSummaryDto
@@ -68,14 +60,13 @@ public class DtoMappingService : IDtoMappingService
             RequestedAmount = payment.RequestedAmount,
             ApprovedAmount = payment.ApprovedAmount,
             FinalAmount = payment.FinalAmount,
-            Photo = _urlService.GetPaymentImageUrl(payment.Photo) ?? string.Empty, // Transform photo path to full URL
+            Photo = _urlService.GetPaymentImageUrl(payment.Photo) ?? string.Empty, 
             PaymentStatus = payment.PaymentStatus,
             CreatedAt = payment.CreatedAt,
             ProcessedAt = payment.ProcessedAt,
             AmountWasAdjusted = payment.AmountWasAdjusted
         };
     }
-
     public TextSlideDto MapToTextSlideDto(TextSlide textSlide)
     {
         return new TextSlideDto
@@ -97,17 +88,14 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = textSlide.UpdatedAt
         };
     }
-
     public TextSlideSummaryDto MapToTextSlideSummaryDto(TextSlide textSlide)
     {
         var textPreview = textSlide.Text.Length <= 100 
             ? textSlide.Text 
             : textSlide.Text.Substring(0, 100) + "...";
-
         var positionSummary = $"Left: {textSlide.Left:F1}, Top: {textSlide.Top:F1}, "
                             + $"Width: {textSlide.Width:F1}"
                             + (textSlide.Height.HasValue ? $", Height: {textSlide.Height.Value:F1}" : "");
-
         return new TextSlideSummaryDto
         {
             Id = textSlide.Id,
@@ -122,7 +110,6 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = textSlide.UpdatedAt
         };
     }
-
     public PhotoSlideDto MapToPhotoSlideDto(PhotoSlide photoSlide)
     {
         var fileSizeFormatted = FormatFileSize(photoSlide.FileSize);
@@ -143,17 +130,13 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = photoSlide.UpdatedAt
         };
     }
-
     public PhotoSlideSummaryDto MapToPhotoSlideSummaryDto(PhotoSlide photoSlide)
     {
         var positionSummary = $"Left: {photoSlide.Left:F1}, Top: {photoSlide.Top:F1}, "
                             + $"Width: {photoSlide.Width:F1}"
                             + (photoSlide.Height.HasValue ? $", Height: {photoSlide.Height.Value:F1}" : "");
-
         var fileSizeFormatted = FormatFileSize(photoSlide.FileSize);
-
         var photoUrl = _urlService.GetPresentationPhotoUrl(photoSlide.PhotoPath) ?? string.Empty;
-        
         return new PhotoSlideSummaryDto
         {
             Id = photoSlide.Id,
@@ -168,29 +151,24 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = photoSlide.UpdatedAt
         };
     }
-
     private static string FormatFileSize(long bytes)
     {
         string[] sizes = { "B", "KB", "MB", "GB", "TB" };
         double len = bytes;
         int order = 0;
-        
         while (len >= 1024 && order < sizes.Length - 1)
         {
             order++;
             len = len / 1024;
         }
-        
         return $"{len:0.##} {sizes[order]}";
     }
-
     public DesignDto MapToDesignDto(Design design)
     {
         var firstPhoto = design.Photos.FirstOrDefault();
         var firstPhotoUrl = firstPhoto != null 
             ? _urlService.GetPresentationPhotoUrl(firstPhoto.PhotoPath) 
             : null;
-            
         return new DesignDto
         {
             Id = design.Id,
@@ -202,14 +180,12 @@ public class DtoMappingService : IDtoMappingService
             FirstPhotoUrl = firstPhotoUrl
         };
     }
-
     public DesignSummaryDto MapToDesignSummaryDto(Design design)
     {
         var firstPhoto = design.Photos.FirstOrDefault();
         var firstPhotoUrl = firstPhoto != null 
             ? _urlService.GetPresentationPhotoUrl(firstPhoto.PhotoPath) 
             : null;
-            
         return new DesignSummaryDto
         {
             Id = design.Id,
@@ -222,7 +198,6 @@ public class DtoMappingService : IDtoMappingService
             PhotoCount = design.Photos.Count
         };
     }
-
     public async Task<OpenaiKeyDto> MapToOpenaiKeyDtoAsync(OpenaiKey openaiKey)
     {
         return new OpenaiKeyDto
@@ -234,12 +209,10 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = openaiKey.UpdatedAt
         };
     }
-
     public async Task<OpenaiKeySummaryDto> MapToOpenaiKeySummaryDtoAsync(OpenaiKey openaiKey)
     {
         var maskedKey = await MaskKeyForDisplay(openaiKey.Key);
         var status = GetKeyStatus(openaiKey.UseCount);
-        
         return new OpenaiKeySummaryDto
         {
             Id = openaiKey.Id,
@@ -250,17 +223,13 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = openaiKey.UpdatedAt
         };
     }
-
     private static async Task<string> MaskKeyForDisplay(string key)
     {
-        await Task.CompletedTask; // Make it async for consistency
-        
+        await Task.CompletedTask; 
         if (string.IsNullOrEmpty(key) || key.Length < 10)
             return "****";
-
         return $"{key[..4]}****{key[^4..]}";
     }
-
     private static string GetKeyStatus(int useCount)
     {
         return useCount switch
@@ -272,7 +241,6 @@ public class DtoMappingService : IDtoMappingService
             _ => "Active"
         };
     }
-
     public async Task<PlanDto> MapToPlanDtoAsync(Plan plan)
     {
         return new PlanDto
@@ -284,17 +252,14 @@ public class DtoMappingService : IDtoMappingService
             UpdatedAt = plan.UpdatedAt
         };
     }
-
     public async Task<PlanSummaryDto> MapToPlanSummaryDtoAsync(Plan plan)
     {
         var planTextPreview = plan.PlanText.Text.Length <= 50 
             ? plan.PlanText.Text 
             : plan.PlanText.Text.Substring(0, 50) + "...";
-            
         var plansPreview = plan.Plans.Text.Length <= 50 
             ? plan.Plans.Text 
             : plan.Plans.Text.Substring(0, 50) + "...";
-
         return new PlanSummaryDto
         {
             Id = plan.Id,

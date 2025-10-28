@@ -3,21 +3,17 @@ using StudentServicesWebApi.Application.DTOs.Presentation;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Application.DTOs.Plan;
 using StudentServicesWebApi.Application.Interfaces;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/Presentation")]
 [Produces("application/json")]
 public class PresentationController : ControllerBase
 {
     private readonly IPresentationService _presentationService;
-
     public PresentationController(IPresentationService presentationService)
     {
         _presentationService = presentationService;
     }
-
     [HttpGet]
     public async Task<IActionResult> GetAllPresentations(CancellationToken ct = default)
     {
@@ -43,7 +39,6 @@ public class PresentationController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetPresentationById(int id, CancellationToken ct = default)
     {
@@ -57,7 +52,6 @@ public class PresentationController : ControllerBase
                     message = $"Presentation with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -76,7 +70,6 @@ public class PresentationController : ControllerBase
             });
         }
     }
-
     [HttpPost]
     [Consumes("application/json")]
     public async Task<IActionResult> CreatePresentation(
@@ -85,7 +78,6 @@ public class PresentationController : ControllerBase
     {
         try
         {
-            // Validate model state first
             if (!ModelState.IsValid)
                 return BadRequest(new
                 {
@@ -94,8 +86,6 @@ public class PresentationController : ControllerBase
                     errors = ModelState,
                     timestamp = DateTime.UtcNow
                 });
-
-            // Validate photo positions when WithPhoto is true
             if (createDto.WithPhoto)
             {
                 var expectedPhotoCount = (createDto.PageCount - 2) / 2;
@@ -121,8 +111,6 @@ public class PresentationController : ControllerBase
                     });
                 }
             }
-
-            // Call service to create presentation with placeholder PhotoSlides
             var presentation = await _presentationService.CreatePresentationWithPositionsAsync(createDto, ct);
             return CreatedAtAction(nameof(GetPresentationById), new { id = presentation.Id }, new
             {
@@ -152,7 +140,6 @@ public class PresentationController : ControllerBase
             });
         }
     }
-
     [HttpPut("{id:int}/photos")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UpdatePresentationPhotos(
@@ -162,7 +149,6 @@ public class PresentationController : ControllerBase
     {
         try
         {
-            // Validate model state first
             if (!ModelState.IsValid)
                 return BadRequest(new
                 {
@@ -171,8 +157,6 @@ public class PresentationController : ControllerBase
                     errors = ModelState,
                     timestamp = DateTime.UtcNow
                 });
-
-            // Check if presentation exists
             var existingPresentation = await _presentationService.GetPresentationByIdAsync(id, ct);
             if (existingPresentation == null)
                 return NotFound(new
@@ -181,8 +165,6 @@ public class PresentationController : ControllerBase
                     message = $"Presentation with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
-            // Validate that this presentation was created with WithPhoto = true
             if (!existingPresentation.WithPhoto)
             {
                 return BadRequest(new
@@ -192,8 +174,6 @@ public class PresentationController : ControllerBase
                     timestamp = DateTime.UtcNow
                 });
             }
-
-            // Validate photo count matches expected count
             var expectedPhotoCount = (existingPresentation.PageCount - 2) / 2;
             if (photosDto.Photos.Count != expectedPhotoCount)
             {
@@ -204,8 +184,6 @@ public class PresentationController : ControllerBase
                     timestamp = DateTime.UtcNow
                 });
             }
-
-            // Call service to update photos
             var updatedPresentation = await _presentationService.UpdatePresentationPhotosAsync(id, photosDto.Photos, ct);
             return Ok(new
             {
@@ -235,7 +213,6 @@ public class PresentationController : ControllerBase
             });
         }
     }
-
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdatePresentation(int id, [FromBody] UpdatePresentationDto updateDto, CancellationToken ct = default)
     {
@@ -247,7 +224,6 @@ public class PresentationController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var presentation = await _presentationService.UpdatePresentationAsync(id, updateDto, ct);
@@ -258,7 +234,6 @@ public class PresentationController : ControllerBase
                     message = $"Presentation with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -278,7 +253,6 @@ public class PresentationController : ControllerBase
             });
         }
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeletePresentation(int id, CancellationToken ct = default)
     {
@@ -292,7 +266,6 @@ public class PresentationController : ControllerBase
                     message = $"Presentation with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,

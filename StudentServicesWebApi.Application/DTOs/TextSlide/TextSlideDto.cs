@@ -1,16 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using GemBox.Presentation;
 using Swashbuckle.AspNetCore.Annotations;
-
 namespace StudentServicesWebApi.Application.DTOs.TextSlide;
-
 public class CreateTextSlideDto
 {
     [Required(ErrorMessage = "Text is required")]
     [StringLength(5000, ErrorMessage = "Text cannot exceed 5000 characters")]
     [SwaggerSchema(Description = "The text content to display on the slide. Maximum 5000 characters.")]
     public string Text { get; set; } = string.Empty;
-
     [Required]
     [Range(1, 200, ErrorMessage = "Size must be between 1 and 200")]
     [SwaggerSchema(Description = "Font size for the text. Must be between 1 and 200 points.")]
@@ -138,7 +135,6 @@ public class TextSlideSummaryDto
     [SwaggerSchema(Description = "When the text slide was last updated.")]
     public DateTime UpdatedAt { get; set; }
 }
-
 public class BulkTextSlideOperationDto
 {
     [Required(ErrorMessage = "TextSlideIds is required")]
@@ -146,7 +142,6 @@ public class BulkTextSlideOperationDto
     [SwaggerSchema(Description = "List of text slide IDs to operate on. Must contain at least one ID.")]
     public List<int> TextSlideIds { get; set; } = new();
 }
-
 public class BulkCreateTextSlideDto
 {
     [Required(ErrorMessage = "TextSlides is required")]

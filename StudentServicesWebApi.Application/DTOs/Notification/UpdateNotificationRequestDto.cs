@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Application.DTOs.Notification;
-
 public class UpdateNotificationRequestDto
 {
     public string? Title { get; set; }

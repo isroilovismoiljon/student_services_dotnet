@@ -2,21 +2,17 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.Notification;
 using StudentServicesWebApi.Infrastructure.Interfaces;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/notifications")]
 [Produces("application/json")]
 public class NotificationsController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-
     public NotificationsController(INotificationService notificationService)
     {
         _notificationService = notificationService;
     }
-
     [HttpPost]
     public async Task<IActionResult> CreateNotification([FromBody] CreateNotificationRequestDto dto)
     {
@@ -30,7 +26,6 @@ public class NotificationsController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetNotification(int id)
     {
@@ -44,7 +39,6 @@ public class NotificationsController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetUserNotifications(int userId)
     {
@@ -58,7 +52,6 @@ public class NotificationsController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
     [HttpGet("user/unread")]
     public async Task<IActionResult> GetUserUnreadNotifications(int userId)
     {
@@ -72,5 +65,4 @@ public class NotificationsController : ControllerBase
             return StatusCode(500, new { success = false, message = ex.Message, timestamp = DateTime.UtcNow });
         }
     }
-
 }

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using StudentServicesWebApi.Application.DTOs.Presentation;
-
 namespace StudentServicesWebApi.Application.Interfaces;
-
 public interface IPresentationService
 {
     Task<List<PresentationSummaryDto>> GetAllPresentationsAsync(CancellationToken ct = default);

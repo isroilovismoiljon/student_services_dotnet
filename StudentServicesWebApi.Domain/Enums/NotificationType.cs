@@ -1,5 +1,4 @@
 namespace StudentServicesWebApi.Domain.Enums;
-
 public enum NotificationType
 {
     Info = 1,

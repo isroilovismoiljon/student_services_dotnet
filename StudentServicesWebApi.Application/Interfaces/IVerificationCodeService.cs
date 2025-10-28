@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
-
 public interface IVerificationCodeService
 {
     Task<string> GenerateVerificationCodeAsync(int userId, VerificationCodeType codeType = VerificationCodeType.Registration);

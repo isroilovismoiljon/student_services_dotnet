@@ -1,5 +1,4 @@
 namespace StudentServicesWebApi.Domain.Enums;
-
 public enum UserRole
 {
     User = 1,

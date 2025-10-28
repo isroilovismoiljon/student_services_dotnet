@@ -1,15 +1,11 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-
 #nullable disable
-
 namespace StudentServicesWebApi.Migrations
 {
-    /// <inheritdoc />
     public partial class Inisdgdgdgdht : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -27,7 +23,6 @@ namespace StudentServicesWebApi.Migrations
                 {
                     table.PrimaryKey("PK_OpenaiKeys", x => x.Id);
                 });
-
             migrationBuilder.CreateTable(
                 name: "TextSlides",
                 columns: table => new
@@ -53,7 +48,6 @@ namespace StudentServicesWebApi.Migrations
                 {
                     table.PrimaryKey("PK_TextSlides", x => x.Id);
                 });
-
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -78,7 +72,6 @@ namespace StudentServicesWebApi.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
-
             migrationBuilder.CreateTable(
                 name: "Plans",
                 columns: table => new
@@ -132,7 +125,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateTable(
                 name: "AdminActions",
                 columns: table => new
@@ -168,7 +160,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
             migrationBuilder.CreateTable(
                 name: "Designs",
                 columns: table => new
@@ -191,7 +182,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
             migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
@@ -222,7 +212,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
@@ -258,7 +247,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
             migrationBuilder.CreateTable(
                 name: "VerificationCodes",
                 columns: table => new
@@ -284,7 +272,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateTable(
                 name: "PhotoSlides",
                 columns: table => new
@@ -313,7 +300,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateTable(
                 name: "PresentationIsroilovs",
                 columns: table => new
@@ -346,7 +332,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
             migrationBuilder.CreateTable(
                 name: "PresentationPages",
                 columns: table => new
@@ -381,7 +366,6 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateTable(
                 name: "PresentationPosts",
                 columns: table => new
@@ -416,345 +400,272 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_ActionType",
                 table: "AdminActions",
                 column: "ActionType");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_AdminId",
                 table: "AdminActions",
                 column: "AdminId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_AdminId_ActionType",
                 table: "AdminActions",
                 columns: new[] { "AdminId", "ActionType" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_CreatedAt",
                 table: "AdminActions",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_TargetUserId",
                 table: "AdminActions",
                 column: "TargetUserId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_TargetUserId_ActionType",
                 table: "AdminActions",
                 columns: new[] { "TargetUserId", "ActionType" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Designs_CreatedAt",
                 table: "Designs",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Designs_CreatedById",
                 table: "Designs",
                 column: "CreatedById");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Designs_Title",
                 table: "Designs",
                 column: "Title");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId_Status",
                 table: "Notifications",
                 columns: new[] { "UserId", "Status" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_CreatedAt",
                 table: "OpenaiKeys",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_Key",
                 table: "OpenaiKeys",
                 column: "Key",
                 unique: true);
-
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_UpdatedAt",
                 table: "OpenaiKeys",
                 column: "UpdatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_UseCount",
                 table: "OpenaiKeys",
                 column: "UseCount");
-
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_UseCount_CreatedAt",
                 table: "OpenaiKeys",
                 columns: new[] { "UseCount", "CreatedAt" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_CreatedAt",
                 table: "Payments",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_PaymentStatus",
                 table: "Payments",
                 column: "PaymentStatus");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ProcessedByAdminId",
                 table: "Payments",
                 column: "ProcessedByAdminId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_SenderId_PaymentStatus",
                 table: "Payments",
                 columns: new[] { "SenderId", "PaymentStatus" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_ContentType",
                 table: "PhotoSlides",
                 column: "ContentType");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_CreatedAt",
                 table: "PhotoSlides",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_DesignId",
                 table: "PhotoSlides",
                 column: "DesignId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_FileSize",
                 table: "PhotoSlides",
                 column: "FileSize");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_Left_Top",
                 table: "PhotoSlides",
                 columns: new[] { "Left", "Top" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_OriginalFileName",
                 table: "PhotoSlides",
                 column: "OriginalFileName");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_PhotoPath",
                 table: "PhotoSlides",
                 column: "PhotoPath");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_UpdatedAt",
                 table: "PhotoSlides",
                 column: "UpdatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Plans_Plan_1Id",
                 table: "Plans",
                 column: "Plan_1Id");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Plans_Plan_2Id",
                 table: "Plans",
                 column: "Plan_2Id");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Plans_Plan_3Id",
                 table: "Plans",
                 column: "Plan_3Id");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Plans_Plan_4Id",
                 table: "Plans",
                 column: "Plan_4Id");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Plans_Plan_5Id",
                 table: "Plans",
                 column: "Plan_5Id");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Plans_TitleId",
                 table: "Plans",
                 column: "TitleId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_Author",
                 table: "PresentationIsroilovs",
                 column: "Author");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_CreatedAt",
                 table: "PresentationIsroilovs",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_DesignId",
                 table: "PresentationIsroilovs",
                 column: "DesignId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_IsActive",
                 table: "PresentationIsroilovs",
                 column: "IsActive");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_PlanId",
                 table: "PresentationIsroilovs",
                 column: "PlanId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_Title",
                 table: "PresentationIsroilovs",
                 column: "Title");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_BackgroundPhotoId",
                 table: "PresentationPages",
                 column: "BackgroundPhotoId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_CreatedAt",
                 table: "PresentationPages",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_PhotoId",
                 table: "PresentationPages",
                 column: "PhotoId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_PresentationIsroilovId",
                 table: "PresentationPages",
                 column: "PresentationIsroilovId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_CreatedAt",
                 table: "PresentationPosts",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_PresentationPageId",
                 table: "PresentationPosts",
                 column: "PresentationPageId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_TextId",
                 table: "PresentationPosts",
                 column: "TextId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_TitleId",
                 table: "PresentationPosts",
                 column: "TitleId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_ColorHex",
                 table: "TextSlides",
                 column: "ColorHex");
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_CreatedAt",
                 table: "TextSlides",
                 column: "CreatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Font",
                 table: "TextSlides",
                 column: "Font");
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_IsBold_IsItalic",
                 table: "TextSlides",
                 columns: new[] { "IsBold", "IsItalic" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Left_Top",
                 table: "TextSlides",
                 columns: new[] { "Left", "Top" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Size",
                 table: "TextSlides",
                 column: "Size");
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Text_Left_Top",
                 table: "TextSlides",
                 columns: new[] { "Text", "Left", "Top" });
-
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_UpdatedAt",
                 table: "TextSlides",
                 column: "UpdatedAt");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Users_TelegramId",
                 table: "Users",
                 column: "TelegramId",
                 unique: true);
-
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",
                 table: "Users",
                 column: "Username",
                 unique: true);
-
             migrationBuilder.CreateIndex(
                 name: "IX_VerificationCodes_Code",
                 table: "VerificationCodes",
                 column: "Code");
-
             migrationBuilder.CreateIndex(
                 name: "IX_VerificationCodes_UserId_IsUsed",
                 table: "VerificationCodes",
                 columns: new[] { "UserId", "IsUsed" });
         }
-
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "AdminActions");
-
             migrationBuilder.DropTable(
                 name: "Notifications");
-
             migrationBuilder.DropTable(
                 name: "OpenaiKeys");
-
             migrationBuilder.DropTable(
                 name: "Payments");
-
             migrationBuilder.DropTable(
                 name: "PresentationPosts");
-
             migrationBuilder.DropTable(
                 name: "VerificationCodes");
-
             migrationBuilder.DropTable(
                 name: "PresentationPages");
-
             migrationBuilder.DropTable(
                 name: "PhotoSlides");
-
             migrationBuilder.DropTable(
                 name: "PresentationIsroilovs");
-
             migrationBuilder.DropTable(
                 name: "Designs");
-
             migrationBuilder.DropTable(
                 name: "Plans");
-
             migrationBuilder.DropTable(
                 name: "Users");
-
             migrationBuilder.DropTable(
                 name: "TextSlides");
         }

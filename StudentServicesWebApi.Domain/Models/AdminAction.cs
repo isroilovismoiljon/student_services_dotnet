@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Domain.Models;
 public class AdminAction : BaseEntity
 {

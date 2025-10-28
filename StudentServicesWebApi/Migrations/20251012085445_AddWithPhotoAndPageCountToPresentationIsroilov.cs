@@ -1,13 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
+using Microsoft.EntityFrameworkCore.Migrations;
 #nullable disable
-
 namespace StudentServicesWebApi.Migrations
 {
-    /// <inheritdoc />
     public partial class AddWithPhotoAndPageCountToPresentationIsroilov : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
@@ -17,8 +13,6 @@ namespace StudentServicesWebApi.Migrations
                 nullable: false,
                 defaultValue: false);
         }
-
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

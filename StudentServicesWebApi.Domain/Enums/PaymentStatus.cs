@@ -1,5 +1,4 @@
-﻿namespace StudentServicesWebApi.Domain.Enums;
-
+namespace StudentServicesWebApi.Domain.Enums;
 public enum PaymentStatus
 {
     Waiting = 0,

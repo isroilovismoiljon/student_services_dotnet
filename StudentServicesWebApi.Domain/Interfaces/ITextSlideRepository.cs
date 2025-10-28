@@ -1,7 +1,5 @@
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Domain.Interfaces;
-
 public interface ITextSlideRepository : IGenericRepository<TextSlide>
 {
     Task<List<TextSlide>> SearchByTextAsync(string searchTerm, CancellationToken ct = default);
@@ -11,8 +9,6 @@ public interface ITextSlideRepository : IGenericRepository<TextSlide>
     Task<TextSlideStatsResult> GetStatsAsync(CancellationToken ct = default);
     Task<List<TextSlide>> GetByPresentationPostIdAsync(int presentationPostId, CancellationToken ct = default);
 }
-
-
 public class TextSlideStatsResult
 {
     public int TotalTextSlides { get; set; }

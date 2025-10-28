@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Infrastructure.Repositories;
 public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRepository
 {
@@ -10,10 +9,8 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
     }
     public async Task<List<PhotoSlide>> GetByFileExtensionAsync(string extension, CancellationToken ct = default)
     {
-        // Normalize extension to include the dot
         if (!extension.StartsWith("."))
             extension = "." + extension;
-
         return await _context.Set<PhotoSlide>()
             .Where(ps => ps.PhotoPath.ToLower().EndsWith(extension.ToLower()))
             .OrderBy(ps => ps.CreatedAt)
@@ -38,87 +35,66 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
     public async Task<List<PhotoSlide>> GetByDimensionsAsync(double? minWidth = null, double? maxWidth = null, double? minHeight = null, double? maxHeight = null, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
-
         if (minWidth.HasValue)
         {
             query = query.Where(ps => ps.Width >= minWidth.Value);
         }
-
         if (maxWidth.HasValue)
         {
             query = query.Where(ps => ps.Width <= maxWidth.Value);
         }
-
         if (minHeight.HasValue)
         {
             query = query.Where(ps => ps.Height >= minHeight.Value);
         }
-
         if (maxHeight.HasValue)
         {
             query = query.Where(ps => ps.Height <= maxHeight.Value);
         }
-
         return await query
             .OrderBy(ps => ps.Width)
             .ThenBy(ps => ps.Height)
             .ToListAsync(ct);
     }
-
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByCreationDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
-
         query = ascending 
             ? query.OrderBy(ps => ps.CreatedAt)
             : query.OrderByDescending(ps => ps.CreatedAt);
-
         var totalCount = await query.CountAsync(ct);
-
         var photoSlides = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
-
         return (photoSlides, totalCount);
     }
-
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByUpdateDateAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
-
         query = ascending 
             ? query.OrderBy(ps => ps.UpdatedAt)
             : query.OrderByDescending(ps => ps.UpdatedAt);
-
         var totalCount = await query.CountAsync(ct);
-
         var photoSlides = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
-
         return (photoSlides, totalCount);
     }
-
     public async Task<(List<PhotoSlide> PhotoSlides, int TotalCount)> GetPagedByFileSizeAsync(bool ascending = false, int pageNumber = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = _context.Set<PhotoSlide>().AsQueryable();
-
         query = ascending 
             ? query.OrderBy(ps => ps.FileSize)
             : query.OrderByDescending(ps => ps.FileSize);
-
         var totalCount = await query.CountAsync(ct);
-
         var photoSlides = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
-
         return (photoSlides, totalCount);
     }
-
     public async Task<List<PhotoSlide>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken ct = default)
     {
         return await _context.Set<PhotoSlide>()
@@ -130,7 +106,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
     {
         var photoSlides = await _context.Set<PhotoSlide>().ToListAsync(ct);
         var orphanedSlides = new List<PhotoSlide>();
-
         foreach (var slide in photoSlides)
         {
             if (!string.IsNullOrEmpty(slide.PhotoPath) && !System.IO.File.Exists(slide.PhotoPath))
@@ -138,7 +113,6 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
                 orphanedSlides.Add(slide);
             }
         }
-
         return orphanedSlides;
     }
     public async Task<int> BulkDeleteAsync(List<int> ids, bool deleteFiles = true, CancellationToken ct = default)
@@ -147,16 +121,13 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
         {
             return 0;
         }
-
         var photoSlidesToDelete = await _context.Set<PhotoSlide>()
             .Where(ps => ids.Contains(ps.Id))
             .ToListAsync(ct);
-
         if (photoSlidesToDelete.Any())
         {
             if (deleteFiles)
             {
-                // Delete physical files
                 foreach (var slide in photoSlidesToDelete)
                 {
                     try
@@ -169,33 +140,24 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
                     catch { }
                 }
             }
-
             _context.Set<PhotoSlide>().RemoveRange(photoSlidesToDelete);
             await _context.SaveChangesAsync(ct);
         }
-
         return photoSlidesToDelete.Count;
     }
     public async Task<PhotoSlideStatsResult> GetStatsAsync(CancellationToken ct = default)
     {
         var photoSlides = await _context.Set<PhotoSlide>().ToListAsync(ct);
-
         if (!photoSlides.Any())
         {
             return new PhotoSlideStatsResult();
         }
-
-        // Calculate file extension counts
         var extensionCounts = photoSlides
             .GroupBy(ps => Path.GetExtension(ps.PhotoPath).ToLowerInvariant())
             .ToDictionary(g => g.Key, g => g.Count());
-
-        // Calculate content type counts
         var contentTypeCounts = photoSlides
             .GroupBy(ps => ps.ContentType)
             .ToDictionary(g => g.Key, g => g.Count());
-
-        // Check for orphaned files
         var orphanedCount = 0;
         foreach (var slide in photoSlides)
         {
@@ -204,12 +166,10 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
                 orphanedCount++;
             }
         }
-
         var totalFileSize = photoSlides.Sum(ps => ps.FileSize);
         var averageFileSize = photoSlides.Average(ps => ps.FileSize);
         var largestFileSize = photoSlides.Max(ps => ps.FileSize);
         var smallestFileSize = photoSlides.Min(ps => ps.FileSize);
-
         return new PhotoSlideStatsResult
         {
             TotalPhotoSlides = photoSlides.Count,
@@ -253,45 +213,36 @@ public class PhotoSlideRepository : GenericRepository<PhotoSlide>, IPhotoSlideRe
             .GroupBy(ps => ps.PhotoPath)
             .Where(g => g.Count() > 1)
             .ToListAsync(ct);
-
         var duplicateSlides = new List<PhotoSlide>();
         foreach (var group in duplicateGroups)
         {
             duplicateSlides.AddRange(group);
         }
-
         return duplicateSlides.OrderBy(ps => ps.PhotoPath).ToList();
     }
-
     public async Task<bool> UpdatePhotoPathAsync(int id, string newPhotoPath, CancellationToken ct = default)
     {
         var photoSlide = await _context.Set<PhotoSlide>()
             .FirstOrDefaultAsync(ps => ps.Id == id, ct);
-
         if (photoSlide == null)
         {
             return false;
         }
-
         photoSlide.PhotoPath = newPhotoPath;
         photoSlide.UpdatedAt = DateTime.UtcNow;
-        
         await _context.SaveChangesAsync(ct);
         return true;
     }
-
     private static string FormatFileSize(long bytes)
     {
         string[] sizes = { "B", "KB", "MB", "GB", "TB" };
         double len = bytes;
         int order = 0;
-        
         while (len >= 1024 && order < sizes.Length - 1)
         {
             order++;
             len = len / 1024;
         }
-        
         return $"{len:0.##} {sizes[order]}";
     }
 }

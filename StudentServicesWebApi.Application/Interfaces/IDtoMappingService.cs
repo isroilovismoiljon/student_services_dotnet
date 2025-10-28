@@ -6,9 +6,7 @@ using StudentServicesWebApi.Application.DTOs.Plan;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
-
 public interface IDtoMappingService
 {
     UserResponseDto MapToUserResponseDto(User user);

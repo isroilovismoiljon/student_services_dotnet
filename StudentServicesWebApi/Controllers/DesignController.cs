@@ -4,9 +4,7 @@ using StudentServicesWebApi.Application.DTOs.Design;
 using StudentServicesWebApi.Application.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
@@ -14,7 +12,6 @@ public class DesignController : ControllerBase
 {
     private readonly IDesignService _designService;
     private readonly ILogger<DesignController> _logger;
-
     public DesignController(
         IDesignService designService,
         ILogger<DesignController> logger)
@@ -22,7 +19,6 @@ public class DesignController : ControllerBase
         _designService = designService;
         _logger = logger;
     }
-
     [HttpGet]
     public async Task<IActionResult> GetDesigns(
         [FromQuery] int pageNumber = 1,
@@ -32,7 +28,6 @@ public class DesignController : ControllerBase
         try
         {
             var (designs, totalCount) = await _designService.GetPagedDesignsAsync(pageNumber, pageSize, ct);
-            
             return Ok(new
             {
                 success = true,
@@ -62,7 +57,6 @@ public class DesignController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetDesignById(int id, CancellationToken ct = default)
     {
@@ -76,7 +70,6 @@ public class DesignController : ControllerBase
                     message = $"Design with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -96,7 +89,6 @@ public class DesignController : ControllerBase
             });
         }
     }
-
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateDesign(
@@ -111,8 +103,6 @@ public class DesignController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
-        // Additional validation for photos
         if (createDesignWithPhotosDto.Photos == null || createDesignWithPhotosDto.Photos.Length < 4)
         {
             return BadRequest(new
@@ -122,12 +112,10 @@ public class DesignController : ControllerBase
                 timestamp = DateTime.UtcNow
             });
         }
-
         try
         {
             var userId = GetCurrentUserId();
             var design = await _designService.CreateDesignAsync(createDesignWithPhotosDto, userId, ct);
-
             return CreatedAtAction(nameof(GetDesignById), new { id = design.Id }, new
             {
                 success = true,
@@ -158,8 +146,6 @@ public class DesignController : ControllerBase
             });
         }
     }
-
-
     [HttpPut("{id:int}")]
     [Authorize]
     public async Task<IActionResult> UpdateDesign(int id, [FromBody] UpdateDesignDto updateDesignDto, CancellationToken ct = default)
@@ -172,7 +158,6 @@ public class DesignController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var design = await _designService.UpdateDesignAsync(id, updateDesignDto, ct);
@@ -183,7 +168,6 @@ public class DesignController : ControllerBase
                     message = $"Design with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -204,7 +188,6 @@ public class DesignController : ControllerBase
             });
         }
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteDesign(int id, CancellationToken ct = default)
     {
@@ -218,7 +201,6 @@ public class DesignController : ControllerBase
                     message = $"Design with ID {id} not found",
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new
             {
                 success = true,
@@ -238,7 +220,6 @@ public class DesignController : ControllerBase
             });
         }
     }
-
     private int GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

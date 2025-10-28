@@ -4,16 +4,13 @@ using Swashbuckle.AspNetCore.Annotations;
 using StudentServicesWebApi.Application.DTOs.OpenaiKey;
 using StudentServicesWebApi.Application.Interfaces;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Controllers;
-
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class OpenaiKeyController(IOpenaiKeyService openaiKeyService) : ControllerBase
 {
     private readonly IOpenaiKeyService _openaiKeyService = openaiKeyService;
-
     [HttpPost]
     [Authorize(Roles = $"{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Create a new OpenAI key", Description = "Creates a new OpenAI API key in the system. Only admins can perform this action.")]
@@ -37,7 +34,6 @@ public class OpenaiKeyController(IOpenaiKeyService openaiKeyService) : Controlle
             return StatusCode(500, new { message = "An error occurred while creating the OpenAI key.", details = ex.Message });
         }
     }
-
     [HttpGet("{id}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Get OpenAI key by ID", Description = "Retrieves a specific OpenAI key by its unique identifier.")]
@@ -50,7 +46,6 @@ public class OpenaiKeyController(IOpenaiKeyService openaiKeyService) : Controlle
         var result = await _openaiKeyService.GetByIdAsync(id, cancellationToken);
         return result == null ? NotFound(new { message = $"OpenAI key with ID {id} not found." }) : Ok(result);
     }
-
     [HttpGet]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Get all OpenAI keys", Description = "Retrieves all OpenAI keys in the system.")]
@@ -62,7 +57,6 @@ public class OpenaiKeyController(IOpenaiKeyService openaiKeyService) : Controlle
         var result = await _openaiKeyService.GetAllAsync(cancellationToken);
         return Ok(result);
     }
-
     [HttpPut("{id}")]
     [Authorize(Roles = $"{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Update OpenAI key", Description = "Updates an existing OpenAI key.")]
@@ -89,7 +83,6 @@ public class OpenaiKeyController(IOpenaiKeyService openaiKeyService) : Controlle
             return StatusCode(500, new { message = "An error occurred while updating the OpenAI key.", details = ex.Message });
         }
     }
-
     [HttpDelete("{id}")]
     [Authorize(Roles = $"{nameof(UserRole.SuperAdmin)}")]
     [SwaggerOperation(Summary = "Delete OpenAI key", Description = "Deletes an OpenAI key from the system.")]
@@ -104,5 +97,4 @@ public class OpenaiKeyController(IOpenaiKeyService openaiKeyService) : Controlle
             ? NoContent() 
             : NotFound(new { message = $"OpenAI key with ID {id} not found." });
     }
-
 }

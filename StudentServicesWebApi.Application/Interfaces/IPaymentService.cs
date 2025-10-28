@@ -1,8 +1,6 @@
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
-
 public interface IPaymentService
 {
     Task<PaymentDto> CreatePaymentAsync(CreatePaymentDto createPaymentDto, int senderId, CancellationToken ct = default);

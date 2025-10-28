@@ -2,21 +2,17 @@ using Microsoft.AspNetCore.Mvc;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 using System.ComponentModel.DataAnnotations;
-
 namespace StudentServicesWebApi.Controllers;
-
 [ApiController]
 [Route("api/TextSlide")]
 [Produces("application/json")]
 public class TextSlideController : ControllerBase
 {
     private readonly ITextSlideService _textSlideService;
-
     public TextSlideController(ITextSlideService textSlideService)
     {
         _textSlideService = textSlideService;
     }
-
     [HttpPost]
     public async Task<IActionResult> CreateTextSlide([FromBody] CreateTextSlideDto createTextSlideDto, CancellationToken ct = default)
     {
@@ -27,10 +23,8 @@ public class TextSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
-            // Validate creation first
             var isValid = await _textSlideService.ValidateTextSlideCreationAsync(createTextSlideDto, ct);
             if (!isValid)
                 return BadRequest(new { 
@@ -38,7 +32,6 @@ public class TextSlideController : ControllerBase
                     message = "A text slide with similar properties already exists", 
                     timestamp = DateTime.UtcNow
                 });
-
             var result = await _textSlideService.CreateTextSlideAsync(createTextSlideDto, ct);
             return CreatedAtAction(nameof(GetTextSlideById), new { id = result.Id }, new { 
                 success = true, 
@@ -57,7 +50,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetTextSlideById(int id, CancellationToken ct = default)
     {
@@ -70,7 +62,6 @@ public class TextSlideController : ControllerBase
                     message = $"Text slide with ID {id} not found", 
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new { 
                 success = true, 
                 data = textSlide, 
@@ -87,14 +78,12 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet]
     public async Task<IActionResult> GetTextSlides([FromQuery] int pageNumber = 1, [FromQuery] [Range(1, 100)] int pageSize = 10, CancellationToken ct = default)
     {
         try
         {
             var (textSlides, totalCount) = await _textSlideService.GetPagedTextSlidesAsync(pageNumber, pageSize, ct);
-            
             return Ok(new { 
                 success = true, 
                 data = new {
@@ -119,7 +108,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateTextSlide(int id, [FromBody] UpdateTextSlideDto updateTextSlideDto, CancellationToken ct = default)
     {
@@ -130,10 +118,8 @@ public class TextSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
-            // Check if text slide exists
             var exists = await _textSlideService.TextSlideExistsAsync(id, ct);
             if (!exists)
                 return NotFound(new { 
@@ -141,8 +127,6 @@ public class TextSlideController : ControllerBase
                     message = $"Text slide with ID {id} not found", 
                     timestamp = DateTime.UtcNow
                 });
-
-            // Validate update
             var isValid = await _textSlideService.ValidateTextSlideUpdateAsync(id, updateTextSlideDto, ct);
             if (!isValid)
                 return BadRequest(new { 
@@ -150,7 +134,6 @@ public class TextSlideController : ControllerBase
                     message = "Update would create a duplicate text slide", 
                     timestamp = DateTime.UtcNow
                 });
-
             var result = await _textSlideService.UpdateTextSlideAsync(id, updateTextSlideDto, ct);
             if (result == null)
                 return NotFound(new { 
@@ -158,7 +141,6 @@ public class TextSlideController : ControllerBase
                     message = $"Text slide with ID {id} not found", 
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new { 
                 success = true, 
                 message = "Text slide updated successfully",
@@ -176,7 +158,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteTextSlide(int id, CancellationToken ct = default)
     {
@@ -189,7 +170,6 @@ public class TextSlideController : ControllerBase
                     message = $"Text slide with ID {id} not found", 
                     timestamp = DateTime.UtcNow
                 });
-
             return Ok(new { 
                 success = true, 
                 message = "Text slide deleted successfully", 
@@ -206,7 +186,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("search")]
     public async Task<IActionResult> SearchTextSlides([FromQuery] string searchTerm, CancellationToken ct = default)
     {
@@ -216,7 +195,6 @@ public class TextSlideController : ControllerBase
                 message = "Search term is required", 
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var textSlides = await _textSlideService.SearchTextSlidesAsync(searchTerm, ct);
@@ -238,7 +216,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("statistics")]
     public async Task<IActionResult> GetTextSlideStats(CancellationToken ct = default)
     {
@@ -284,7 +261,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpGet("presentation-post/{presentationPostId:int}")]
     public async Task<IActionResult> GetTextSlidesByPresentationPostId(int presentationPostId, CancellationToken ct = default)
     {
@@ -309,7 +285,6 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     [HttpPost("bulk")]
     public async Task<IActionResult> BulkCreateTextSlides([FromBody] BulkCreateTextSlideDto bulkCreateDto, CancellationToken ct = default)
     {
@@ -320,7 +295,6 @@ public class TextSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var results = await _textSlideService.BulkCreateTextSlidesAsync(bulkCreateDto, ct);
@@ -351,7 +325,6 @@ public class TextSlideController : ControllerBase
                 errors = ModelState,
                 timestamp = DateTime.UtcNow
             });
-
         try
         {
             var deletedCount = await _textSlideService.BulkDeleteTextSlidesAsync(bulkOperationDto, ct);
@@ -372,9 +345,7 @@ public class TextSlideController : ControllerBase
             });
         }
     }
-
     #region Private Helper Methods
-
     private static string BuildFormattingFilterDescription(bool? isBold, bool? isItalic)
     {
         var filters = new List<string>();
@@ -382,9 +353,7 @@ public class TextSlideController : ControllerBase
             filters.Add($"Bold: {isBold.Value}");
         if (isItalic.HasValue)
             filters.Add($"Italic: {isItalic.Value}");
-        
         return filters.Count > 0 ? string.Join(", ", filters) : "No formatting filters";
     }
-
     #endregion
 }

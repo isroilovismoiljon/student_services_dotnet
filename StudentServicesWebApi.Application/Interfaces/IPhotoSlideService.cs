@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
 using StudentServicesWebApi.Domain.Models;
-
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
-
 public interface IPhotoSlideService
 {
     Task<PhotoSlideDto> CreatePhotoSlideAsync(CreatePhotoSlideDto createPhotoSlideDto, CancellationToken ct = default);
@@ -22,7 +20,6 @@ public interface IPhotoSlideService
     Task<PhotoSlideDto?> ReplacePhotoAsync(int id, IFormFile newPhoto, bool deleteOldFile = true, CancellationToken ct = default);
     Task<PhotoSlideDto> AddPhotoToDesignAsync(int designId, AddPhotoToDesignDto addPhotoToDesignDto, CancellationToken ct = default);
 }
-
 public class PhotoSlideStatsDto
 {
     public int TotalPhotoSlides { get; set; }

@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using StudentServicesWebApi.Domain.Enums;
-
 namespace StudentServicesWebApi.Application.DTOs.Payment;
 public class ProcessPaymentDto
 {
