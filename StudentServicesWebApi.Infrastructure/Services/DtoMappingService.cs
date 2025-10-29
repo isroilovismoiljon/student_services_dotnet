@@ -1,9 +1,11 @@
 using AutoMapper;
+using StudentServicesWebApi.Application.DTOs.Auth;
 using StudentServicesWebApi.Application.DTOs.Design;
 using StudentServicesWebApi.Application.DTOs.OpenaiKey;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
 using StudentServicesWebApi.Application.DTOs.Plan;
+using StudentServicesWebApi.Application.DTOs.PresentationPage;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Interfaces;
@@ -22,6 +24,12 @@ public class DtoMappingService : IDtoMappingService
     public UserResponseDto MapToUserResponseDto(User user)
     {
         var dto = _mapper.Map<UserResponseDto>(user);
+        dto.Photo = _urlService.GetPaymentImageUrl(user.Photo);
+        return dto;
+    }
+    public RegisterResponseDto MapToRegisterResponseDto(User user)
+    {
+        var dto = _mapper.Map<RegisterResponseDto>(user);
         dto.Photo = _urlService.GetPaymentImageUrl(user.Photo);
         return dto;
     }
@@ -267,6 +275,39 @@ public class DtoMappingService : IDtoMappingService
             PlansPreview = plansPreview,
             CreatedAt = plan.CreatedAt,
             UpdatedAt = plan.UpdatedAt
+        };
+    }
+
+    public PlanDto MapToPlanDto(Plan plan)
+    {
+        return new PlanDto
+        {
+            Id = plan.Id,
+            PlanText = MapToTextSlideDto(plan.PlanText),
+            Plans = MapToTextSlideDto(plan.Plans),
+            CreatedAt = plan.CreatedAt,
+            UpdatedAt = plan.UpdatedAt
+        };
+    }
+
+    public PresentationPageDto MapToPresentationPageDto(PresentationPage presentationPage)
+    {
+        return new PresentationPageDto
+        {
+            Id = presentationPage.Id,
+            PresentationIsroilovId = presentationPage.PresentationIsroilovId,
+            PhotoId = presentationPage.PhotoId,
+            BackgroundPhotoId = presentationPage.BackgroundPhotoId,
+            WithPhoto = presentationPage.WithPhoto,
+            CreatedAt = presentationPage.CreatedAt,
+            UpdatedAt = presentationPage.UpdatedAt,
+            Posts = presentationPage.PresentationPosts?.Select(pp => new PresentationPostSummaryDto
+            {
+                Id = pp.Id,
+                TitleId = pp.TitleId,
+                TextId = pp.TextId,
+                CreatedAt = pp.CreatedAt
+            }).ToList() ?? new List<PresentationPostSummaryDto>()
         };
     }
 }

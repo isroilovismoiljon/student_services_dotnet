@@ -77,19 +77,11 @@ public class AuthService : IAuthService
         }
         var verificationCode = await _verificationCodeService.GenerateVerificationCodeAsync(createdUser.Id);
         var telegramDeepLink = _verificationCodeService.GenerateTelegramDeepLink(verificationCode);
-        var userResponseDto = new UserResponseDto
-        {
-            Id = createdUser.Id,
-            FirstName = createdUser.FirstName,
-            LastName = createdUser.LastName,
-            Username = createdUser.Username,
-            PhoneNumber = createdUser.PhoneNumber,
-            TelegramId = createdUser.TelegramId
-        };
+        var registerResponseDto = _dtoMappingService.MapToRegisterResponseDto(createdUser);
         return new AuthResponseDto
         {
             Success = true,
-            User = userResponseDto,
+            User = registerResponseDto,
             TelegramDeepLink = telegramDeepLink,
             VerificationCode = verificationCode,
             Message = "To complete the registration, please log in to the Telegram bot via the link below, get the code, enter it in the here and go through verification.",

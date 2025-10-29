@@ -54,8 +54,8 @@ public class TelegramBotService : ITelegramBotService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error starting Telegram bot");
-            throw;
+            _logger.LogError(ex, "Error starting Telegram bot. The bot will be disabled but the application will continue.");
+            // Don't throw - let the app continue without the bot
         }
     }
     public async Task StopBotAsync()

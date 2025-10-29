@@ -11,7 +11,7 @@ public class PresentationPageRepository : GenericRepository<PresentationPage>, I
     public async Task<List<PresentationPage>> GetByPresentationIdAsync(int presentationId, CancellationToken ct = default)
     {
         return await _context.Set<PresentationPage>()
-            .Where(pp => pp.PresentationIsroilovId == presentationId)
+            .Where(pp => !pp.IsDeleted && pp.PresentationIsroilovId == presentationId)
             .Include(pp => pp.PresentationPosts)
             .OrderBy(pp => pp.CreatedAt)
             .ToListAsync(ct);
@@ -19,6 +19,7 @@ public class PresentationPageRepository : GenericRepository<PresentationPage>, I
     public async Task<PresentationPage?> GetByIdWithPostsAsync(int id, CancellationToken ct = default)
     {
         return await _context.Set<PresentationPage>()
+            .Where(pp => !pp.IsDeleted)
             .Include(pp => pp.PresentationPosts)
             .FirstOrDefaultAsync(pp => pp.Id == id, ct);
     }

@@ -1,8 +1,10 @@
+using StudentServicesWebApi.Application.DTOs.Auth;
 using StudentServicesWebApi.Application.DTOs.Design;
 using StudentServicesWebApi.Application.DTOs.OpenaiKey;
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Application.DTOs.PhotoSlide;
 using StudentServicesWebApi.Application.DTOs.Plan;
+using StudentServicesWebApi.Application.DTOs.PresentationPage;
 using StudentServicesWebApi.Application.DTOs.TextSlide;
 using StudentServicesWebApi.Application.DTOs.User;
 using StudentServicesWebApi.Domain.Models;
@@ -10,6 +12,7 @@ namespace StudentServicesWebApi.Infrastructure.Interfaces;
 public interface IDtoMappingService
 {
     UserResponseDto MapToUserResponseDto(User user);
+    RegisterResponseDto MapToRegisterResponseDto(User user);
     PaymentDto MapToPaymentDto(Payment payment);
     PaymentSummaryDto MapToPaymentSummaryDto(Payment payment);
     TextSlideDto MapToTextSlideDto(TextSlide textSlide);
@@ -22,4 +25,6 @@ public interface IDtoMappingService
     Task<OpenaiKeySummaryDto> MapToOpenaiKeySummaryDtoAsync(OpenaiKey openaiKey);
     Task<PlanDto> MapToPlanDtoAsync(Plan plan);
     Task<PlanSummaryDto> MapToPlanSummaryDtoAsync(Plan plan);
+    PlanDto MapToPlanDto(Plan plan);
+    PresentationPageDto MapToPresentationPageDto(PresentationPage presentationPage);
 }

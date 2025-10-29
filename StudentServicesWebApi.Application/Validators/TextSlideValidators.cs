@@ -20,22 +20,24 @@ public class CreateTextSlideDtoValidator : AbstractValidator<CreateTextSlideDto>
             .NotEmpty().WithMessage("Color is required")
             .Matches(@"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$").WithMessage("Color must be a valid hex color code (e.g., #000000 or #000)");
         RuleFor(x => x.Left)
-            .GreaterThanOrEqualTo(0).WithMessage("Left position must be non-negative");
+            .GreaterThanOrEqualTo(0).WithMessage("Left position must be non-negative")
+            .LessThanOrEqualTo(33.867).WithMessage("Left position cannot exceed 33.867 cm (slide width)");
         RuleFor(x => x.Top)
-            .GreaterThanOrEqualTo(0).WithMessage("Top position must be non-negative");
+            .GreaterThanOrEqualTo(0).WithMessage("Top position must be non-negative")
+            .LessThanOrEqualTo(19.05).WithMessage("Top position cannot exceed 19.05 cm (slide height)");
         RuleFor(x => x.Width)
             .GreaterThan(0).WithMessage("Width must be greater than 0")
-            .LessThanOrEqualTo(10000).WithMessage("Width cannot exceed 10000");
+            .LessThanOrEqualTo(33.867).WithMessage("Width cannot exceed 33.867 cm (slide width)");
         RuleFor(x => x.Height)
             .GreaterThan(0).WithMessage("Height must be greater than 0 when specified")
-            .LessThanOrEqualTo(10000).WithMessage("Height cannot exceed 10000")
+            .LessThanOrEqualTo(19.05).WithMessage("Height cannot exceed 19.05 cm (slide height)")
             .When(x => x.Height.HasValue);
         RuleFor(x => x.Horizontal)
             .IsInEnum().WithMessage("Invalid horizontal alignment value");
         RuleFor(x => x.Vertical)
             .IsInEnum().WithMessage("Invalid vertical alignment value");
         RuleFor(x => x)
-            .Must(HaveValidPosition).WithMessage("Text slide position and dimensions result in negative coordinates");
+            .Must(HaveValidPosition).WithMessage("Text element exceeds slide boundaries. Left + Width must not exceed 33.867 cm, Top + Height must not exceed 19.05 cm");
     }
     private static bool BeValidFont(string font)
     {
@@ -46,9 +48,13 @@ public class CreateTextSlideDtoValidator : AbstractValidator<CreateTextSlideDto>
     }
     private static bool HaveValidPosition(CreateTextSlideDto dto)
     {
-        return dto.Left >= 0 && dto.Top >= 0 && 
-               dto.Left + dto.Width <= 50000 && 
-               dto.Top + (dto.Height ?? 100) <= 50000;
+        const double MaxSlideWidth = 33.867;  // cm
+        const double MaxSlideHeight = 19.05;   // cm
+        
+        bool widthValid = dto.Left + dto.Width <= MaxSlideWidth;
+        bool heightValid = dto.Top + (dto.Height ?? 0) <= MaxSlideHeight;
+        
+        return widthValid && heightValid;
     }
 }
 public class UpdateTextSlideDtoValidator : AbstractValidator<UpdateTextSlideDto>

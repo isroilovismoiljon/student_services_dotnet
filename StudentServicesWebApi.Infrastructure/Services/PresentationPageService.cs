@@ -6,10 +6,10 @@ namespace StudentServicesWebApi.Infrastructure.Services;
 public class PresentationPageService : IPresentationPageService
 {
     private readonly IPresentationPageRepository _pageRepository;
-    private readonly IPresentationRepository _presentationRepository;
+    private readonly IPresentationIsroilovRepository _presentationRepository;
     public PresentationPageService(
         IPresentationPageRepository pageRepository,
-        IPresentationRepository presentationRepository)
+        IPresentationIsroilovRepository presentationRepository)
     {
         _pageRepository = pageRepository;
         _presentationRepository = presentationRepository;
@@ -68,7 +68,6 @@ public class PresentationPageService : IPresentationPageService
             BackgroundPhotoId = createDto.BackgroundPhotoId
         };
         var createdPage = await _pageRepository.AddAsync(page, ct);
-        await _presentationRepository.UpdatePageCountAsync(presentationId, ct);
         return new PresentationPageDto
         {
             Id = createdPage.Id,
@@ -98,9 +97,7 @@ public class PresentationPageService : IPresentationPageService
     {
         var page = await _pageRepository.GetByIdAsync(id, ct);
         if (page == null) return false;
-        var presentationId = page.PresentationIsroilovId;
         await _pageRepository.DeleteAsync(page, ct);
-        await _presentationRepository.UpdatePageCountAsync(presentationId, ct);
         return true;
     }
     public async Task<bool> PageExistsAsync(int id, CancellationToken ct = default)
