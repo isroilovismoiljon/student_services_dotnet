@@ -1,11 +1,15 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
 #nullable disable
+
 namespace StudentServicesWebApi.Migrations
 {
-    public partial class Inisdgdgdgdht : Migration
+    /// <inheritdoc />
+    public partial class Infisfsefsegfdfg : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -17,12 +21,15 @@ namespace StudentServicesWebApi.Migrations
                     Key = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     UseCount = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OpenaiKeys", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "TextSlides",
                 columns: table => new
@@ -42,12 +49,15 @@ namespace StudentServicesWebApi.Migrations
                     Horizontal = table.Column<int>(type: "integer", nullable: false),
                     Vertical = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TextSlides", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -66,65 +76,45 @@ namespace StudentServicesWebApi.Migrations
                     UserRole = table.Column<int>(type: "integer", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "Plans",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TitleId = table.Column<int>(type: "integer", nullable: false),
-                    Plan_1Id = table.Column<int>(type: "integer", nullable: false),
-                    Plan_2Id = table.Column<int>(type: "integer", nullable: false),
-                    Plan_3Id = table.Column<int>(type: "integer", nullable: false),
-                    Plan_4Id = table.Column<int>(type: "integer", nullable: true),
-                    Plan_5Id = table.Column<int>(type: "integer", nullable: true),
+                    PlanTextId = table.Column<int>(type: "integer", nullable: false),
+                    PlansId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Plans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Plans_TextSlides_Plan_1Id",
-                        column: x => x.Plan_1Id,
+                        name: "FK_Plans_TextSlides_PlanTextId",
+                        column: x => x.PlanTextId,
                         principalTable: "TextSlides",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Plans_TextSlides_Plan_2Id",
-                        column: x => x.Plan_2Id,
-                        principalTable: "TextSlides",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Plans_TextSlides_Plan_3Id",
-                        column: x => x.Plan_3Id,
-                        principalTable: "TextSlides",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Plans_TextSlides_Plan_4Id",
-                        column: x => x.Plan_4Id,
-                        principalTable: "TextSlides",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Plans_TextSlides_Plan_5Id",
-                        column: x => x.Plan_5Id,
-                        principalTable: "TextSlides",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Plans_TextSlides_TitleId",
-                        column: x => x.TitleId,
+                        name: "FK_Plans_TextSlides_PlansId",
+                        column: x => x.PlansId,
                         principalTable: "TextSlides",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "AdminActions",
                 columns: table => new
@@ -142,7 +132,9 @@ namespace StudentServicesWebApi.Migrations
                     IpAddress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     NotificationSent = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -160,6 +152,7 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
             migrationBuilder.CreateTable(
                 name: "Designs",
                 columns: table => new
@@ -170,7 +163,9 @@ namespace StudentServicesWebApi.Migrations
                     CreatedById = table.Column<int>(type: "integer", nullable: false),
                     IsValid = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -182,6 +177,7 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
             migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
@@ -200,7 +196,9 @@ namespace StudentServicesWebApi.Migrations
                     IsGlobal = table.Column<bool>(type: "boolean", nullable: false),
                     Metadata = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -212,6 +210,7 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
@@ -229,7 +228,9 @@ namespace StudentServicesWebApi.Migrations
                     ProcessedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     AdminNotes = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -247,6 +248,7 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
             migrationBuilder.CreateTable(
                 name: "VerificationCodes",
                 columns: table => new
@@ -260,7 +262,9 @@ namespace StudentServicesWebApi.Migrations
                     TelegramDeepLink = table.Column<string>(type: "text", nullable: true),
                     CodeType = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -272,6 +276,7 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "PhotoSlides",
                 columns: table => new
@@ -288,7 +293,9 @@ namespace StudentServicesWebApi.Migrations
                     Height = table.Column<double>(type: "double precision", precision: 18, scale: 6, nullable: true),
                     DesignId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -300,21 +307,25 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "PresentationIsroilovs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Author = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    TitleId = table.Column<int>(type: "integer", nullable: false),
+                    AuthorId = table.Column<int>(type: "integer", nullable: false),
+                    WithPhoto = table.Column<bool>(type: "boolean", nullable: false),
                     PageCount = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     FilePath = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     DesignId = table.Column<int>(type: "integer", nullable: false),
                     PlanId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -331,7 +342,20 @@ namespace StudentServicesWebApi.Migrations
                         principalTable: "Plans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PresentationIsroilovs_TextSlides_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "TextSlides",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PresentationIsroilovs_TextSlides_TitleId",
+                        column: x => x.TitleId,
+                        principalTable: "TextSlides",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
+
             migrationBuilder.CreateTable(
                 name: "PresentationPages",
                 columns: table => new
@@ -341,8 +365,11 @@ namespace StudentServicesWebApi.Migrations
                     PhotoId = table.Column<int>(type: "integer", nullable: true),
                     BackgroundPhotoId = table.Column<int>(type: "integer", nullable: true),
                     PresentationIsroilovId = table.Column<int>(type: "integer", nullable: false),
+                    WithPhoto = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -366,6 +393,7 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.CreateTable(
                 name: "PresentationPosts",
                 columns: table => new
@@ -376,7 +404,9 @@ namespace StudentServicesWebApi.Migrations
                     TitleId = table.Column<int>(type: "integer", nullable: true),
                     TextId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -400,272 +430,325 @@ namespace StudentServicesWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_ActionType",
                 table: "AdminActions",
                 column: "ActionType");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_AdminId",
                 table: "AdminActions",
                 column: "AdminId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_AdminId_ActionType",
                 table: "AdminActions",
                 columns: new[] { "AdminId", "ActionType" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_CreatedAt",
                 table: "AdminActions",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_TargetUserId",
                 table: "AdminActions",
                 column: "TargetUserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AdminActions_TargetUserId_ActionType",
                 table: "AdminActions",
                 columns: new[] { "TargetUserId", "ActionType" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Designs_CreatedAt",
                 table: "Designs",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Designs_CreatedById",
                 table: "Designs",
                 column: "CreatedById");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Designs_Title",
                 table: "Designs",
                 column: "Title");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId_Status",
                 table: "Notifications",
                 columns: new[] { "UserId", "Status" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_CreatedAt",
                 table: "OpenaiKeys",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_Key",
                 table: "OpenaiKeys",
                 column: "Key",
                 unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_UpdatedAt",
                 table: "OpenaiKeys",
                 column: "UpdatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_UseCount",
                 table: "OpenaiKeys",
                 column: "UseCount");
+
             migrationBuilder.CreateIndex(
                 name: "IX_OpenaiKeys_UseCount_CreatedAt",
                 table: "OpenaiKeys",
                 columns: new[] { "UseCount", "CreatedAt" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_CreatedAt",
                 table: "Payments",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_PaymentStatus",
                 table: "Payments",
                 column: "PaymentStatus");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ProcessedByAdminId",
                 table: "Payments",
                 column: "ProcessedByAdminId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_SenderId_PaymentStatus",
                 table: "Payments",
                 columns: new[] { "SenderId", "PaymentStatus" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_ContentType",
                 table: "PhotoSlides",
                 column: "ContentType");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_CreatedAt",
                 table: "PhotoSlides",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_DesignId",
                 table: "PhotoSlides",
                 column: "DesignId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_FileSize",
                 table: "PhotoSlides",
                 column: "FileSize");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_Left_Top",
                 table: "PhotoSlides",
                 columns: new[] { "Left", "Top" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_OriginalFileName",
                 table: "PhotoSlides",
                 column: "OriginalFileName");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_PhotoPath",
                 table: "PhotoSlides",
                 column: "PhotoPath");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoSlides_UpdatedAt",
                 table: "PhotoSlides",
                 column: "UpdatedAt");
+
             migrationBuilder.CreateIndex(
-                name: "IX_Plans_Plan_1Id",
+                name: "IX_Plans_PlansId",
                 table: "Plans",
-                column: "Plan_1Id");
+                column: "PlansId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_Plans_Plan_2Id",
+                name: "IX_Plans_PlanTextId",
                 table: "Plans",
-                column: "Plan_2Id");
+                column: "PlanTextId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_Plans_Plan_3Id",
-                table: "Plans",
-                column: "Plan_3Id");
-            migrationBuilder.CreateIndex(
-                name: "IX_Plans_Plan_4Id",
-                table: "Plans",
-                column: "Plan_4Id");
-            migrationBuilder.CreateIndex(
-                name: "IX_Plans_Plan_5Id",
-                table: "Plans",
-                column: "Plan_5Id");
-            migrationBuilder.CreateIndex(
-                name: "IX_Plans_TitleId",
-                table: "Plans",
-                column: "TitleId");
-            migrationBuilder.CreateIndex(
-                name: "IX_PresentationIsroilovs_Author",
+                name: "IX_PresentationIsroilovs_AuthorId",
                 table: "PresentationIsroilovs",
-                column: "Author");
+                column: "AuthorId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_CreatedAt",
                 table: "PresentationIsroilovs",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_DesignId",
                 table: "PresentationIsroilovs",
                 column: "DesignId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_IsActive",
                 table: "PresentationIsroilovs",
                 column: "IsActive");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationIsroilovs_PlanId",
                 table: "PresentationIsroilovs",
                 column: "PlanId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_PresentationIsroilovs_Title",
+                name: "IX_PresentationIsroilovs_TitleId",
                 table: "PresentationIsroilovs",
-                column: "Title");
+                column: "TitleId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_BackgroundPhotoId",
                 table: "PresentationPages",
                 column: "BackgroundPhotoId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_CreatedAt",
                 table: "PresentationPages",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_PhotoId",
                 table: "PresentationPages",
                 column: "PhotoId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPages_PresentationIsroilovId",
                 table: "PresentationPages",
                 column: "PresentationIsroilovId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_CreatedAt",
                 table: "PresentationPosts",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_PresentationPageId",
                 table: "PresentationPosts",
                 column: "PresentationPageId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_TextId",
                 table: "PresentationPosts",
                 column: "TextId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PresentationPosts_TitleId",
                 table: "PresentationPosts",
                 column: "TitleId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_ColorHex",
                 table: "TextSlides",
                 column: "ColorHex");
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_CreatedAt",
                 table: "TextSlides",
                 column: "CreatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Font",
                 table: "TextSlides",
                 column: "Font");
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_IsBold_IsItalic",
                 table: "TextSlides",
                 columns: new[] { "IsBold", "IsItalic" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Left_Top",
                 table: "TextSlides",
                 columns: new[] { "Left", "Top" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Size",
                 table: "TextSlides",
                 column: "Size");
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_Text_Left_Top",
                 table: "TextSlides",
                 columns: new[] { "Text", "Left", "Top" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_TextSlides_UpdatedAt",
                 table: "TextSlides",
                 column: "UpdatedAt");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Users_TelegramId",
                 table: "Users",
                 column: "TelegramId",
                 unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",
                 table: "Users",
                 column: "Username",
                 unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_VerificationCodes_Code",
                 table: "VerificationCodes",
                 column: "Code");
+
             migrationBuilder.CreateIndex(
                 name: "IX_VerificationCodes_UserId_IsUsed",
                 table: "VerificationCodes",
                 columns: new[] { "UserId", "IsUsed" });
         }
+
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "AdminActions");
+
             migrationBuilder.DropTable(
                 name: "Notifications");
+
             migrationBuilder.DropTable(
                 name: "OpenaiKeys");
+
             migrationBuilder.DropTable(
                 name: "Payments");
+
             migrationBuilder.DropTable(
                 name: "PresentationPosts");
+
             migrationBuilder.DropTable(
                 name: "VerificationCodes");
+
             migrationBuilder.DropTable(
                 name: "PresentationPages");
+
             migrationBuilder.DropTable(
                 name: "PhotoSlides");
+
             migrationBuilder.DropTable(
                 name: "PresentationIsroilovs");
+
             migrationBuilder.DropTable(
                 name: "Designs");
+
             migrationBuilder.DropTable(
                 name: "Plans");
+
             migrationBuilder.DropTable(
                 name: "Users");
+
             migrationBuilder.DropTable(
                 name: "TextSlides");
         }

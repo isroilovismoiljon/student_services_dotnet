@@ -64,8 +64,10 @@ public class PresentationPageService : IPresentationPageService
         var page = new PresentationPage
         {
             PresentationIsroilovId = presentationId,
-            PhotoId = createDto.PhotoId,
-            BackgroundPhotoId = createDto.BackgroundPhotoId
+            PhotoId = null, // Photos are set later via UpdatePhotos endpoint
+            BackgroundPhotoId = null, // Background photos should be assigned by the presentation service
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
         var createdPage = await _pageRepository.AddAsync(page, ct);
         return new PresentationPageDto
@@ -74,6 +76,7 @@ public class PresentationPageService : IPresentationPageService
             PresentationIsroilovId = createdPage.PresentationIsroilovId,
             PhotoId = createdPage.Photo?.Id,
             BackgroundPhotoId = createdPage.BackgroundPhoto?.Id,
+            WithPhoto = createdPage.WithPhoto,
             CreatedAt = createdPage.CreatedAt,
             UpdatedAt = createdPage.UpdatedAt,
             Posts = new List<PresentationPostSummaryDto>()
@@ -86,7 +89,7 @@ public class PresentationPageService : IPresentationPageService
     public async Task<PresentationPageDto?> UpdatePageAsync(int id, UpdatePresentationPageDto updateDto, CancellationToken ct = default)
     {
         var page = await _pageRepository.GetByIdAsync(id, ct);
-        if (page == null) return null;
+        if (page == null) return null;  
         if (updateDto.PresentationIsroilovId.HasValue)
             page.PresentationIsroilovId = updateDto.PresentationIsroilovId.Value;
         page.UpdatedAt = DateTime.UtcNow;

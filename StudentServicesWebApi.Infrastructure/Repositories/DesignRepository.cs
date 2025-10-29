@@ -13,9 +13,20 @@ public class DesignRepository : GenericRepository<Design>, IDesignRepository
     public async Task<Design?> GetByIdWithPhotosAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<Design>()
+            .AsNoTracking()
             .Include(d => d.CreatedBy)
             .Include(d => d.Photos.OrderBy(p => p.CreatedAt))
             .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
+    }
+
+    public async Task<List<int>> GetPhotoIdsByDesignIdAsync(int designId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<PhotoSlide>()
+            .AsNoTracking()
+            .Where(p => p.DesignId == designId)
+            .OrderBy(p => p.CreatedAt)
+            .Select(p => p.Id)
+            .ToListAsync(cancellationToken);
     }
     public async Task<(List<Design> Designs, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {

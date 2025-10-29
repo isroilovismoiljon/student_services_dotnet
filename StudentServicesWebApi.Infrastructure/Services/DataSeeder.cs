@@ -50,9 +50,18 @@ public class DataSeeder : IDataSeeder
             var defaultDesignExists = await _context.Designs.AnyAsync();
             if (!defaultDesignExists)
             {
+                // Ensure we get the user with AsNoTracking to avoid tracking conflicts
                 var superAdmin = await _context.Users
-                    .FirstAsync(u => u.UserRole == UserRole.SuperAdmin);
-                _logger.LogInformation("Creating default Design...");
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.UserRole == UserRole.SuperAdmin);
+                
+                if (superAdmin == null)
+                {
+                    _logger.LogError("SuperAdmin user not found. Cannot create default Design.");
+                    return;
+                }
+                
+                _logger.LogInformation($"Creating default Design with CreatedById: {superAdmin.Id}...");
                 var defaultDesign = new Design
                 {
                     Title = "Default Design",

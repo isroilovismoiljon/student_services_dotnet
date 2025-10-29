@@ -14,6 +14,7 @@ public class PresentationIsroilovService : IPresentationIsroilovService
     private readonly ITextSlideService _textSlideService;
     private readonly IPlanService _planService;
     private readonly IDesignService _designService;
+    private readonly IDesignRepository _designRepository;
     private readonly IPhotoSlideService _photoSlideService;
     private readonly IPresentationPageRepository _presentationPageRepository;
     private readonly IPresentationPostRepository _presentationPostRepository;
@@ -24,6 +25,7 @@ public class PresentationIsroilovService : IPresentationIsroilovService
         ITextSlideService textSlideService,
         IPlanService planService,
         IDesignService designService,
+        IDesignRepository designRepository,
         IPhotoSlideService photoSlideService,
         IPresentationPageRepository presentationPageRepository,
         IPresentationPostRepository presentationPostRepository,
@@ -33,6 +35,7 @@ public class PresentationIsroilovService : IPresentationIsroilovService
         _textSlideService = textSlideService;
         _planService = planService;
         _designService = designService;
+        _designRepository = designRepository;
         _photoSlideService = photoSlideService;
         _presentationPageRepository = presentationPageRepository;
         _presentationPostRepository = presentationPostRepository;
@@ -60,8 +63,8 @@ public class PresentationIsroilovService : IPresentationIsroilovService
         }
 
         // Note: Design existence will be validated by foreign key constraint
-        // We'll fetch design info only if we need background photos
-        DesignDto? design = null;
+        // We'll fetch design photo IDs only if we need background photos (without tracking)
+        List<int>? designPhotoIds = null;
 
         // Create Title and Author text slides
         var titleSlide = await _textSlideService.CreateTextSlideAsync(createDto.Title, ct);
@@ -107,26 +110,24 @@ public class PresentationIsroilovService : IPresentationIsroilovService
                 pageWithPhoto = (adjustedPage % 3 == 0);
             }
 
-            // Get background photo from design
-            int? backgroundPhotoId = pageDto.BackgroundPhotoId;
-            if (!backgroundPhotoId.HasValue)
+            // Auto-assign background photo from design
+            int? backgroundPhotoId = null;
+            
+            // Lazy load design photo IDs only when needed (without entity tracking)
+            if (designPhotoIds == null)
             {
-                // Lazy load design only when needed for background photos
-                if (design == null)
-                {
-                    design = await _designService.GetDesignByIdAsync(createDto.DesignId, ct);
-                }
-                
-                if (design != null && design.Photos != null && design.Photos.Count > 0)
-                {
-                    backgroundPhotoId = design.Photos[i % design.Photos.Count].Id;
-                }
+                designPhotoIds = await _designRepository.GetPhotoIdsByDesignIdAsync(createDto.DesignId, ct);
+            }
+            
+            if (designPhotoIds.Count > 0)
+            {
+                backgroundPhotoId = designPhotoIds[i % designPhotoIds.Count];
             }
 
             var presentationPage = new PresentationPage
             {
                 PresentationIsroilovId = createdPresentation.Id,
-                PhotoId = pageDto.PhotoId,
+                PhotoId = null, // Will be set later via UpdatePhotos endpoint if WithPhoto=true
                 BackgroundPhotoId = backgroundPhotoId,
                 WithPhoto = pageWithPhoto,
                 CreatedAt = DateTime.UtcNow,

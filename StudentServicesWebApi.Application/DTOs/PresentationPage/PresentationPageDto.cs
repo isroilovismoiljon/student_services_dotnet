@@ -12,8 +12,6 @@ public class CreatePresentationPagePostDto
 
 public class CreatePresentationPageDto
 {
-    public int? PhotoId { get; set; }
-    public int? BackgroundPhotoId { get; set; }
     public List<CreatePresentationPagePostDto> PresentationPosts { get; set; } = default!;
 }
 public class UpdatePresentationPageDto
