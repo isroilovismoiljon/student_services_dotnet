@@ -19,9 +19,20 @@ public class DataSeeder : IDataSeeder
         {
             await _context.Database.EnsureCreatedAsync();
             var superAdminExists = await _context.Users
+                .Where(u => !u.IsDeleted)
                 .AnyAsync(u => u.UserRole == UserRole.SuperAdmin || u.Username == "Isroilov");
             if (!superAdminExists)
             {
+                // Delete any existing unverified or deleted users with this username
+                var existingUsers = await _context.Users
+                    .Where(u => u.Username == "Isroilov")
+                    .ToListAsync();
+                if (existingUsers.Any())
+                {
+                    _context.Users.RemoveRange(existingUsers);
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Removed {existingUsers.Count} existing user(s) with username 'Isroilov'");
+                }
                 _logger.LogInformation("Creating default SuperAdmin user...");
                 var superAdminUser = new User
                 {

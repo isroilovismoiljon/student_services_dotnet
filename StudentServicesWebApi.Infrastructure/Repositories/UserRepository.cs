@@ -129,6 +129,19 @@ public class UserRepository : GenericRepository<User>, IUserRepository
             .Where(u => !u.IsDeleted)
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }
+    public async Task<User> ResetUserVerificationAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var user = await GetByIdAsync(userId);
+        if (user == null)
+            throw new ArgumentException($"User with ID {userId} not found");
+        
+        user.IsVerified = false;
+        user.TelegramId = null;
+        user.UpdatedAt = DateTime.UtcNow;
+        
+        await _context.SaveChangesAsync(cancellationToken);
+        return user;
+    }
     private string HashPassword(string password)
     {
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password + "salt"));

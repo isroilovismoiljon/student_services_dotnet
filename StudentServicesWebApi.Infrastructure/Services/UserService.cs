@@ -25,4 +25,9 @@ public class UserService : IUserService
         var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
         return user != null ? _dtoMappingService.MapToUserResponseDto(user) : null;
     }
+    public async Task<UserResponseDto> ResetUserVerificationAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var user = await _userRepository.ResetUserVerificationAsync(userId, cancellationToken);
+        return _dtoMappingService.MapToUserResponseDto(user);
+    }
 }

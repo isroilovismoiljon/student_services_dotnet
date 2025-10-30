@@ -403,6 +403,43 @@ public class AdminController : ControllerBase
             });
         }
     }
+    [HttpPatch("users/{userId:int}/reset-verification")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> ResetUserVerification(int userId, CancellationToken ct = default)
+    {
+        try
+        {
+            var user = await _userService.ResetUserVerificationAsync(userId, ct);
+            _logger.LogInformation("User {UserId} verification status reset by admin {AdminId}", userId, GetCurrentUserId());
+            return Ok(new
+            {
+                success = true,
+                message = "User verification status reset successfully. User is now unverified and TelegramId has been removed.",
+                data = user,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error resetting verification status for user {UserId}", userId);
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while resetting user verification status",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
     [HttpGet("admins/{adminId:int}")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> GetAdminById(int adminId, CancellationToken ct = default)
