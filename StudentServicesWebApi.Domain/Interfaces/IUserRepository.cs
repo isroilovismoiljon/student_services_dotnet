@@ -18,4 +18,6 @@ public interface IUserRepository : IGenericRepository<User>
     Task<List<User>> GetUsersByRoleAsync(Domain.Enums.UserRole role, CancellationToken cancellationToken = default);
     Task<User?> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default);
     Task<User> ResetUserVerificationAsync(int userId, CancellationToken cancellationToken = default);
+    Task<(List<User> Users, int TotalCount)> GetAllUsersAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+    Task<User> SoftDeleteUserAsync(int userId, CancellationToken cancellationToken = default);
 }

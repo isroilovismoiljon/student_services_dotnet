@@ -403,6 +403,43 @@ public class AdminController : ControllerBase
             });
         }
     }
+    [HttpDelete("users/{userId:int}")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public async Task<IActionResult> DeleteUser(int userId, CancellationToken ct = default)
+    {
+        try
+        {
+            var user = await _userService.SoftDeleteUserAsync(userId, ct);
+            _logger.LogInformation("User {UserId} soft deleted by admin {AdminId}", userId, GetCurrentUserId());
+            return Ok(new
+            {
+                success = true,
+                message = "User deleted successfully. User is now marked as deleted, unverified, and TelegramId has been removed.",
+                data = user,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(new
+            {
+                success = false,
+                message = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting user {UserId}", userId);
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "An error occurred while deleting user",
+                details = ex.Message,
+                timestamp = DateTime.UtcNow
+            });
+        }
+    }
     [HttpPatch("users/{userId:int}/reset-verification")]
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<IActionResult> ResetUserVerification(int userId, CancellationToken ct = default)

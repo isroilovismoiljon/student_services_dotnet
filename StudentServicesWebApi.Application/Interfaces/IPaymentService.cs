@@ -1,5 +1,6 @@
 using StudentServicesWebApi.Application.DTOs.Payment;
 using StudentServicesWebApi.Domain.Enums;
+
 namespace StudentServicesWebApi.Infrastructure.Interfaces;
 public interface IPaymentService
 {

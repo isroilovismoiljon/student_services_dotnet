@@ -142,6 +142,36 @@ public class UserRepository : GenericRepository<User>, IUserRepository
         await _context.SaveChangesAsync(cancellationToken);
         return user;
     }
+    public async Task<(List<User> Users, int TotalCount)> GetAllUsersAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Set<User>()
+            .Where(u => !u.IsDeleted)
+            .OrderByDescending(u => u.CreatedAt);
+        
+        var totalCount = await query.CountAsync(cancellationToken);
+        
+        var users = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+        
+        return (users, totalCount);
+    }
+    public async Task<User> SoftDeleteUserAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var user = await GetByIdAsync(userId);
+        if (user == null)
+            throw new ArgumentException($"User with ID {userId} not found");
+        
+        user.IsDeleted = true;
+        user.IsVerified = false;
+        user.TelegramId = null;
+        user.DeletedAt = DateTime.UtcNow;
+        user.UpdatedAt = DateTime.UtcNow;
+        
+        await _context.SaveChangesAsync(cancellationToken);
+        return user;
+    }
     private string HashPassword(string password)
     {
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password + "salt"));
