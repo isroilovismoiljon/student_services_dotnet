@@ -4,5 +4,29 @@
         <name>StudentServicesWebApi</name>
     </assembly>
     <members>
+        <member name="T:StudentServicesWebApi.Migrations.Infisfsefsegfdfg">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

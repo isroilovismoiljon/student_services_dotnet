@@ -1,0 +1,21 @@
+[Unit]
+Description=Talabajon Student Services Web API
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/talabajon
+ExecStart=/usr/bin/dotnet /var/www/talabajon/StudentServicesWebApi.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=talabajon-api
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+StandardOutput=append:/var/log/talabajon/stdout.log
+StandardError=append:/var/log/talabajon/stderr.log
+
+[Install]
+WantedBy=multi-user.target

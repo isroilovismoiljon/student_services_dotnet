@@ -99,6 +99,16 @@ public class AuthService : IAuthService
                 Message = "Invalid username or password"
             };
         }
+        
+        if (!user.IsVerified)
+        {
+            return new AuthResponseDto
+            {
+                Success = false,
+                Message = "You must verify first with this username."
+            };
+        }
+        
         var userResponseDto = _dtoMappingService.MapToUserResponseDto(user);
         var token = _jwtService.GenerateToken(user);
         return new AuthResponseDto
@@ -254,26 +264,33 @@ public class AuthService : IAuthService
                 Message = "User is already verified"
             };
         }
-        if (string.IsNullOrEmpty(user.TelegramId))
-        {
-            return new AuthResponseDto
-            {
-                Success = false,
-                Message = "Telegram account is not linked. Please use the original verification link to link your Telegram account first."
-            };
-        }
+        
         try
         {
-            var newCode = await _verificationCodeService.ResendVerificationCodeAsync(user.Id, user.TelegramId);
-            var telegramBotService = _serviceProvider.GetService<ITelegramBotService>();
-            if (telegramBotService != null)
+            // Generate new verification code (works even if old code is expired)
+            var newCode = await _verificationCodeService.GenerateVerificationCodeAsync(user.Id);
+            var telegramDeepLink = _verificationCodeService.GenerateTelegramDeepLink(newCode);
+            
+            // Only send to Telegram if user has linked their Telegram account
+            if (!string.IsNullOrEmpty(user.TelegramId))
             {
-                await telegramBotService.SendVerificationCodeAsync(user.TelegramId, newCode);
+                var telegramBotService = _serviceProvider.GetService<ITelegramBotService>();
+                if (telegramBotService != null)
+                {
+                    await telegramBotService.SendVerificationCodeAsync(user.TelegramId, newCode);
+                }
             }
+            
+            var message = string.IsNullOrEmpty(user.TelegramId)
+                ? "New verification code generated. Please use the Telegram deep link to link your account and verify."
+                : "Verification code has been resent to your Telegram account";
+            
             return new AuthResponseDto
             {
                 Success = true,
-                Message = "Verification code has been resent to your Telegram account"
+                Message = message,
+                VerificationCode = newCode,
+                TelegramDeepLink = telegramDeepLink
             };
         }
         catch (Exception ex)

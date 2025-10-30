@@ -26,7 +26,7 @@ public class VerificationCodeService : IVerificationCodeService
             UserId = userId,
             Code = code,
             CodeType = codeType,
-            ExpiresAt = DateTime.UtcNow.AddMinutes(5), 
+            ExpiresAt = DateTime.UtcNow.AddMinutes(1), 
             TelegramDeepLink = codeType == VerificationCodeType.Registration ? GenerateTelegramDeepLink(code) : null,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
