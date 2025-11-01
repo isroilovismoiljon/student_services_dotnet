@@ -5,7 +5,8 @@ namespace StudentServicesWebApi.Application.DTOs.PresentationPage;
 
 public class CreatePresentationPagePostDto
 {
-    public CreateTextSlideDto? Title { get; set; }
+    [Required]
+    public CreateTextSlideDto Title { get; set; } = default!;
     [Required]
     public CreateTextSlideDto Text { get; set; } = default!;
 }
@@ -29,7 +30,7 @@ public class PresentationPageDto
     public bool WithPhoto { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    public List<PresentationPostSummaryDto> Posts { get; set; } = new();
+    public List<PresentationPostDetailsDto> PresentationPosts { get; set; } = new();
 }
 public class PresentationPageSummaryDto
 {
@@ -45,4 +46,12 @@ public class PresentationPostSummaryDto
     public int? TitleId { get; set; }
     public int TextId { get; set; }
     public DateTime CreatedAt { get; set; }
+}
+public class PresentationPostDetailsDto
+{
+    public int Id { get; set; }
+    public TextSlideDto? Title { get; set; }
+    public TextSlideDto Text { get; set; } = default!;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

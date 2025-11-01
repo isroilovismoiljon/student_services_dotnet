@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudentServicesWebApi.Infrastructure;
@@ -11,9 +12,11 @@ using StudentServicesWebApi.Infrastructure;
 namespace StudentServicesWebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101092858_AddPlanToPresentationIsroilov")]
+    partial class AddPlanToPresentationIsroilov
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -444,9 +447,6 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("DesignId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -478,8 +478,6 @@ namespace StudentServicesWebApi.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DesignId");
 
                     b.HasIndex("IsActive");
 
@@ -874,12 +872,6 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.Design", "Design")
-                        .WithMany()
-                        .HasForeignKey("DesignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("StudentServicesWebApi.Domain.Models.Plan", "Plan")
                         .WithMany()
                         .HasForeignKey("PlanId")
@@ -893,8 +885,6 @@ namespace StudentServicesWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
-
-                    b.Navigation("Design");
 
                     b.Navigation("Plan");
 
@@ -914,7 +904,7 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StudentServicesWebApi.Domain.Models.PresentationIsroilov", "PresentationIsroilov")
-                        .WithMany("PresentationPages")
+                        .WithMany()
                         .HasForeignKey("PresentationIsroilovId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -966,11 +956,6 @@ namespace StudentServicesWebApi.Migrations
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Design", b =>
                 {
                     b.Navigation("Photos");
-                });
-
-            modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationIsroilov", b =>
-                {
-                    b.Navigation("PresentationPages");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationPage", b =>

@@ -15,6 +15,14 @@ public class CreatePresentationIsroilovDtoValidator : AbstractValidator<CreatePr
             .NotNull()
             .WithMessage("Author is required");
 
+        RuleFor(x => x.Plan)
+            .NotNull()
+            .WithMessage("Plan is required");
+
+        RuleFor(x => x.DesignId)
+            .GreaterThan(0)
+            .WithMessage("DesignId must be greater than 0");
+
         RuleFor(x => x.PageCount)
             .GreaterThan(0)
             .WithMessage("Page count must be greater than 0");

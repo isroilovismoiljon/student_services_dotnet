@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudentServicesWebApi.Infrastructure;
@@ -11,9 +12,11 @@ using StudentServicesWebApi.Infrastructure;
 namespace StudentServicesWebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101114121_Segyujsfdghjytsdfdfadsfdg")]
+    partial class Segyujsfdghjytsdfdfadsfdg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -516,6 +519,9 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<int>("PresentationIsroilovId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("PresentationIsroilovId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -531,6 +537,8 @@ namespace StudentServicesWebApi.Migrations
                     b.HasIndex("PhotoId");
 
                     b.HasIndex("PresentationIsroilovId");
+
+                    b.HasIndex("PresentationIsroilovId1");
 
                     b.ToTable("PresentationPages");
                 });
@@ -914,10 +922,15 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StudentServicesWebApi.Domain.Models.PresentationIsroilov", "PresentationIsroilov")
-                        .WithMany("PresentationPages")
+                        .WithMany()
                         .HasForeignKey("PresentationIsroilovId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("StudentServicesWebApi.Domain.Models.PresentationIsroilov", null)
+                        .WithMany("PresentationPages")
+                        .HasForeignKey("PresentationIsroilovId1")
+                        .HasConstraintName("FK_PresentationPages_PresentationIsroilovs_PresentationIsroil~1");
 
                     b.Navigation("BackgroundPhoto");
 

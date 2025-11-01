@@ -192,7 +192,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasIndex(pp => pp.PresentationIsroilovId);
             entity.HasIndex(pp => pp.CreatedAt);
             entity.HasOne(pp => pp.PresentationIsroilov)
-                .WithMany()
+                .WithMany(p => p.PresentationPages)
                 .HasForeignKey(pp => pp.PresentationIsroilovId)
                 .OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(pp => pp.Photo)

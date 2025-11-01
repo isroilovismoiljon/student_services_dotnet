@@ -39,7 +39,7 @@ public class PlanService : IPlanService
             throw new InvalidOperationException("Failed to retrieve created text slides");
         }
 
-        var plan = new Plan
+        var plan = new Plan 
         {
             PlanText = planTextSlide,
             Plans = plansSlide,

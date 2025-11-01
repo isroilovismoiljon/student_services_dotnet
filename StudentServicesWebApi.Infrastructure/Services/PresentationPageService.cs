@@ -23,15 +23,10 @@ public class PresentationPageService : IPresentationPageService
             PresentationIsroilovId = p.PresentationIsroilovId,
             PhotoId = p.Photo?.Id,
             BackgroundPhotoId = p.BackgroundPhoto?.Id,
+            WithPhoto = p.WithPhoto,
             CreatedAt = p.CreatedAt,
             UpdatedAt = p.UpdatedAt,
-            Posts = p.PresentationPosts.Select(pp => new PresentationPostSummaryDto
-            {
-                Id = pp.Id,
-                TitleId = pp.TitleId,
-                TextId = pp.TextId,
-                CreatedAt = pp.CreatedAt
-            }).ToList()
+            PresentationPosts = new List<PresentationPostDetailsDto>()
         }).ToList();
     }
     public async Task<PresentationPageDto?> GetPageByIdAsync(int id, CancellationToken ct = default)
@@ -44,15 +39,10 @@ public class PresentationPageService : IPresentationPageService
             PresentationIsroilovId = page.PresentationIsroilovId,
             PhotoId = page.Photo?.Id,
             BackgroundPhotoId = page.BackgroundPhoto?.Id,
+            WithPhoto = page.WithPhoto,
             CreatedAt = page.CreatedAt,
             UpdatedAt = page.UpdatedAt,
-            Posts = page.PresentationPosts.Select(pp => new PresentationPostSummaryDto
-            {
-                Id = pp.Id,
-                TitleId = pp.TitleId,
-                TextId = pp.TextId,
-                CreatedAt = pp.CreatedAt
-            }).ToList()
+            PresentationPosts = new List<PresentationPostDetailsDto>()
         };
     }
     public async Task<PresentationPageDto> CreatePageAsync(CreatePresentationPageDto createDto, CancellationToken ct = default)
@@ -79,7 +69,7 @@ public class PresentationPageService : IPresentationPageService
             WithPhoto = createdPage.WithPhoto,
             CreatedAt = createdPage.CreatedAt,
             UpdatedAt = createdPage.UpdatedAt,
-            Posts = new List<PresentationPostSummaryDto>()
+            PresentationPosts = new List<PresentationPostDetailsDto>()
         };
     }
     public async Task<PresentationPage> CreatePageDirectAsync(PresentationPage presentationPage, CancellationToken ct = default)

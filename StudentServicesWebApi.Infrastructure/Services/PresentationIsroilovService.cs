@@ -5,6 +5,7 @@ using StudentServicesWebApi.Application.Interfaces;
 using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudentServicesWebApi.Infrastructure.Services;
 
@@ -19,6 +20,7 @@ public class PresentationIsroilovService : IPresentationIsroilovService
     private readonly IPresentationPageRepository _presentationPageRepository;
     private readonly IPresentationPostRepository _presentationPostRepository;
     private readonly IDtoMappingService _mappingService;
+    private readonly AppDbContext _context;
 
     public PresentationIsroilovService(
         IPresentationIsroilovRepository presentationRepository,
@@ -29,7 +31,8 @@ public class PresentationIsroilovService : IPresentationIsroilovService
         IPhotoSlideService photoSlideService,
         IPresentationPageRepository presentationPageRepository,
         IPresentationPostRepository presentationPostRepository,
-        IDtoMappingService mappingService)
+        IDtoMappingService mappingService,
+        AppDbContext context)
     {
         _presentationRepository = presentationRepository;
         _textSlideService = textSlideService;
@@ -40,6 +43,7 @@ public class PresentationIsroilovService : IPresentationIsroilovService
         _presentationPageRepository = presentationPageRepository;
         _presentationPostRepository = presentationPostRepository;
         _mappingService = mappingService;
+        _context = context;
     }
 
     public async Task<List<PresentationIsroilovDto>> GetAllPresentationsAsync(CancellationToken ct = default)
@@ -56,26 +60,81 @@ public class PresentationIsroilovService : IPresentationIsroilovService
 
     public async Task<PresentationIsroilovDto> CreatePresentationAsync(CreatePresentationIsroilovDto createDto, CancellationToken ct = default)
     {
+        // Validate DesignId exists
+        var design = await _designRepository.GetByIdWithPhotosAsync(createDto.DesignId, ct);
+        if (design == null)
+        {
+            throw new ArgumentException($"Design with ID {createDto.DesignId} not found");
+        }
+
         // Create Title and Author text slides
         var titleSlide = await _textSlideService.CreateTextSlideAsync(createDto.Title, ct);
         var authorSlide = await _textSlideService.CreateTextSlideAsync(createDto.Author, ct);
+        
+        // Create Plan
+        var plan = await _planService.CreateAsync(createDto.Plan, ct);
 
-        // Create PresentationIsroilov
+        // Create PresentationIsroilov with navigation properties
         var presentation = new PresentationIsroilov
         {
             TitleId = titleSlide.Id,
             AuthorId = authorSlide.Id,
+            PlanId = plan.Id,
+            DesignId = createDto.DesignId,
             WithPhoto = createDto.WithPhoto,
             PageCount = createDto.PageCount,
             IsActive = true,
             FilePath = string.Empty,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            PresentationPages = new List<PresentationPage>()
         };
 
-        var createdPresentation = await _presentationRepository.AddAsync(presentation, ct);
+        // Create PresentationPages and PresentationPosts using navigation properties
+        if (createDto.PresentationPages != null && createDto.PresentationPages.Any())
+        {
+            foreach (var pageDto in createDto.PresentationPages)
+            {
+                var page = new PresentationPage
+                {
+                    WithPhoto = createDto.WithPhoto,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    PresentationPosts = new List<PresentationPost>()
+                };
 
-        return await GetPresentationByIdAsync(createdPresentation.Id, ct) 
+                // Create PresentationPosts for this page
+                if (pageDto.PresentationPosts != null && pageDto.PresentationPosts.Any())
+                {
+                    foreach (var postDto in pageDto.PresentationPosts)
+                    {
+                        // Create Title TextSlide
+                        var postTitleSlide = await _textSlideService.CreateTextSlideAsync(postDto.Title, ct);
+                        
+                        // Create Text TextSlide
+                        var postTextSlide = await _textSlideService.CreateTextSlideAsync(postDto.Text, ct);
+
+                        // Create PresentationPost
+                        var post = new PresentationPost
+                        {
+                            TitleId = postTitleSlide.Id,
+                            TextId = postTextSlide.Id,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+
+                        page.PresentationPosts.Add(post);
+                    }
+                }
+                
+                presentation.PresentationPages.Add(page);
+            }
+        }
+
+        // Add presentation with all nested entities in one go
+        var createdPresentation = await _presentationRepository.AddAsync(presentation, ct);
+        
+        return await GetPresentationByIdAsync(createdPresentation.Id, ct)
             ?? throw new InvalidOperationException("Failed to retrieve created presentation");
     }
 
@@ -113,12 +172,17 @@ public class PresentationIsroilovService : IPresentationIsroilovService
             Id = presentation.Id,
             Title = _mappingService.MapToTextSlideDto(presentation.Title),
             Author = _mappingService.MapToTextSlideDto(presentation.Author),
+            PlanId = presentation.PlanId,
+            Plan = _mappingService.MapToPlanDto(presentation.Plan),
+            DesignId = presentation.DesignId,
+            Design = _mappingService.MapToDesignDto(presentation.Design),
             WithPhoto = presentation.WithPhoto,
             PageCount = presentation.PageCount,
             FilePath = presentation.FilePath,
             IsActive = presentation.IsActive,
             CreatedAt = presentation.CreatedAt,
-            UpdatedAt = presentation.UpdatedAt
+            UpdatedAt = presentation.UpdatedAt,
+            PresentationPages = presentation.PresentationPages?.Select(_mappingService.MapToPresentationPageDto).ToList() ?? new()
         };
     }
 }

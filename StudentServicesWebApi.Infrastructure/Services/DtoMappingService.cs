@@ -24,13 +24,13 @@ public class DtoMappingService : IDtoMappingService
     public UserResponseDto MapToUserResponseDto(User user)
     {
         var dto = _mapper.Map<UserResponseDto>(user);
-        dto.Photo = _urlService.GetPaymentImageUrl(user.Photo);
+        dto.Photo = _urlService.GetPaymentImageUrl(user.Photo) ?? string.Empty;
         return dto;
     }
     public RegisterResponseDto MapToRegisterResponseDto(User user)
     {
         var dto = _mapper.Map<RegisterResponseDto>(user);
-        dto.Photo = _urlService.GetPaymentImageUrl(user.Photo);
+        dto.Photo = _urlService.GetPaymentImageUrl(user.Photo) ?? string.Empty;
         return dto;
     }
     public PaymentDto MapToPaymentDto(Payment payment)
@@ -301,13 +301,14 @@ public class DtoMappingService : IDtoMappingService
             WithPhoto = presentationPage.WithPhoto,
             CreatedAt = presentationPage.CreatedAt,
             UpdatedAt = presentationPage.UpdatedAt,
-            Posts = presentationPage.PresentationPosts?.Select(pp => new PresentationPostSummaryDto
+            PresentationPosts = presentationPage.PresentationPosts?.Select(pp => new PresentationPostDetailsDto
             {
                 Id = pp.Id,
-                TitleId = pp.TitleId,
-                TextId = pp.TextId,
-                CreatedAt = pp.CreatedAt
-            }).ToList() ?? new List<PresentationPostSummaryDto>()
+                Title = pp.Title != null ? MapToTextSlideDto(pp.Title) : null,
+                Text = MapToTextSlideDto(pp.Text),
+                CreatedAt = pp.CreatedAt,
+                UpdatedAt = pp.UpdatedAt
+            }).ToList() ?? new List<PresentationPostDetailsDto>()
         };
     }
 }
