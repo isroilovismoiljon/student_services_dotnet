@@ -726,8 +726,7 @@ namespace StudentServicesWebApi.Migrations
                     b.HasIndex("TelegramId")
                         .IsUnique();
 
-                    b.HasIndex("Username")
-                        .IsUnique();
+                    b.HasIndex("Username");
 
                     b.ToTable("Users");
                 });

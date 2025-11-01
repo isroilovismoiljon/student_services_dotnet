@@ -163,6 +163,7 @@ public static class ServiceExtensions
                     Url = new Uri("https://opensource.org/licenses/MIT")
                 }
             });
+            c.AddServer(new OpenApiServer { Url = "http://localhost:7086", Description = "Production Server" });
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath))

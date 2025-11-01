@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StudentServicesWebApi</name>
+    </assembly>
+    <members>
+        <member name="T:StudentServicesWebApi.Migrations.Infisfsefsegfdfg">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.Imisgrtjythr">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Imisgrtjythr.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Imisgrtjythr.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Imisgrtjythr.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.AddPlanToPresentationIsroilov">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddPlanToPresentationIsroilov.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddPlanToPresentationIsroilov.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddPlanToPresentationIsroilov.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.AddDesignToPresentationIsroilov">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddDesignToPresentationIsroilov.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddDesignToPresentationIsroilov.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddDesignToPresentationIsroilov.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.Segyujsfdghjyt">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjyt.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjyt.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjyt.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.Segyujsfdghjytsdf">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdf.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdf.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdf.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdf">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdf.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdf.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdf.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdfadsfdg">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdfadsfdg.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdfadsfdg.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.Segyujsfdghjytsdfdfadsfdg.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.AddPresentationPagesToPresentationIsroilov">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddPresentationPagesToPresentationIsroilov.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddPresentationPagesToPresentationIsroilov.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.AddPresentationPagesToPresentationIsroilov.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.ResetDb">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.ResetDb.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.ResetDb.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.ResetDb.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.ResetDbsfgf">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.ResetDbsfgf.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.ResetDbsfgf.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.ResetDbsfgf.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

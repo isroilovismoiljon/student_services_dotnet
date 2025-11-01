@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using StudentServicesWebApi.Domain.Models;
 namespace StudentServicesWebApi.Infrastructure;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
@@ -19,12 +20,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Username)
-            .IsUnique();
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.TelegramId)
-            .IsUnique(); 
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasIndex(u => u.Username);
+                
+            entity.HasIndex(u => u.TelegramId)
+                .IsUnique();
+        });
         modelBuilder.Entity<Notification>()
             .HasIndex(n => new { n.UserId, n.Status });
         modelBuilder.Entity<Notification>()

@@ -4,28 +4,52 @@
         <name>StudentServicesWebApi</name>
     </assembly>
     <members>
-        <member name="T:StudentServicesWebApi.Migrations.Infisfsefsegfdfg">
+        <member name="T:StudentServicesWebApi.Migrations.JBHbhbfuenf">
             <inheritdoc />
         </member>
-        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:StudentServicesWebApi.Migrations.JBHbhbfuenf.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:StudentServicesWebApi.Migrations.JBHbhbfuenf.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:StudentServicesWebApi.Migrations.Infisfsefsegfdfg.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:StudentServicesWebApi.Migrations.JBHbhbfuenf.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete">
+        <member name="T:StudentServicesWebApi.Migrations.RemoveUsernameUniqueConstraint">
             <inheritdoc />
         </member>
-        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:StudentServicesWebApi.Migrations.RemoveUsernameUniqueConstraint.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:StudentServicesWebApi.Migrations.RemoveUsernameUniqueConstraint.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:StudentServicesWebApi.Migrations.UpdateUsernameIndexForSoftDelete.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:StudentServicesWebApi.Migrations.RemoveUsernameUniqueConstraint.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.sdfbresw">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.sdfbresw.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.sdfbresw.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.sdfbresw.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StudentServicesWebApi.Migrations.RemoveUsernameUniqueIndex">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.RemoveUsernameUniqueIndex.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.RemoveUsernameUniqueIndex.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StudentServicesWebApi.Migrations.RemoveUsernameUniqueIndex.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>
