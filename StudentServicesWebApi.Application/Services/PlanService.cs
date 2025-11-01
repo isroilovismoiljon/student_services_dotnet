@@ -5,16 +5,44 @@ using StudentServicesWebApi.Domain.Interfaces;
 using StudentServicesWebApi.Domain.Models;
 using StudentServicesWebApi.Infrastructure.Interfaces;
 namespace StudentServicesWebApi.Application.Services;
-public class PlanService(IPlanRepository repository, IDtoMappingService mapper) : IPlanService
+public class PlanService : IPlanService
 {
-    private readonly IPlanRepository _repository = repository;
-    private readonly IDtoMappingService _mapper = mapper;
+    private readonly IPlanRepository _repository;
+    private readonly IDtoMappingService _mapper;
+    private readonly ITextSlideService _textSlideService;
+    private readonly ITextSlideRepository _textSlideRepository;
+
+    public PlanService(
+        IPlanRepository repository, 
+        IDtoMappingService mapper, 
+        ITextSlideService textSlideService,
+        ITextSlideRepository textSlideRepository)
+    {
+        _repository = repository;
+        _mapper = mapper;
+        _textSlideService = textSlideService;
+        _textSlideRepository = textSlideRepository;
+    }
+
     public async Task<PlanDto> CreateAsync(CreatePlanDto createDto, CancellationToken cancellationToken = default)
     {
+        // Create text slides first using the service
+        var planTextSlideDto = await _textSlideService.CreateTextSlideAsync(createDto.PlanText, cancellationToken);
+        var plansSlideDto = await _textSlideService.CreateTextSlideAsync(createDto.Plans, cancellationToken);
+
+        // Fetch the actual entities from repository
+        var planTextSlide = await _textSlideRepository.GetByIdAsync(planTextSlideDto.Id, cancellationToken);
+        var plansSlide = await _textSlideRepository.GetByIdAsync(plansSlideDto.Id, cancellationToken);
+
+        if (planTextSlide == null || plansSlide == null)
+        {
+            throw new InvalidOperationException("Failed to retrieve created text slides");
+        }
+
         var plan = new Plan
         {
-            PlanText = MapCreateTextSlideToTextSlide(createDto.PlanText),
-            Plans = MapCreateTextSlideToTextSlide(createDto.Plans),
+            PlanText = planTextSlide,
+            Plans = plansSlide,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -72,26 +100,6 @@ public class PlanService(IPlanRepository repository, IDtoMappingService mapper) 
     public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _repository.ExistsAsync(id, cancellationToken);
-    }
-    private static TextSlide MapCreateTextSlideToTextSlide(CreateTextSlideDto dto)
-    {
-        return new TextSlide
-        {
-            Text = dto.Text,
-            Size = dto.Size,
-            Font = dto.Font,
-            IsBold = dto.IsBold,
-            IsItalic = dto.IsItalic,
-            ColorHex = dto.ColorHex,
-            Left = dto.Left,
-            Top = dto.Top,
-            Width = dto.Width,
-            Height = dto.Height,
-            Horizontal = dto.Horizontal,
-            Vertical = dto.Vertical,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
     }
     private static void UpdateTextSlide(TextSlide textSlide, UpdateTextSlideDto dto)
     {

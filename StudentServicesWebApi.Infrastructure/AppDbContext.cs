@@ -186,21 +186,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .WithMany()
                 .HasForeignKey(p => p.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
-            entity.HasOne(p => p.Design)
-                .WithMany()
-                .HasForeignKey(p => p.DesignId)
-                .OnDelete(DeleteBehavior.Restrict);
-            entity.HasOne(p => p.Plan)
-                .WithMany()
-                .HasForeignKey(p => p.PlanId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
         modelBuilder.Entity<PresentationPage>(entity =>
         {
             entity.HasIndex(pp => pp.PresentationIsroilovId);
             entity.HasIndex(pp => pp.CreatedAt);
             entity.HasOne(pp => pp.PresentationIsroilov)
-                .WithMany(p => p.PresentationPages)
+                .WithMany()
                 .HasForeignKey(pp => pp.PresentationIsroilovId)
                 .OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(pp => pp.Photo)

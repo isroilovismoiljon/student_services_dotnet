@@ -444,9 +444,6 @@ namespace StudentServicesWebApi.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("DesignId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -459,9 +456,6 @@ namespace StudentServicesWebApi.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<int>("PageCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PlanId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TitleId")
@@ -479,11 +473,7 @@ namespace StudentServicesWebApi.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.HasIndex("DesignId");
-
                     b.HasIndex("IsActive");
-
-                    b.HasIndex("PlanId");
 
                     b.HasIndex("TitleId");
 
@@ -874,18 +864,6 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudentServicesWebApi.Domain.Models.Design", "Design")
-                        .WithMany()
-                        .HasForeignKey("DesignId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("StudentServicesWebApi.Domain.Models.Plan", "Plan")
-                        .WithMany()
-                        .HasForeignKey("PlanId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("StudentServicesWebApi.Domain.Models.TextSlide", "Title")
                         .WithMany()
                         .HasForeignKey("TitleId")
@@ -893,10 +871,6 @@ namespace StudentServicesWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
-
-                    b.Navigation("Design");
-
-                    b.Navigation("Plan");
 
                     b.Navigation("Title");
                 });
@@ -914,7 +888,7 @@ namespace StudentServicesWebApi.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StudentServicesWebApi.Domain.Models.PresentationIsroilov", "PresentationIsroilov")
-                        .WithMany("PresentationPages")
+                        .WithMany()
                         .HasForeignKey("PresentationIsroilovId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -966,11 +940,6 @@ namespace StudentServicesWebApi.Migrations
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.Design", b =>
                 {
                     b.Navigation("Photos");
-                });
-
-            modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationIsroilov", b =>
-                {
-                    b.Navigation("PresentationPages");
                 });
 
             modelBuilder.Entity("StudentServicesWebApi.Domain.Models.PresentationPage", b =>

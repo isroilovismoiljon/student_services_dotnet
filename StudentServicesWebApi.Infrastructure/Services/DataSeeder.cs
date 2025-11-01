@@ -9,7 +9,7 @@ public class DataSeeder : IDataSeeder
     private readonly AppDbContext _context;
     private readonly ILogger<DataSeeder> _logger;
     public DataSeeder(AppDbContext context, ILogger<DataSeeder> logger)
-    {
+    {   
         _context = context;
         _logger = logger;
     }

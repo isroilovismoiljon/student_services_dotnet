@@ -126,7 +126,7 @@ public class TelegramBotService : ITelegramBotService
             var existingUserWithTelegram = await userRepository.GetByTelegramIdAsync(telegramId);
             if (existingUserWithTelegram != null && existingUserWithTelegram.Id != verificationCode.UserId)
             {
-                await SendMessageAsync(telegramId, "❌ This Telegram account is already linked to another user.");
+                await SendMessageAsync(telegramId, $"❌ This Telegram account is already linked to this user\nId: {existingUserWithTelegram.Id}\nUsername: {existingUserWithTelegram.Username}");
                 return;
             }
             try

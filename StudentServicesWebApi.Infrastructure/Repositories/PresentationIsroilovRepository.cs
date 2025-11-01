@@ -16,16 +16,6 @@ public class PresentationIsroilovRepository : GenericRepository<PresentationIsro
             .Where(p => !p.IsDeleted)
             .Include(p => p.Title)
             .Include(p => p.Author)
-            .Include(p => p.Design)
-                .ThenInclude(d => d.Photos)
-            .Include(p => p.Plan)
-                .ThenInclude(p => p.PlanText)
-            .Include(p => p.Plan)
-                .ThenInclude(p => p.Plans)
-            .Include(p => p.PresentationPages)
-                .ThenInclude(pp => pp.Photo)
-            .Include(p => p.PresentationPages)
-                .ThenInclude(pp => pp.BackgroundPhoto)
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync(ct);
     }
@@ -36,16 +26,6 @@ public class PresentationIsroilovRepository : GenericRepository<PresentationIsro
             .Where(p => !p.IsDeleted)
             .Include(p => p.Title)
             .Include(p => p.Author)
-            .Include(p => p.Design)
-                .ThenInclude(d => d.Photos)
-            .Include(p => p.Plan)
-                .ThenInclude(p => p.PlanText)
-            .Include(p => p.Plan)
-                .ThenInclude(p => p.Plans)
-            .Include(p => p.PresentationPages)
-                .ThenInclude(pp => pp.Photo)
-            .Include(p => p.PresentationPages)
-                .ThenInclude(pp => pp.BackgroundPhoto)
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 }

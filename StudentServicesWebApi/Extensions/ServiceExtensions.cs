@@ -44,6 +44,7 @@ public static class ServiceExtensions
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.CreatePhotoSlideDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.OpenaiKey.CreateOpenaiKeyDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.Plan.CreatePlanDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.Presentation.CreatePresentationDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<StudentServicesWebApi.Application.Validators.PresentationIsroilov.CreatePresentationIsroilovDtoValidator>();
         return services;
     }
@@ -62,6 +63,7 @@ public static class ServiceExtensions
         services.AddScoped<IAdminActionRepository, AdminActionRepository>();
         services.AddScoped<ITextSlideRepository, TextSlideRepository>();
         services.AddScoped<IPhotoSlideRepository, PhotoSlideRepository>();
+        services.AddScoped<IPresentationRepository, PresentationRepository>();
         services.AddScoped<IPresentationIsroilovRepository, PresentationIsroilovRepository>();
         services.AddScoped<IPresentationPageRepository, PresentationPageRepository>();
         services.AddScoped<IPresentationPostRepository, PresentationPostRepository>();
@@ -77,6 +79,7 @@ public static class ServiceExtensions
         services.AddScoped<IAdminActionService, AdminActionService>();
         services.AddScoped<ITextSlideService, TextSlideService>();
         services.AddScoped<IPhotoSlideService, PhotoSlideService>();
+        services.AddScoped<IPresentationService, PresentationService>();
         services.AddScoped<IPresentationIsroilovService, PresentationIsroilovService>();
         services.AddScoped<IPresentationPageService, PresentationPageService>();
         services.AddScoped<IPresentationPostService, PresentationPostService>();

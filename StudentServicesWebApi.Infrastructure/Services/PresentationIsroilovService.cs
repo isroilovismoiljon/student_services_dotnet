@@ -56,22 +56,9 @@ public class PresentationIsroilovService : IPresentationIsroilovService
 
     public async Task<PresentationIsroilovDto> CreatePresentationAsync(CreatePresentationIsroilovDto createDto, CancellationToken ct = default)
     {
-        // Validate page count
-        if (createDto.PageCount < 5)
-        {
-            throw new ArgumentException("Page count must be at least 5");
-        }
-
-        // Note: Design existence will be validated by foreign key constraint
-        // We'll fetch design photo IDs only if we need background photos (without tracking)
-        List<int>? designPhotoIds = null;
-
         // Create Title and Author text slides
         var titleSlide = await _textSlideService.CreateTextSlideAsync(createDto.Title, ct);
         var authorSlide = await _textSlideService.CreateTextSlideAsync(createDto.Author, ct);
-
-        // Create Plan
-        var plan = await _planService.CreateAsync(createDto.Plan, ct);
 
         // Create PresentationIsroilov
         var presentation = new PresentationIsroilov
@@ -80,8 +67,6 @@ public class PresentationIsroilovService : IPresentationIsroilovService
             AuthorId = authorSlide.Id,
             WithPhoto = createDto.WithPhoto,
             PageCount = createDto.PageCount,
-            DesignId = createDto.DesignId,
-            PlanId = plan.Id,
             IsActive = true,
             FilePath = string.Empty,
             CreatedAt = DateTime.UtcNow,
@@ -89,82 +74,6 @@ public class PresentationIsroilovService : IPresentationIsroilovService
         };
 
         var createdPresentation = await _presentationRepository.AddAsync(presentation, ct);
-
-        // Validate that provided pages count matches PageCount
-        if (createDto.PresentationPages.Count != createDto.PageCount)
-        {
-            throw new ArgumentException($"Number of presentation pages ({createDto.PresentationPages.Count}) must match PageCount ({createDto.PageCount})");
-        }
-
-        // Create PresentationPages from provided data
-        for (int i = 0; i < createDto.PresentationPages.Count; i++)
-        {
-            var pageDto = createDto.PresentationPages[i];
-            
-            // Determine if this page should have photos based on position and WithPhoto setting
-            bool pageWithPhoto = false;
-            if (createDto.WithPhoto && i >= 2) // Pages 1-2 (index 0-1) never have photos
-            {
-                // Pattern: page 3, 6, 9, 12, etc. (index 2, 5, 8, 11) have photos
-                int adjustedPage = i - 2; // Start counting from page 3
-                pageWithPhoto = (adjustedPage % 3 == 0);
-            }
-
-            // Auto-assign background photo from design
-            int? backgroundPhotoId = null;
-            
-            // Lazy load design photo IDs only when needed (without entity tracking)
-            if (designPhotoIds == null)
-            {
-                designPhotoIds = await _designRepository.GetPhotoIdsByDesignIdAsync(createDto.DesignId, ct);
-            }
-            
-            if (designPhotoIds.Count > 0)
-            {
-                backgroundPhotoId = designPhotoIds[i % designPhotoIds.Count];
-            }
-
-            var presentationPage = new PresentationPage
-            {
-                PresentationIsroilovId = createdPresentation.Id,
-                PhotoId = null, // Will be set later via UpdatePhotos endpoint if WithPhoto=true
-                BackgroundPhotoId = backgroundPhotoId,
-                WithPhoto = pageWithPhoto,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            var createdPage = await _presentationPageRepository.AddAsync(presentationPage, ct);
-
-            // Create presentation posts for this page
-            if (pageDto.PresentationPosts != null)
-            {
-                foreach (var postDto in pageDto.PresentationPosts)
-                {
-                    // Create title text slide if provided
-                    int? titleSlideId = null;
-                    if (postDto.Title != null)
-                    {
-                        var titleTextSlide = await _textSlideService.CreateTextSlideAsync(postDto.Title, ct);
-                        titleSlideId = titleTextSlide.Id;
-                    }
-
-                    // Create text slide for content
-                    var textSlide = await _textSlideService.CreateTextSlideAsync(postDto.Text, ct);
-
-                    var presentationPost = new PresentationPost
-                    {
-                        PresentationPageId = createdPage.Id,
-                        TitleId = titleSlideId,
-                        TextId = textSlide.Id,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
-                    };
-
-                    await _presentationPostRepository.AddAsync(presentationPost, ct);
-                }
-            }
-        }
 
         return await GetPresentationByIdAsync(createdPresentation.Id, ct) 
             ?? throw new InvalidOperationException("Failed to retrieve created presentation");
@@ -183,49 +92,9 @@ public class PresentationIsroilovService : IPresentationIsroilovService
             throw new InvalidOperationException("Cannot update photos for a presentation created with WithPhoto=false");
         }
 
-        // Get pages that should have photos
-        var pagesWithPhoto = presentation.PresentationPages
-            .Where(p => p.WithPhoto)
-            .OrderBy(p => p.Id)
-            .ToList();
-
-        if (updateDto.Photos.Count != pagesWithPhoto.Count)
-        {
-            throw new ArgumentException($"Expected {pagesWithPhoto.Count} photos, but received {updateDto.Photos.Count}");
-        }
-
-        // Update photos for each page
-        for (int i = 0; i < pagesWithPhoto.Count; i++)
-        {
-            var page = pagesWithPhoto[i];
-            var photo = updateDto.Photos[i];
-
-            // Create or update photo slide
-            if (page.PhotoId.HasValue)
-            {
-                // Update existing photo
-                await _photoSlideService.UpdatePhotoSlideFileAsync(page.PhotoId.Value, photo, ct);
-            }
-            else
-            {
-                // Create new photo slide
-                var createPhotoDto = new Application.DTOs.PhotoSlide.CreatePhotoSlideDto
-                {
-                    Photo = photo,
-                    Left = 0,
-                    Top = 0,
-                    Width = 100,
-                    Height = 100
-                };
-                var createdPhoto = await _photoSlideService.CreatePhotoSlideAsync(createPhotoDto, ct);
-                page.PhotoId = createdPhoto.Id;
-                page.UpdatedAt = DateTime.UtcNow;
-                await _presentationPageRepository.UpdateAsync(page, ct);
-            }
-        }
-
-        return await GetPresentationByIdAsync(id, ct) 
-            ?? throw new InvalidOperationException("Failed to retrieve updated presentation");
+        // For now, this is a placeholder implementation
+        // You would need to implement page management separately
+        throw new NotImplementedException("Photo update functionality requires PresentationPage management");
     }
 
     public async Task<bool> DeletePresentationAsync(int id, CancellationToken ct = default)
@@ -246,15 +115,10 @@ public class PresentationIsroilovService : IPresentationIsroilovService
             Author = _mappingService.MapToTextSlideDto(presentation.Author),
             WithPhoto = presentation.WithPhoto,
             PageCount = presentation.PageCount,
-            DesignId = presentation.DesignId,
-            Plan = _mappingService.MapToPlanDto(presentation.Plan),
             FilePath = presentation.FilePath,
             IsActive = presentation.IsActive,
             CreatedAt = presentation.CreatedAt,
-            UpdatedAt = presentation.UpdatedAt,
-            PresentationPages = presentation.PresentationPages
-                .Select(pp => _mappingService.MapToPresentationPageDto(pp))
-                .ToList()
+            UpdatedAt = presentation.UpdatedAt
         };
     }
 }
